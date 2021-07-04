@@ -1,5 +1,18 @@
 ## own stuff
+
+# attachments
 tmp/*
+
+# sample data (private)
+sampledata.sql
+
+# DB file
+mailiszt.db
+
+
+
+
+
 
 ## Template stuff https://gist.github.com/Yousha/a5514afd6cda8afba800f5af9f7115b4
 
