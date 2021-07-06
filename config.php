@@ -1,4 +1,4 @@
 <?php
 
 // DB file (SQLite)
-define('DB_FILE', 'mailiszt.db');
+define('DB_FILE', __DIR__ . '/mailiszt.db');

@@ -1,18 +1,11 @@
 <?php
 
 class Mail {
-    public $i_mail;
-    public $i_mailbox;
-    public $subject;
-    public $frommail;
-    public $fromname;
-    public $tomail;
-    public $toname;
-    public $bodytext;
-    public $bodyhtml;
-    public $messageid;
-    public $sent;
-    public $attachments;
+    public $properties;
+    public $attachments = [];
+    public static $validationrules = [];
+
+    public $saved;
 
     function __construct() {
     }
@@ -24,23 +17,36 @@ class Mail {
         $this->subject      = $message->getSubject();
         $this->frommail     = $attributes["from"]->toArray()[0]->toArray()["mail"];
         $this->fromname     = $attributes["from"]->toArray()[0]->toArray()["personal"] ?: NULL;
+        $this->replytomail  = $attributes["reply_to"]->toArray()[0]->toArray()["mail"];
+        $this->replytoname  = $attributes["reply_to"]->toArray()[0]->toArray()["personal"] ?: NULL;
         $this->tomail       = $attributes["to"]->toArray()[0]->toArray()["mail"];
         $this->toname       = $attributes["to"]->toArray()[0]->toArray()["personal"] ?: NULL;
-        $this->bodytext     = $message->getTextBoxy();
+        $this->bodytext     = $message->getTextBody();
         $this->bodyhtml     = $message->getHtmlBody();
         $this->messageid    = $attributes["message_id"]->toString();
         $this->sent         = $attributes["date"]->toString();
+        $this->internalid   = $this->calculateHash();
 
+        // check if messageid is already present in DB
+        $db = new DB();
+        $this->saved = $db->queryScalar(
+            "SELECT 1 FROM mail WHERE s_internalid = ?", 
+            [$this->internalid]
+        );
+
+        // crawl attachments
         $attach_cnt = 0;
         foreach ($message->getAttachments() as $key => $attachment) {
-            $this->attachments[] = [
-                "index"         => $attach_cnt,
-                "content_type"  => $attachment->getAttributes()["content_type"],
-                "cid"           => $attachment->getAttributes()["id"],
-                "filename"      => $attachment->getAttributes()["name"],
-                "i_attachment"  => NULL,
-            ];
-            $attachment->save('data/attachments/', $filename = $this->calculateHash() . '_' . $attach_cnt);
+            // new attachment
+            $this->attachments[] = new Attachment($i_attachment = NULL, $attachment);
+
+            // update properties
+            $end = count($this->attachments) - 1;            
+            $this->attachments[$end]->properties["n_index"] = $attach_cnt;
+            $this->attachments[$end]->properties["s_filename"] = $this->internalid . "_" . $attach_cnt;
+
+            $this->attachments[$end]->saveAttachment($attachment);
+
             $attach_cnt++;
         }
     }
@@ -50,14 +56,22 @@ class Mail {
     }
 
     public function writeToDB() {
+        if ($this->saved) {
+            return ;
+        }
+
         $db = new DB();
+
         $this->i_mail = $db->insert(
             "mail",
             [
                 "i_mailbox"     => $this->i_mailbox,
+                "s_internalid"  => $this->internalid,
                 "s_subject"     => $this->subject,
                 "s_frommail"    => $this->frommail,
                 "s_fromname"    => $this->fromname,
+                "s_replytomail" => $this->replytomail,
+                "s_replytoname" => $this->replytoname,
                 "s_tomail"      => $this->tomail,
                 "s_toname"      => $this->toname,
                 "s_bodytext"    => $this->bodytext,
@@ -68,16 +82,8 @@ class Mail {
         );
 
         foreach ($this->attachments as $attachment) {
-            $attachment["i_attachment"] = $db->insert(
-                "attachment",
-                [
-                    "i_mail"        => $this->i_mail,
-                    "s_contenttype" => $attachment["content_type"],
-                    "s_cid"         => $attachment["cid"],
-                    "s_filename"    => $attachment["filename"],
-                    "n_index"       => $attachment["index"]
-                ]
-            );
+            $attachment->properties["i_mail"] = $this->i_mail;
+            $attachment->save();
         }
     }
 

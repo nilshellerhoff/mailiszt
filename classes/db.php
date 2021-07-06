@@ -5,7 +5,7 @@ class DB extends SQLite3 {
         if (file_exists(DB_FILE)) {
             $this->open(DB_FILE);
         } else {
-            // if DB file didnt exist, create DB, make schema and insert sampledata
+            // if DB file doesn't exist, create DB, make schema and insert sampledata
             $this->open(DB_FILE);
             $this->executeFile('tables.sql');
             $this->executeFile('sampledata.sql');
@@ -31,7 +31,50 @@ class DB extends SQLite3 {
         return $rows;
     }
 
-    function insert($table, $values) {
+    public function queryRow($query, $parameters = []) {
+        // execute query and return one row
+        $stmt = $this->prepare($query);
+        for ($i = 0; $i < count($parameters); $i++) {
+            $stmt->bindValue($i+1, $parameters[$i]);
+        }
+
+        // filter numeric columns
+        $results = array_filter($stmt->execute()->fetchArray(), function(&$key) {
+            return !is_numeric($key);
+        }, ARRAY_FILTER_USE_KEY);
+        
+        return $results;
+    }
+
+    public function queryAll($query, $parameters = []) {
+        // execute query and return all rows
+        $stmt = $this->prepare($query);
+        for ($i = 0; $i < count($parameters); $i++) {
+            $stmt->bindValue($i+1, $parameters[$i]);
+        }
+        $result = $stmt->execute();
+
+        // loop through rows and return only with non-numeric index (otherwise double columns)
+        $rows = [];
+        while ($row = $result->fetchArray()) {
+            $rows[] = array_filter($row, function(&$key) {
+                return !is_numeric($key);
+            }, ARRAY_FILTER_USE_KEY);
+        }
+        return $rows;
+    }
+
+    public function queryScalar($query, $parameters = []) {
+        // execute query and return a scalar (first row, first column)
+        $stmt = $this->prepare($query);
+        for ($i = 0; $i < count($parameters); $i++) {
+            $stmt->bindValue($i+1, $parameters[$i]);
+        }
+
+        return $stmt->execute()->fetchArray()[0];
+    }
+
+    public function insert($table, $values) {
         // insert one row into a table
         // columns as comma separated string
         $insert_cols = implode(', ', array_keys($values));
@@ -53,5 +96,35 @@ class DB extends SQLite3 {
         $stmt->execute();
 
         return $this->lastInsertRowID();
+    }
+
+    public function update($table, $values, $wheres) {
+        // update a row in table
+        $update_cols = [];
+        foreach ($values as $key=>$value) {
+            $update_cols[] = $key . " = :" . $key;
+        }
+        $update_cols = implode(', ', $update_cols);
+
+        $where_cols = [];
+        foreach ($wheres as $key=>$value) {
+            $where_cols[] = $key . " = :" . $key;
+        }
+        $where_cols = implode(', ', $where_cols);
+
+        $stmt = $this->prepare("UPDATE $table SET $update_cols WHERE $where_cols");
+
+        // bind values 
+        foreach ($values as $key=>$value) {
+            $stmt->bindValue(":" . $key, $value);
+        }
+        // bind wheres
+        foreach ($wheres as $key=>$value) {
+            $stmt->bindValue(":" . $key, $value);
+        }
+        
+        $stmt->execute();
+        return $this->lastInsertRowID();
+
     }
 }

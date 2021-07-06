@@ -15,8 +15,11 @@ CREATE TABLE mailbox (
 CREATE TABLE mail (
     i_mail INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     i_mailbox INTEGER,
+    s_internalid TEXT,
     s_frommail TEXT,
     s_fromname TEXT,
+    s_replytomail TEXT,
+    s_replytoname TEXT,
     s_tomail TEXT,
     s_toname TEXT,
     s_messageid TEXT,
@@ -33,8 +36,10 @@ CREATE TABLE attachment (
     i_attachment INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     i_mail INTEGER,
     s_filename TEXT,
+    s_name TEXT,
     s_contenttype TEXT,
     s_cid TEXT,
+    n_size INTEGER,
     n_index INTEGER,
     d_inserted TEXT,
     d_updated TEXT
