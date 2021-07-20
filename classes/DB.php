@@ -7,8 +7,8 @@ class DB extends SQLite3 {
         } else {
             // if DB file doesn't exist, create DB, make schema and insert sampledata
             $this->open(DB_FILE);
-            $this->executeFile('tables.sql');
-            $this->executeFile('sampledata.sql');
+            $this->executeFile(BASE_DIR . 'tables.sql');
+            $this->executeFile(BASE_DIR .'sampledata.sql');
         }
     }
 
@@ -86,7 +86,7 @@ class DB extends SQLite3 {
         });
         $insert_vals = implode(', ', $insert_vals);
 
-        $stmt = $this->prepare("INSERT INTO $table ($insert_cols) VALUES ($insert_vals)");
+        $stmt = $this->prepare("INSERT INTO $table ($insert_cols, d_inserted) VALUES ($insert_vals, DATETIME('now'))");
 
         // bind values 
         foreach ($values as $key=>$value) {

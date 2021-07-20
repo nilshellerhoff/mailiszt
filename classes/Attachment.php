@@ -17,7 +17,8 @@ class Attachment {
         if (!is_null($i_attachment)) {
             $this->properties = $db->queryRow("SELECT * FROM attachment WHERE i_attachment = ?", [$i_attachment]);
         } else if (!is_null($attachment)) {
-            $this->populateFromObject($attachment);
+            $this->attachment = $attachment;
+            $this->populateFromObject();
         } else {
             // load data from properties
             $this->properties = $properties;
@@ -41,10 +42,15 @@ class Attachment {
                 ["i_attachment" => $this->properties["i_attachment"]]
             );
         } else {
-            $db->insert(
+            $this->properties["i_attachment"] = $db->insert(
                 "attachment",
                 $this->properties
             );
+        }
+
+        // if attachment object is given, save the file
+        if (isset($this->attachment)) {
+            $this->attachment->save('data/attachments/', $filename = $this->properties["s_filename"]);
         }
     }
 
@@ -58,16 +64,12 @@ class Attachment {
         return true;
     }
 
-    private function populateFromObject($attachment) {
+    private function populateFromObject() {
         $this->properties = [
-            "s_contenttype" => $attachment->getAttributes()["content_type"],
-            "s_cid"         => $attachment->getAttributes()["id"],
-            "s_name"        => $attachment->getAttributes()["name"],
-            "n_size"        => $attachment->getAttributes()["size"],
+            "s_contenttype" => $this->attachment->getAttributes()["content_type"],
+            "s_cid"         => $this->attachment->getAttributes()["id"],
+            "s_name"        => $this->attachment->getAttributes()["name"],
+            "n_size"        => $this->attachment->getAttributes()["size"],
         ];
-    }
-
-    function saveAttachment($attachment) {
-        $attachment->save('data/attachments/', $filename = $this->properties["s_filename"]);
     }
 }

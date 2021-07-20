@@ -1,5 +1,6 @@
 CREATE TABLE mailbox (
     i_mailbox INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    s_name TEXT,
     s_address TEXT,
     s_imapserver TEXT,
     n_imapport TEXT,
@@ -27,6 +28,7 @@ CREATE TABLE mail (
     s_subject TEXT,
     s_bodytext TEXT,
     s_bodyhtml TEXT,
+    n_attachments INTEGER,
     d_forwarded TEXT,
     d_inserted TEXT,
     d_updated TEXT
@@ -45,11 +47,21 @@ CREATE TABLE attachment (
     d_updated TEXT
 );
 
--- CREATE TABLE user (
---     i_user INTEGER PRIMARY KEY,
---     s_username TEXT,
---     s_password TEXT
--- )
+CREATE TABLE user (
+    i_user INTEGER PRIMARY KEY,
+    s_username TEXT,
+    s_password TEXT,
+    d_inserted TEXT,
+    d_updated TEXT
+);
+
+CREATE TABLE authtoken (
+    i_authtoken INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    i_user INTEGER,
+    s_username TEXT,
+    s_token TEXT,
+    d_inserted TEXT
+);
 
 CREATE TABLE member (
     i_member INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
