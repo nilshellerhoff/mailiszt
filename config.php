@@ -13,7 +13,7 @@ define('ATTACHMENT_PATH', __DIR__ . '/data/attachments/');
 
 // what to do with mails when processed
 define('MAIL_PROCESSED_ACTION', 'nada');
-define('MAIL_PROCESSED_FOLDER', 'INBOX/mailster_processed');
+define('MAIL_PROCESSED_FOLDER', 'INBOX/mailiszt_processed');
 
 // php-imap communication sequence type
 define('IMAP_SEQUENCE_TYPE', 'ST_UID');
