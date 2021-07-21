@@ -8,6 +8,9 @@ define('BASE_DIR', __DIR__ . '/');
 // DB file (SQLite)
 define('DB_FILE', __DIR__ . '/mailiszt.db');
 
+// path where attachments are saved
+define('ATTACHMENT_PATH', __DIR__ . '/data/attachments/');
+
 // what to do with mails when processed
 define('MAIL_PROCESSED_ACTION', 'nada');
 define('MAIL_PROCESSED_FOLDER', 'INBOX/mailster_processed');

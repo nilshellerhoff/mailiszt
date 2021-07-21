@@ -15,7 +15,6 @@ class Mail extends Base {
     public $saved;
 
     protected function populateFromObject() {
-        echo "populating";
         $attributes = $this->object->getAttributes();
 
         $this->properties["s_subject"]      = $this->object->getSubject();
@@ -96,9 +95,28 @@ class Mail extends Base {
             $mail->Body = $this->properties["s_bodyhtml"];
             $mail->AltBody = $this->properties["s_bodytext"];
         } else {
+            // mail is only text type
             $mail->Body = $this->properties["s_bodytext"];
         }
 
+        // add attachments to mail
+        foreach ($this->attachments as $attachment) {
+            $attach_path = ATTACHMENT_PATH . $attachment->properties["s_filename"];
+
+            // if cid is set, handle as embedded image, else normal attachment
+            if (isset($attachment->properties["s_cid"])) {
+                echo "adding embedded image";
+                $mail->AddEmbeddedImage(
+                    $attach_path,
+                    $attachment->properties["s_cid"],
+                    $attachment->properties["s_name"]
+                );
+            } else {
+                $mail->addAttachment($attach_path, $attachment->properties["s_name"]);
+            }
+        }
+
+        // send the mail to all recipients in $mailbox
         foreach ($mailbox->getRecipients() as $address) {
             $mail->addAddress($address);
             $mail->send();

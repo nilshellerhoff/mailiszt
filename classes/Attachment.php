@@ -50,7 +50,7 @@ class Attachment {
 
         // if attachment object is given, save the file
         if (isset($this->attachment)) {
-            $this->attachment->save('data/attachments/', $filename = $this->properties["s_filename"]);
+            $this->attachment->save(ATTACHMENT_PATH, $filename = $this->properties["s_filename"]);
         }
     }
 
