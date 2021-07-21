@@ -51,6 +51,7 @@ CREATE TABLE user (
     i_user INTEGER PRIMARY KEY,
     s_username TEXT,
     s_password TEXT,
+    s_role TEXT,
     d_inserted TEXT,
     d_updated TEXT
 );

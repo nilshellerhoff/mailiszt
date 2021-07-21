@@ -6,6 +6,11 @@ class User extends Base {
     public $table = "user";
     public $identifier = "i_user";
 
+    public $exposedInfo = [
+        "READER"    => [],
+        "ADMIN"     => ["i_user", "s_username", "d_inserted", "d_updated"]
+    ];
+
     public function updatePassword($password) {
         $this->properties["s_password"] = $this->generateHash($password);
     }

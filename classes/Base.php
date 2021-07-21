@@ -6,6 +6,13 @@ class Base {
 
     public $properties;
     public static $validationrules = [];
+
+    // list, which informations are exposed over the api
+    // right now there are two roles: READER and ADMIN
+    public $exposedInfo = [
+        "READER"    => [],
+        "ADMIN"     => []
+    ];
     
     public $table = ""; // table name where class data is stored
     public $identifier = ""; // identifier in $table
@@ -85,4 +92,11 @@ class Base {
         return true;
     }
 
+    public function apiGetInfo($role) {
+        // get the info appropriate to the user role
+        return array_intersect_key(
+            $this->properties,
+            array_flip($this->exposedInfo[$role])
+        ); 
+    }
 }
