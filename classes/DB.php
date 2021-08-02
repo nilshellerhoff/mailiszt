@@ -46,6 +46,13 @@ class DB extends SQLite3 {
         return $results;
     }
 
+    public function queryColumn($query, $parameters = []) {
+        // execute query and return one column
+        $values = $this->queryAll($query, $parameters);
+        $key_first = array_keys($values[0])[0];
+        return array_column($values, $key_first);
+    }
+
     public function queryAll($query, $parameters = []) {
         // execute query and return all rows
         $stmt = $this->prepare($query);
