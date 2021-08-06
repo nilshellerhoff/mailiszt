@@ -15,8 +15,8 @@ class Member extends Base {
     public function getGroups() {
         // get groups of member
         $db = new DB();
-        return $db->queryAll("
-            SELECT *
+        return $db->queryColumn("
+            SELECT g.s_name
             FROM _group g
             INNER JOIN member2group mg ON mg.i_group = g.i_group
             WHERE mg.i_member = ?
