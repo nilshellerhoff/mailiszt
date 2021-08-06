@@ -31,6 +31,18 @@ class DB extends SQLite3 {
         return $rows;
     }
 
+    public function execute($query, $parameters = []) {
+        // execute query and return one row
+        $stmt = $this->prepare($query);
+        for ($i = 0; $i < count($parameters); $i++) {
+            $stmt->bindValue($i+1, $parameters[$i]);
+        }
+
+        $stmt->execute();
+
+        return;
+    }
+
     public function queryRow($query, $parameters = []) {
         // execute query and return one row
         $stmt = $this->prepare($query);
