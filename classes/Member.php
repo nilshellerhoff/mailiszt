@@ -22,4 +22,20 @@ class Member extends Base {
             WHERE mg.i_member = ?
         ", [$this->properties["i_member"]]);
     }
+
+    public function setGroups($groups) {
+        // set the groups of user from array with group names
+        $db = new DB();
+
+        // delete all existing groups
+        $db->execute("DELETE FROM member2group WHERE i_member = ?", [$this->properties["i_member"]]);
+
+        // add groups from array
+        foreach ($groups as $group) {
+            $db->execute("
+                INSERT INTO member2group (i_member, i_group, d_inserted)
+                VALUES (?, (SELECT i_group FROM _group WHERE s_name = ?), DATETIME('now'))
+            ", [$this->properties["i_member"], $group]);
+        }
+    }
 }
