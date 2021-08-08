@@ -81,6 +81,17 @@ class Base {
 
     public function afterSave() {}
 
+    public function delete() {
+        // delete the entry from DB
+        $db = new DB();
+        $db->delete(
+            $table,
+            [$identifier, $this->properties[$identifier]]
+        );
+
+        $this->afterDelete();
+    }
+
     function validate() {
         // validate the object properties
         foreach (self::$validationrules as $key => $rule) {

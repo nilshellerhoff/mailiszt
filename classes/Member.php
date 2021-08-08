@@ -38,4 +38,13 @@ class Member extends Base {
             ", [$this->properties["i_member"], $group]);
         }
     }
+
+    public function afterDelete() {
+        // delete all entries from member2group which point to the member
+        $db = new DB();
+        $db->delete(
+            "member2group",
+            ["i_member", $this->properties["i_member"]]
+        );
+    }
 }
