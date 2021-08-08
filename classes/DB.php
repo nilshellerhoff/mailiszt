@@ -146,4 +146,22 @@ class DB extends SQLite3 {
         return $this->lastInsertRowID();
 
     }
+
+    public function delete($table, $wheres) {
+        // delete entries from a table where conditions apply
+        $where_cols = [];
+        foreach ($wheres as $key=>$value) {
+            $where_cols[] = $key . " = :" . $key;
+        }
+        $where_cols = implode(', ', $where_cols);
+
+        $stmt = $this->prepare("DELETE FROM $table WHERE $where_cols");
+
+        // bind wheres
+        foreach ($wheres as $key=>$value) {
+            $stmt->bindValue(":" . $key, $value);
+        }
+        
+        $stmt->execute();
+    }
 }
