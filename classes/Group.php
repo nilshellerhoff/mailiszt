@@ -6,6 +6,11 @@ class Group extends Base {
     public $table = "_group";
     public $identifier = "i_group";
 
+    public $exposedInfo = [
+        "READER"    => ["i_group", "s_name", "d_inserted", "d_updated"],
+        "ADMIN"     => ["i_group", "s_name", "d_inserted", "d_updated"],
+    ];
+
     public function getMembers() {
         // get members of group
         $db = new DB();
