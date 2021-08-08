@@ -1,0 +1,49 @@
+<template>
+  <MemberPopup
+    @save="saveMember()"
+    :popupTitle="`Add member`"
+    :btnState="btnState"
+    :member="member"
+    :groups="groups"
+  >
+  </MemberPopup>
+</template>
+
+<script>
+import MemberPopup from "@/components/MemberPopup.vue";
+
+export default {
+  name: "EditMember",
+  data: function () {
+    return {
+      member: {
+        b_active: 1,
+      },
+      groups: {
+        member: [],
+        available: ["1. Geigen", "2. Geigen", "Bratschen", "Celli", "Test"],
+      },
+      btnState: "ready",
+    };
+  },
+  components: {
+    MemberPopup,
+  },
+  methods: {
+    async saveMember() {
+      this.btnState = "loading";
+      this.$api.put(`/member/add`, this.member).then((response) => {
+        this.$api
+          .put(`/member/${response.data.i_member}/groups`, this.groups.member)
+          .then(() => {
+            this.btnState = "done";
+            setTimeout(() => {
+              this.$root.$emit("reloadData");
+              this.$router.back();
+            }, 500);
+          });
+      });
+    },
+  },
+};
+</script>

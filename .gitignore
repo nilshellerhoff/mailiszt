@@ -9,9 +9,6 @@ sampledata.sql
 # DB file
 mailiszt.db
 
-# ignore frontend for now
-frontend/*
-
 ## Template stuff https://gist.github.com/Yousha/a5514afd6cda8afba800f5af9f7115b4
 
 ##### Windows
