@@ -85,8 +85,8 @@ class Base {
         // delete the entry from DB
         $db = new DB();
         $db->delete(
-            $table,
-            [$identifier, $this->properties[$identifier]]
+            $this->table,
+            [$this->identifier => $this->properties[$this->identifier]]
         );
 
         $this->afterDelete();

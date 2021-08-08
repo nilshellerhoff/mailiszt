@@ -44,7 +44,7 @@ class Member extends Base {
         $db = new DB();
         $db->delete(
             "member2group",
-            ["i_member", $this->properties["i_member"]]
+            ["i_member" => $this->properties["i_member"]]
         );
     }
 }
