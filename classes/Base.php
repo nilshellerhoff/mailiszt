@@ -92,6 +92,8 @@ class Base {
         $this->afterDelete();
     }
 
+    public function afterDelete() {}
+
     function validate() {
         // validate the object properties
         foreach (self::$validationrules as $key => $rule) {
