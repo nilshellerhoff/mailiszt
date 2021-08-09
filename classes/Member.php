@@ -15,27 +15,27 @@ class Member extends Base {
     public function getGroups() {
         // get groups of member
         $db = new DB();
-        return $db->queryColumn("
-            SELECT g.s_name
+        return $db->queryAll("
+            SELECT g.*
             FROM _group g
             INNER JOIN member2group mg ON mg.i_group = g.i_group
             WHERE mg.i_member = ?
         ", [$this->properties["i_member"]]);
     }
 
-    public function setGroups($groups) {
-        // set the groups of user from array with group names
+    public function setGroups($group_ids) {
+        // set the groups of user from array with group ids
         $db = new DB();
 
         // delete all existing groups
         $db->execute("DELETE FROM member2group WHERE i_member = ?", [$this->properties["i_member"]]);
 
         // add groups from array
-        foreach ($groups as $group) {
+        foreach ($group_ids as $group_id) {
             $db->execute("
                 INSERT INTO member2group (i_member, i_group, d_inserted)
-                VALUES (?, (SELECT i_group FROM _group WHERE s_name = ?), DATETIME('now'))
-            ", [$this->properties["i_member"], $group]);
+                VALUES (?, ?, DATETIME('now'))
+            ", [$this->properties["i_member"], $group_id]);
         }
     }
 

@@ -37,7 +37,7 @@ export default {
         this.groups.member = response.data
       })
       this.$api.get(`/group`).then((response) => {
-        this.groups.available = response.data.map((group) => group.s_name)
+        this.groups.available = response.data
       })
     },
     async saveMember() {

@@ -13,6 +13,8 @@
       label="Groups"
       v-model="groups.member"
       :items="groups.available"
+      item-text="s_name"
+      item-value="i_group"
       multiple
       chips
       deletable-chips
