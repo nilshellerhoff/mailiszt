@@ -20,15 +20,6 @@
       </v-col>
     </v-row>
     <v-data-table :headers="headers" :items="groups" :search="search">
-      <!-- show active status as checkbox -->
-      <template v-slot:[`item.b_active`]="{ item }">
-        <v-checkbox
-          v-model="item.b_active"
-          :true-value="1"
-          :false-value="0"
-        ></v-checkbox>
-      </template>
-
       <!-- edit link -->
       <template v-slot:[`item.actions`]="{ item }">
         <router-link :to="'/groups/edit/' + item.i_group">
