@@ -42,3 +42,12 @@ Route::add('/api/group/([0-9]*)', function($i_group) {
 }, 'DELETE');
 
 // add routes for managing members of group
+Route::add('/api/group/([0-9]*)/members', function($i_group) {
+    $group = new Group($id = $i_group);
+    return makeResponse($group->getMembers());
+}, 'GET');
+
+Route::add('/api/group/([0-9]*)/members', function($i_group) {
+    $group = new Group($id = $i_group);
+    $group->setMembers(getPutData());
+}, 'PUT');

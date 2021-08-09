@@ -11,17 +11,6 @@ class Group extends Base {
         "ADMIN"     => ["i_group", "s_name", "d_inserted", "d_updated"],
     ];
 
-    public function getMembers() {
-        // get members of group
-        $db = new DB();
-        return $db->queryAll("
-            SELECT *
-            FROM member m
-            INNER JOIN member2group mg ON mg.i_member = m.i_member
-            WHERE mg.i_group = ?
-        ", [$this->properties["i_group"]]);
-    }
-
     public function insertMember($i_member) {
         $db = new DB();
 
@@ -41,5 +30,32 @@ class Group extends Base {
                 "i_group"   => $this->properties["i_group"]
             ]
         );
+    }
+
+    public function getMembers() {
+        // get all the members of the group
+        $db = new DB();
+        return $db->queryAll("
+            SELECT m.*
+            FROM member m
+            INNER JOIN member2group mg ON mg.i_member = m.i_member
+            WHERE mg.i_group = ?
+        ", [$this->properties["i_group"]]);
+    }
+
+    public function setMembers($member_ids) {
+        // set the members of a group from array with member ids
+        $db = new DB();
+
+        // delete all existing members of the group
+        $db->execute("DELETE FROM member2group WHERE i_group = ?", [$this->properties["i_group"]]);
+
+        // add the members from the array
+        foreach ($member_ids as $member_id) {
+            $db->insert("member2group", [
+                "i_group" => $this->properties["i_group"],
+                "i_member" => $member_id
+            ]);
+        }
     }
 }

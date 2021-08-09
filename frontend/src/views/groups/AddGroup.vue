@@ -4,6 +4,7 @@
     :popupTitle="`Add member`"
     :btnState="btnState"
     :group="group"
+    :members="members"
   >
   </GroupPopup>
 </template>
@@ -17,6 +18,9 @@ export default {
     return {
       group: {},
       btnState: "ready",
+      members: {
+        group: []
+      }
     };
   },
   components: {
@@ -25,12 +29,14 @@ export default {
   methods: {
     async saveGroup() {
       this.btnState = "loading";
-      this.$api.put(`/group/add`, this.group).then(() => {
-        this.btnState = "done";
-        setTimeout(() => {
-          this.$root.$emit("reloadData");
-          this.$router.back();
-        }, 500);
+      this.$api.put(`/group/add`, this.group).then((response) => {
+        this.$api.put(`/group/${response.data.i_group}/members`, this.members.group).then(() => {
+          this.btnState = "done";
+          setTimeout(() => {
+            this.$root.$emit('reloadData');
+            this.$router.back();
+          }, 500);
+        });
       });
     },
   },

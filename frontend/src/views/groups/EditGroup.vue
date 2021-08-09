@@ -4,6 +4,7 @@
     :popupTitle="`Edit group ${group.s_name}`"
     :btnState="btnState"
     :group="group"
+    :members="members"
   >
   </GroupPopup>
 </template>
@@ -17,6 +18,9 @@ export default {
     return {
       groupId: this.$route.params.id,
       group: {},
+      members: {
+        group: [],
+      },
       btnState: "ready",
     };
   },
@@ -26,17 +30,22 @@ export default {
   methods: {
     getGroup() {
       this.$api.get(`/group/${this.groupId}`).then((response) => {
-        this.group = response.data;
-      });
+        this.group = response.data
+      })
+      this.$api.get(`/group/${this.groupId}/members`).then((response) => {
+        this.members.group = response.data
+      })
     },
     async saveGroup() {
       this.btnState = "loading";
-      this.$api.put(`/group/add`, this.group).then(() => {
-        this.btnState = "done";
-        setTimeout(() => {
-          this.$root.$emit("reloadData");
-          this.$router.back();
-        }, 500);
+      this.$api.put(`/group/${this.groupId}`, this.group).then(() => {
+        this.$api.put(`/group/${this.groupId}/members`, this.members.group).then(() => {
+          this.btnState = "done";
+          setTimeout(() => {
+            this.$root.$emit('reloadData');
+            this.$router.back();
+          }, 500);
+        });
       });
     },
   },
