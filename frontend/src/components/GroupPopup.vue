@@ -15,7 +15,7 @@
       label="Members"
       v-model="members.group"
       :items="membersAvailable"
-      item-text="s_name1"
+      :item-text="(item) => item.s_name1 + ' ' + item.s_name2"
       item-value="i_member"
       multiple
       chips
