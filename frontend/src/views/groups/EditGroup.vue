@@ -1,57 +1,48 @@
 <template>
-    <MemberPopup
-      @save="saveMember()"
-      :popupTitle="`Edit ${member.s_name1} ${member.s_name2}`"
-      :btnState="btnState"
-      :member="member"
-      :groups="groups"
-    >
-    </MemberPopup>
+  <GroupPopup
+    @save="saveGroup()"
+    :popupTitle="`Edit group ${group.s_name}`"
+    :btnState="btnState"
+    :group="group"
+  >
+  </GroupPopup>
 </template>
 
 <script>
-import MemberPopup from '@/components/MemberPopup.vue'
+import GroupPopup from "@/components/GroupPopup.vue";
 
 export default {
-  name: "EditMember",
+  name: "EditGroup",
   data: function () {
     return {
-      memberId: this.$route.params.id,
-      member: {},
-      groups: {
-          member: [],
-          available: ["1. Geigen", "2. Geigen", "Bratschen", "Celli", "Test"],
-      },
+      groupId: this.$route.params.id,
+      group: {},
       btnState: "ready",
-    }
+    };
   },
   components: {
-      MemberPopup
+    GroupPopup,
   },
   methods: {
-    getMember() {
-      this.$api.get(`/member/${this.memberId}`).then((response) => {
-        this.member = response.data;
+    getGroup() {
+      this.$api.get(`/group/${this.groupId}`).then((response) => {
+        this.group = response.data;
       });
-      this.$api.get(`/member/${this.memberId}/groups`).then((response) => {
-        this.groups.member = response.data
-      })
     },
-    async saveMember() {
+    async saveGroup() {
       this.btnState = "loading";
-      this.$api.put(`/member/${this.memberId}`, this.member).then(() => {
-        this.$api.put(`/member/${this.memberId}/groups`, this.groups.member).then(() => {
-          this.btnState = "done";
-          setTimeout(() => {
-            this.$root.$emit('reloadData');
-            this.$router.back();
-          }, 500);
-        });
+      this.$api.put(`/group/add`, this.group).then(() => {
+        this.btnState = "done";
+        setTimeout(() => {
+          this.$root.$emit("reloadData");
+          this.$router.back();
+        }, 500);
       });
     },
   },
   mounted() {
-    this.getMember();
-  },
+    this.getGroup();
+  }
 };
+
 </script>
