@@ -20,7 +20,6 @@ export default {
       member: {},
       groups: {
           member: [],
-          available: [],
       },
       btnState: "ready",
     }
@@ -35,9 +34,6 @@ export default {
       });
       this.$api.get(`/member/${this.memberId}/groups`).then((response) => {
         this.groups.member = response.data
-      })
-      this.$api.get(`/group`).then((response) => {
-        this.groups.available = response.data
       })
     },
     async saveMember() {

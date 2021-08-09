@@ -21,7 +21,6 @@ export default {
       },
       groups: {
         member: [],
-        available: ["1. Geigen", "2. Geigen", "Bratschen", "Celli", "Test"],
       },
       btnState: "ready",
     };
