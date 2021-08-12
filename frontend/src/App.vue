@@ -1,12 +1,16 @@
 <template>
   <v-app id="app">
     <NavigationDrawer :links=links>
-      <v-sheet
-        width=100%
-        max-width=1200
-      >
-        <router-view/>
-      </v-sheet>
+      <v-container
+        fluid
+        class="pa-0 ma-0"
+        style="height: calc(100vh - 64px); overflow: scroll;">
+        <v-container
+          style="max-width: 1000px; width: 100%;"
+        >
+          <router-view/>
+        </v-container>
+      </v-container>
     </NavigationDrawer>
   </v-app>
 </template>
