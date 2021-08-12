@@ -11,6 +11,10 @@ import AddGroup from '@/views/groups/AddGroup.vue'
 import Groups from '@/views/groups/Groups.vue'
 import EditGroup from '@/views/groups/EditGroup.vue'
 
+import AddMailbox from '@/views/mailboxes/AddMailbox.vue'
+import Mailboxes from '@/views/mailboxes/Mailboxes.vue'
+import EditMailbox from '@/views/mailboxes/EditMailbox.vue'
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -71,6 +75,34 @@ const routes = [
         components: {
           default: Groups,
           dialog: AddGroup,
+        }
+      },
+    ],
+  },
+  // mailboxes
+  {
+    path: "/mailboxes",
+    component: EmptyRouterView,
+    children: [
+      {
+        name: 'Mailboxes',
+        path: '',
+        component: Mailboxes,
+      },
+      {
+        path: "edit/:id",
+        name: "Mailboxes.Edit",
+        components: {
+          default:  Mailboxes,
+          dialog: EditMailbox,
+        }
+      },
+      {
+        path: "add",
+        name: "Mailboxes.Add",
+        components: {
+          default: Mailboxes,
+          dialog: AddMailbox,
         }
       },
     ],

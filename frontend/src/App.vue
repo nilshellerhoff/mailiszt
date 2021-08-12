@@ -57,8 +57,8 @@ export default {
         icon: 'mdi-account-group'
       },
       {
-        title: "Lists",
-        url: '/lists',
+        title: "Mailboxes",
+        url: '/mailboxes',
         icon: 'mdi-email'
       },
       {

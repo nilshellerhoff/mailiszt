@@ -30,3 +30,4 @@ function checkAuthentication() {
 // include api definitions
 include('members.php');
 include('groups.php');
+include('mailboxes.php');

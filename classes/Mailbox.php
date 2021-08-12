@@ -10,6 +10,11 @@ class Mailbox extends Base {
     public $table = "mailbox";
     public $identifier = "i_mailbox";
 
+    public $exposedInfo = [
+        "READER"    => ["i_mailbox", "s_name", "s_address", "s_imapserver", "n_imapport", "s_smtpserver", "n_smtpport", "s_username", "s_groupselectionsql", "d_inserted", "d_updated"],
+        "ADMIN"     => ["i_mailbox", "s_name", "s_address", "s_imapserver", "n_imapport", "s_smtpserver", "n_smtpport", "s_username", "s_groupselectionsql", "d_inserted", "d_updated"],
+    ];
+
     public $properties;
     public static $validationrules = [
         "s_address"     => '/^[^\s@]+@[^\s@]+$/',
