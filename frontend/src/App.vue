@@ -1,6 +1,5 @@
 <template>
   <v-app id="app">
-    <Login dialog=true></Login>
     <NavigationDrawer :links=links>
       <v-container
         fluid
@@ -25,13 +24,11 @@
 
 <script>
 import NavigationDrawer from '@/components/NavigationDrawer.vue'
-import Login from '@/components/Login.vue'
 
 export default {
   name: 'App',
   components: {
     NavigationDrawer,
-    Login,
   },
   computed: {
     contentWidth () {
@@ -43,6 +40,7 @@ export default {
     }
   },
   data: () => ({
+    loggedIn: false,
     links: [
       {
         title: "Home",
@@ -74,6 +72,12 @@ export default {
         icon: 'mdi-cog'
       },
     ]
-  })
+  }),
+  mounted() {
+    // if not loggedin, redirect to login screen
+    if (!this.loggedIn) {
+      this.$router.push({name: 'Login'})
+    }
+  }
 }
 </script>
