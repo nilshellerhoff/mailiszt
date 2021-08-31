@@ -1,5 +1,6 @@
 <template>
   <v-app id="app">
+    <Login dialog=true></Login>
     <NavigationDrawer :links=links>
       <v-container
         fluid
@@ -24,11 +25,13 @@
 
 <script>
 import NavigationDrawer from '@/components/NavigationDrawer.vue'
+import Login from '@/components/Login.vue'
 
 export default {
   name: 'App',
   components: {
-    NavigationDrawer
+    NavigationDrawer,
+    Login,
   },
   computed: {
     contentWidth () {
