@@ -8,7 +8,12 @@ class User extends Base {
 
     public $exposedInfo = [
         "READER"    => [],
-        "ADMIN"     => ["i_user", "s_username", "d_inserted", "d_updated"]
+        "ADMIN"     => ["i_user", "s_username", "s_role", "d_inserted", "d_updated"]
+    ];
+
+    public static $validationrules = [
+        "s_username" => '/[a-zA-Z0-9]*/',
+        "s_role" => '/ADMIN|READER/',
     ];
 
     public function updatePassword($password) {
@@ -18,6 +23,11 @@ class User extends Base {
     public static function idFromName($s_username) {
         $db = new DB();
         return $db->queryScalar("SELECT i_user FROM user WHERE s_username = ?", [$s_username]);
+    }
+
+    public static function idFromToken($token) {
+        $db = new DB();
+        return $db->queryScalar("SELECT i_user FROM authtoken WHERE s_token = ?", [$token]);
     }
 
     public static function generateHash($password) {

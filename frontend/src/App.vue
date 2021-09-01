@@ -70,16 +70,22 @@ export default {
         icon: "mdi-cog",
       },
     ],
+    accessToken: null,
+    userInfo: {
+      "i_user": "",
+      "s_username": "",
+      "s_role": "",
+    }
   }),
   methods: {
     readCookie() {
       const accessToken = this.$cookies.get("accessToken");
       if (accessToken) {
-        this.$root.accessToken = accessToken;
+        this.accessToken = accessToken;
       }
     },
     loggedIn() {
-      return this.$root.accessToken != null;
+      return this.accessToken != null;
     },
     checkLogin() {
       // if not loggedin, redirect to login screen
@@ -87,15 +93,21 @@ export default {
         this.$router.push({ name: "Login" });
       }
     },
+    getUserInfo() {
+      // populate the userinfo object
+      this.$api.put("users/current/", { accessToken: this.accessToken }).then(response => {
+        this.userInfo = response.data
+      })
+    },
 
     // generic functions for login managment
     login(username, password) {
       // request a login at the server and store the accessToken as cookie and global var
       return this.$api
-        .put("user/login", { username: username, password: password })
+        .put("users/current/login", { username: username, password: password })
         .then((response) => {
           if (response.data) {
-            this.$root.accessToken = response.data;
+            this.accessToken = response.data;
             this.$cookies.set("accessToken", response.data);
             return true;
           } else {
@@ -106,9 +118,9 @@ export default {
     logout() {
       // delete the accessToken from storage and cookie
       return this.$api
-        .put("user/logout", { acessToken: this.$root.accesToken })
+        .put("users/current/logout", { accessToken: this.accessToken })
         .then(() => {
-          this.$root.accessToken = null;
+          this.accessToken = null;
           this.$cookies.set("accessToken", "");
           return true;
         });
@@ -120,9 +132,11 @@ export default {
   mounted() {
     this.readCookie();
     this.checkLogin();
+    this.getUserInfo();
   },
   updated() {
     this.checkLogin();
+    this.getUserInfo();
   },
 };
 </script>
