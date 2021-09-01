@@ -5,6 +5,10 @@
         dark
         >
         <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+        <v-spacer></v-spacer>
+        <v-btn @click="logout">
+          <v-icon>mdi-logout</v-icon>log out
+        </v-btn>
         </v-app-bar>
 
         <v-navigation-drawer
@@ -72,11 +76,16 @@
         this.drawer = false
       },
     },
-
     computed: {
         mobile() {
             return this.$vuetify.breakpoint.sm;
         }
+    },
+    methods: {
+      logout() {
+        this.$root.$refs.App.logout()
+        this.$router.push('/login')
+      }
     }
   }
 </script>

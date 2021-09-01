@@ -1,14 +1,13 @@
 <template>
   <v-app id="app">
-    <NavigationDrawer :links=links>
+    <NavigationDrawer :links="links">
       <v-container
         fluid
         class="pa-0 ma-0"
-        style="height: calc(100vh - 64px); overflow: scroll;">
-        <v-container
-          style="max-width: 1000px; width: 100%;"
-        >
-          <router-view/>
+        style="height: calc(100vh - 64px); overflow: scroll"
+      >
+        <v-container style="max-width: 1000px; width: 100%">
+          <router-view />
         </v-container>
       </v-container>
     </NavigationDrawer>
@@ -16,68 +15,114 @@
 </template>
 
 <style lang="scss" scoped>
-  v-sheet {
-    margin-left: auto;
-    margin-right: auto;
-  }
+v-sheet {
+  margin-left: auto;
+  margin-right: auto;
+}
 </style>
 
 <script>
-import NavigationDrawer from '@/components/NavigationDrawer.vue'
+import NavigationDrawer from "@/components/NavigationDrawer.vue";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
     NavigationDrawer,
   },
   computed: {
-    contentWidth () {
+    contentWidth() {
       if (this.$vuetify.breakpoint.smAndDown) {
-        return '100%'
+        return "100%";
       } else {
-        return '400'
+        return "400";
       }
-    }
+    },
   },
   data: () => ({
-    loggedIn: false,
     links: [
       {
         title: "Home",
         url: "/",
-        icon: 'mdi-home'
+        icon: "mdi-home",
       },
       {
         title: "About",
-        url: "/about"
+        url: "/about",
       },
       {
         title: "Members",
         url: "/members",
-        icon: 'mdi-account'
+        icon: "mdi-account",
       },
       {
         title: "Groups",
-        url: '/groups',
-        icon: 'mdi-account-group'
+        url: "/groups",
+        icon: "mdi-account-group",
       },
       {
         title: "Mailboxes",
-        url: '/mailboxes',
-        icon: 'mdi-email'
+        url: "/mailboxes",
+        icon: "mdi-email",
       },
       {
         title: "Settings",
-        url: '/settings',
-        icon: 'mdi-cog'
+        url: "/settings",
+        icon: "mdi-cog",
       },
-    ]
+    ],
   }),
+  methods: {
+    readCookie() {
+      const accessToken = this.$cookies.get("accessToken");
+      if (accessToken) {
+        this.$root.accessToken = accessToken;
+      }
+    },
+    loggedIn() {
+      return this.$root.accessToken != null;
+    },
+    checkLogin() {
+      // if not loggedin, redirect to login screen
+      if (!this.loggedIn() && this.$route.name != "Login") {
+        this.$router.push({ name: "Login" });
+      }
+    },
+
+    // generic functions for login managment
+    login(username, password) {
+      // request a login at the server and store the accessToken as cookie and global var
+      return this.$api
+        .put("user/login", { username: username, password: password })
+        .then((response) => {
+          if (response.data) {
+            this.$root.accessToken = response.data;
+            this.$cookies.set("accessToken", response.data);
+            return true;
+          } else {
+            return false;
+          }
+        });
+    },
+    logout() {
+      // delete the accessToken from storage and cookie
+      return this.$api
+        .put("user/logout", { acessToken: this.$root.accesToken })
+        .then(() => {
+          this.$root.accessToken = null;
+          this.$cookies.set("accessToken", "");
+          return true;
+        });
+    },
+  },
+  created() {
+    this.$root.$refs.App = this;
+  },
   mounted() {
-    // if not loggedin, redirect to login screen
-    if (!this.loggedIn) {
-      this.$router.push({name: 'Login'})
-    }
-  }
-}
+    this.readCookie();
+    this.checkLogin();
+  },
+  updated() {
+    this.checkLogin();
+  },
+};
 </script>

@@ -17,7 +17,8 @@ function getPutData() {
     return json_decode(file_get_contents('php://input'), true);
 }
 
-function makeResponse($data) {
+function makeResponse($data, $responseCode = 200) {
+    http_response_code($responseCode);
     return json_encode($data);
 }
 
@@ -31,3 +32,4 @@ function checkAuthentication() {
 include('members.php');
 include('groups.php');
 include('mailboxes.php');
+include('user.php');

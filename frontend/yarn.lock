@@ -8316,6 +8316,11 @@
     "semver" "^7.1.2"
     "shelljs" "^0.8.3"
 
+"vue-cookies@^1.7.4":
+  "integrity" "sha512-mOS5Btr8V9zvAtkmQ7/TfqJIropOx7etDAgBywPCmHjvfJl2gFbH2XgoMghleLoyyMTi5eaJss0mPN7arMoslA=="
+  "resolved" "https://registry.npmjs.org/vue-cookies/-/vue-cookies-1.7.4.tgz"
+  "version" "1.7.4"
+
 "vue-eslint-parser@^7.0.0":
   "integrity" "sha512-ehmmrLZNYLUoKayvVW8l8HyPQIfuYZHiJoQLRP3dapDlTU7bGs4tqIKVGdAEpMuXS/b4R/PImCt7Tkj4UhX1SQ=="
   "resolved" "https://registry.npmjs.org/vue-eslint-parser/-/vue-eslint-parser-7.8.0.tgz"

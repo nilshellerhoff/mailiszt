@@ -55,4 +55,10 @@ class User extends Base {
         }
         return false;
     }
+
+    public static function deleteToken($token) {
+        // deleta a token from the DB
+        $db = new DB();
+        $db->delete("authtoken", ["s_token" => $token]);
+    }
 }
