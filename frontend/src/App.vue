@@ -123,6 +123,7 @@ export default {
         .then(() => {
           this.accessToken = null;
           this.$cookies.set("accessToken", "");
+          this.$router.push({ name: "Login" })
           return true;
         });
     },
