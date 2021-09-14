@@ -54,7 +54,7 @@
           v-model="mailbox.s_username"
         ></v-text-field>
       </v-col>
-      <v-col cols=6>
+      <v-col cols="6">
         <v-text-field
           v-model="mailbox.s_password"
           :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
@@ -64,23 +64,43 @@
         ></v-text-field>
       </v-col>
     </v-row>
+    <div class="pa-4">
+      <BooleanInput
+        ref="boolInp"
+        @change="getSql()"
+        :entities="groupsAvail"
+        :condition="groups"
+      ></BooleanInput>
+      <v-row>
+        <v-col cols="12">
+          <v-text-field disabled v-model="sql"></v-text-field>
+        </v-col>
+      </v-row>
+    </div>
   </DetailsPopup>
 </template>
 
 <script>
 import DetailsPopup from "@/components/DetailsPopup.vue";
+import BooleanInput from "@/components/BooleanInput.vue";
 
 export default {
   name: "MailboxPopup",
-  props: ["popupTitle", "mailbox", "btnState"],
+  props: ["popupTitle", "mailbox", "btnState", "groupsAvail", "groups"],
   data: function () {
     return {
-      showPassword: false
-};
+      showPassword: false,
+      sql: "",
+    };
   },
   components: {
     DetailsPopup,
+    BooleanInput,
   },
-  methods: {},
+  methods: {
+    getSql() {
+      return (this.sql = this.$refs.boolInp.getSqlExpression("i_group"));
+    },
+  },
 };
 </script>

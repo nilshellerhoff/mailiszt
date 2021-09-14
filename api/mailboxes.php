@@ -40,3 +40,14 @@ Route::add('/api/mailbox/([0-9]*)', function($i_mailbox) {
     $mailbox = new Mailbox($i_mailbox);
     $mailbox->delete();
 }, 'DELETE');
+
+Route::add('/api/mailbox/([0-9]*)/groups', function($i_mailbox) {
+    $mailbox = new Mailbox($i_mailbox);
+    return makeResponse($mailbox->getGroups());
+}, 'GET');
+
+Route::add('/api/mailbox/([0-9]*)/groups', function($i_mailbox) {
+    $mailbox = new Mailbox($i_mailbox);
+    $mailbox->setGroups(getPutData());
+    $mailbox->save();
+}, 'PUT');
