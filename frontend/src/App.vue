@@ -85,6 +85,7 @@ export default {
       }
     },
     loggedIn() {
+      this.readCookie();
       return this.accessToken != null;
     },
     checkLogin() {
