@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="login-background"></div>
-    <v-dialog value="true" max-width="400" persistent>
+    <v-dialog value="true" max-width="400" persistent hide-overlay="true">
       <v-card max-width="400" class="pa-4 mx">
         <v-card-title> Login </v-card-title>
         <v-form @submit.prevent="login">
