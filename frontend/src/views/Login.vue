@@ -74,5 +74,11 @@ export default {
       );
     },
   },
+  mounted() {
+    // if logged in, redirect to home
+    if (this.$root.$refs.App.loggedIn()) {
+      this.$router.push("/")
+    }
+  }
 };
 </script>
