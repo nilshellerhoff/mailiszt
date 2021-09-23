@@ -90,7 +90,11 @@ class DB extends SQLite3 {
             $stmt->bindValue($i+1, $parameters[$i]);
         }
 
-        return $stmt->execute()->fetchArray()[0];
+        $result = $stmt->execute()->fetchArray();
+        if ($result) {
+            return $result[0];
+        }
+        return $result;
     }
 
     public function insert($table, $values) {
