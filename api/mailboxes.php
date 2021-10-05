@@ -41,6 +41,7 @@ Route::add('/api/mailbox/([0-9]*)', function($i_mailbox) {
     $mailbox->delete();
 }, 'DELETE');
 
+// groups management
 Route::add('/api/mailbox/([0-9]*)/groups', function($i_mailbox) {
     $mailbox = new Mailbox($i_mailbox);
     return makeResponse($mailbox->getGroups());
@@ -51,3 +52,26 @@ Route::add('/api/mailbox/([0-9]*)/groups', function($i_mailbox) {
     $mailbox->setGroups(getPutData());
     $mailbox->save();
 }, 'PUT');
+
+// actions for forwarding mails
+Route::add('/api/mailbox/forward', function() {
+    $db = new DB();
+    $mailbox_ids = $db->queryColumn("SELECT i_mailbox FROM mailbox");
+    foreach ($mailbox_ids as $id) {
+        $mailbox = new Mailbox($id = $id);
+        $mails = $mailbox->fetchMails();
+        foreach ($mails as $mail) {
+            $mail->save();
+            $mail->forwardMail($mailbox);
+        }
+    }
+});
+
+Route::add('/api/mailbox/([0-9]*)/forward', function($i_mailbox) {
+    $mailbox = new Mailbox($id = $i_mailbox);
+    $mails = $mailbox->fetchMails();
+    foreach ($mails as $mail) {
+        $mail->save();
+        $mail->forwardMail($mailbox);
+    }
+});
