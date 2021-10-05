@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="login-background"></div>
-    <v-dialog value="true" max-width="400" persistent hide-overlay="true">
+    <v-dialog value="true" max-width="400" persistent :hide-overlay="true">
       <v-card max-width="400" class="pa-4 mx">
         <v-card-title> Login </v-card-title>
         <v-form @submit.prevent="login">
@@ -11,17 +11,14 @@
             prepend-icon="mdi-account"
             :error="loginError"
           ></v-text-field>
-          <v-text-field
-            style="z-index: 5000"
-            v-model="password"
-            :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-            :type="showPassword ? 'text' : 'password'"
+          <PasswordInput
+            ref="passwordInput"
             label="Password"
-            @click:append="showPassword = !showPassword"
-            prepend-icon="mdi-lock"
+            :password="password"
             :error="loginError"
-            :messages="[loginError ? 'Wrong username or password' : '']"
-          ></v-text-field>
+            :message="loginError ? 'Wrong username or password' : ''"
+            :prepend-icon="'mdi-lock'"
+          ></PasswordInput>
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="primary" type="submit" :loading="btnLoading">
@@ -49,8 +46,11 @@
 </style>
 
 <script>
+import PasswordInput from "@/components/PasswordInput.vue";
+
 export default {
   name: "Login",
+  components: { PasswordInput },
   data: () => ({
     username: "",
     password: "",
@@ -60,6 +60,7 @@ export default {
   }),
   methods: {
     login() {
+      this.password = this.$refs.passwordInput.password;
       this.btnLoading = true;
       this.$root.$refs.App.login(this.username, this.password).then(
         (status) => {
@@ -77,8 +78,8 @@ export default {
   mounted() {
     // if logged in, redirect to home
     if (this.$root.$refs.App.loggedIn()) {
-      this.$router.push("/")
+      this.$router.push("/");
     }
-  }
+  },
 };
 </script>
