@@ -12,13 +12,61 @@ Route::add('/api/users/current/login', function() {
 }, 'PUT');
 
 Route::add('/api/users/current/logout', function() {
-    $token = getPutData()["accessToken"];
-    User::deleteToken($token);
+    $auth = checkAuthToken();
+    if (!$auth) {
+        return 'invalid authentication';
+    } else {
+        User::deleteToken($auth["s_token"]);
+    }
 }, 'PUT');
 
 Route::add('/api/users/current', function() {
     // return info about the current user
-    $userid = User::idFromToken(getPutData()["accessToken"]);
+    $auth = checkAuthToken();
+    if (!$auth) {
+        return 'invalid authentication';
+    } else {
+        $userid = $auth["i_user"];
+        $user = new User($userid);
+        return makeResponse($user->apiGetInfo($auth["s_role"])); 
+    }
+}, 'PUT');
+
+Route::add('/api/users/current/password', function() {
+    $put_data = getPutData();
+
+    $oldPass =  $put_data["oldPassword"];
+    $newPass1 = $put_data["newPassword1"];
+    $newPass2 = $put_data["newPassword2"];
+
+    if ($newPass1 != $newPass2) {
+        return makeResponse("passwords do not match", 400);
+    }
+
+    $userid = User::idFromToken($put_data["accessToken"]);
     $user = new User($userid);
-    return makeResponse($user->apiGetInfo("ADMIN"));
+
+    if (!$user->checkPassword($userid, $oldPass)) {
+        return makeResponse("wrong old password", 403);
+    }
+
+    $user->updatePassword($newPass1);
+    $user->save();
+
+    // return "password changed to '$newPass1'";
+    return makeResponse("password updated", 200);
+}, 'PUT');
+
+Route::add('/api/users/([0-9]*)/password', function($userid) {
+    $put_data = getPutData();
+
+    $newPass = $put_data["newPassword2"];
+
+    $user = new User($userid);
+
+    $user->updatePassword($newPass);
+    $user->save();
+
+    return "password changed to '$newPass'";
+    // return makeResponse("password updated", 200);
 }, 'PUT');

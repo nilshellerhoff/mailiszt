@@ -56,12 +56,14 @@ class User extends Base {
         return false;
     }
 
-    public static function checkAuthentication($username, $token) {
+    public static function checkAuthentication($token) {
         // check if authToken is valid
         $db = new DB();
-        $tokenCreated = $db->queryScalar("SELECT d_inserted FROM authtoken WHERE s_token = ?", [$token]);
-        if (isset($tokenCreated)) {
-            return true;
+        if ($token) {
+            $tokenCreated = $db->queryRow("SELECT * FROM authtoken WHERE s_token = ?", [$token]);
+            if ($tokenCreated) {
+                return $tokenCreated;
+            }
         }
         return false;
     }
