@@ -22,10 +22,16 @@ function makeResponse($data, $responseCode = 200) {
     return json_encode($data);
 }
 
-function checkAuthentication() {
-    // return the role of querying user
-    // todo
-    return 'ADMIN';
+function checkAuthToken() {
+    // return the role of querying user using the supplied token (returns empty if invalid or no token)
+    // right now there is only "ADMIN" or no auth
+    $token = getallheaders()['Authorization'];
+    $auth = User::checkAuthentication($token);
+    if ($auth) {
+        $auth["s_role"] = 'ADMIN';
+        return $auth;
+    }
+    return false;
 }
 
 // include api definitions
