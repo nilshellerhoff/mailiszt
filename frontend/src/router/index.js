@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 import EmptyRouterView from "@/views/EmptyRouterView.vue";
 import Login from '@/views/Login.vue'
+import Settings from '@/views/Settings.vue'
 
 import AddMember from '@/views/members/AddMember.vue'
 import Members from '@/views/members/Members.vue'
@@ -28,6 +29,11 @@ const routes = [
     path: "/login",
     name: "Login",
     component: Login,
+  },
+  {
+    path: "/settings",
+    name: "Settings",
+    component: Settings,
   },
   // members
   {
