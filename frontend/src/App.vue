@@ -82,6 +82,8 @@ export default {
       const accessToken = this.$cookies.get("accessToken");
       if (accessToken) {
         this.accessToken = accessToken;
+        this.$api.defaults.headers["Authorization"] = accessToken;
+        this.$root.$emit('reloadData')
       }
     },
     loggedIn() {
@@ -95,10 +97,12 @@ export default {
       }
     },
     getUserInfo() {
-      // populate the userinfo object
-      this.$api.put("users/current/", { accessToken: this.accessToken }).then(response => {
-        this.userInfo = response.data
-      })
+      if (this.loggedIn()) {
+        // populate the userinfo object
+        this.$api.put("users/current/", { accessToken: this.accessToken }).then(response => {
+          this.userInfo = response.data
+        })
+      }
     },
 
     // generic functions for login managment
@@ -109,6 +113,7 @@ export default {
         .then((response) => {
           if (response.data) {
             this.accessToken = response.data;
+            this.$api.defaults.headers["Authorization"] = response.data;
             this.$cookies.set("accessToken", response.data);
             return true;
           } else {
@@ -122,6 +127,7 @@ export default {
         .put("users/current/logout", { accessToken: this.accessToken })
         .then(() => {
           this.accessToken = null;
+          this.$api.defaults.headers["Authorization"] = null;
           this.$cookies.set("accessToken", "");
           this.$router.push({ name: "Login" })
           return true;
