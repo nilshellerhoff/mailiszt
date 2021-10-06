@@ -60,10 +60,14 @@ class Mailbox extends Base {
 
     public function getRecipients() {
         // get the recipient list for this address
-        return [
-            "***REMOVED***",
-            "***REMOVED***"
-        ];
+        $db = new DB();
+        $whereCond = $this->properties["s_groupssql"];
+        $sql_query = "
+SELECT m.* FROM member m
+INNER JOIN member2group mg ON mg.i_member = m.i_member
+WHERE $whereCond
+        ";
+        return $db->queryAll($sql_query);
     }
 
     public function getGroups() {

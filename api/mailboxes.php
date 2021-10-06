@@ -53,6 +53,12 @@ Route::add('/api/mailbox/([0-9]*)/groups', function($i_mailbox) {
     $mailbox->save();
 }, 'PUT');
 
+// getting recipients of mailbox
+Route::add('/api/mailbox/([0-9]*)/recipients', function($i_mailbox) {
+    $mailbox = new Mailbox($i_mailbox);
+    return makeResponse($mailbox->getRecipients());
+}, 'GET');
+
 // actions for forwarding mails
 Route::add('/api/mailbox/forward', function() {
     $db = new DB();
