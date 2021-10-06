@@ -117,8 +117,8 @@ class Mail extends Base {
         }
 
         // send the mail to all recipients in $mailbox
-        foreach ($mailbox->getRecipients() as $address) {
-            $mail->addAddress($address);
+        foreach ($mailbox->getRecipients() as $recipient) {
+            $mail->addAddress($recipient["s_email"]);
             $mail->send();
             $mail->clearAddresses();
         }
