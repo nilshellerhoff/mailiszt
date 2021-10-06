@@ -17,7 +17,8 @@ function getPutData() {
     return json_decode(file_get_contents('php://input'), true);
 }
 
-function makeResponse($data, $responseCode = 200) {
+function makeResponse($data, $responseCode = 200, $content_type = 'application/json') {
+    header("Content-Type: $content_type");
     http_response_code($responseCode);
     return json_encode($data);
 }
