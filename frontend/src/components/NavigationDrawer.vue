@@ -8,7 +8,7 @@
         <v-spacer></v-spacer>
         <v-toolbar-title class="ma-4">{{$root.$refs.App.userInfo.s_username}}</v-toolbar-title>
         <v-btn @click="logout">
-          <v-icon>mdi-logout</v-icon>log out
+          <v-icon left>mdi-logout</v-icon>log out
         </v-btn>
         </v-app-bar>
 

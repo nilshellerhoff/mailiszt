@@ -43,7 +43,7 @@
       <v-col cols="5"><v-text-field disabled="true" v-model="cronUrl"></v-text-field></v-col>
       <v-col cols="3">
         <v-btn @click="urlCopy">
-          <v-icon>mdi-content-copy</v-icon>
+          <v-icon left>mdi-content-copy</v-icon>
           copy
         </v-btn>
       </v-col>
