@@ -63,7 +63,7 @@ class Mailbox extends Base {
         $db = new DB();
         $whereCond = $this->properties["s_groupssql"];
         $sql_query = "
-SELECT m.* FROM member m
+SELECT DISTINCT m.* FROM member m
 INNER JOIN member2group mg ON mg.i_member = m.i_member
 WHERE $whereCond
         ";
