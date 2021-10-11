@@ -23,10 +23,10 @@
           <v-list-item>
             <v-list-item-content>
               <v-list-item-title class="text-h6">
-                Application
+                Mailiszt
               </v-list-item-title>
               <v-list-item-subtitle>
-                subtext
+                mailing list manager
               </v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
@@ -35,7 +35,7 @@
 
           <v-list-item-group
           v-model="group"
-          active-class="deep-purple--text text--accent-4"
+          active-class="blue--text text--accent-4"
           >
             <router-link v-for="link in links" :key="link.url" :to=link.url>
               <v-list-item link>
