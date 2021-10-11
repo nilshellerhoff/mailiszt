@@ -46,10 +46,6 @@ export default {
         icon: "mdi-home",
       },
       {
-        title: "About",
-        url: "/about",
-      },
-      {
         title: "Members",
         url: "/members",
         icon: "mdi-account",
