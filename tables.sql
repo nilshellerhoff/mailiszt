@@ -48,6 +48,16 @@ CREATE TABLE attachment (
     d_updated TEXT
 );
 
+CREATE TABLE mail2member (
+    i_mail2member INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    i_mail INTEGER,
+    i_member INTEGER,
+    d_sent TEXT,
+    s_email TEXT,
+    d_inserted TEXT,
+    d_updated TEXT
+)
+
 CREATE TABLE user (
     i_user INTEGER PRIMARY KEY,
     s_username TEXT,
@@ -57,7 +67,7 @@ CREATE TABLE user (
     d_updated TEXT
 );
 
-CREATE TABLE authtoken (
+CREATE TABLE iauthtoken (
     i_authtoken INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     i_user INTEGER,
     s_username TEXT,
