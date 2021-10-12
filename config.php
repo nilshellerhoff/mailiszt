@@ -23,3 +23,6 @@ define('IMAP_PENDING_FOLDER', 'INBOX');
 
 // how long are authentication tokens valid in seconds
 define('AUTH_TOKEN_LIFETIME', 3600);
+
+// date format used in PHP for DB operations
+define('DATE_FORMAT', "Y/m/d H:i:s");
