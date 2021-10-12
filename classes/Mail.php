@@ -32,10 +32,16 @@ class Mail extends Base {
 
         // check if mail is already present in DB
         $db = new DB();
-        $this->dontSave = $db->queryScalar(
-            "SELECT 1 FROM mail WHERE s_internalid = ?", 
+        $mailid = $db->queryScalar(
+            "SELECT i_mail FROM mail WHERE s_internalid = ?", 
             [$this->properties["s_internalid"]]
         );
+
+        // if mail is present in DB, set dont save flag and populate i_mail
+        if (isset($this->dontSave) && $this->dontSave) {
+            $this->dontSave = true;
+            $this->properties["i_mail"] = $mailid;
+        }
 
         // crawl attachments
         $this->properties["n_attachments"] = 0;
@@ -121,7 +127,23 @@ class Mail extends Base {
             $mail->addAddress($recipient["s_email"]);
             $mail->send();
             $mail->clearAddresses();
+
+            // mark mail as sent
+            $this->markSentMail($recipient["i_member"]);
         }
+    }
+
+    private function markSentMail($i_member) {
+        // insert a row into the mail2member table for each time a mail has been sent to a recipient
+        $db = new DB();
+        $db->insert(
+            "mail2member",
+            [
+                "i_mail" => $this->properties["i_mail"],
+                "i_member" => $i_member,
+                "d_sent" => date(DATE_FORMAT),
+            ]
+        );
     }
 }
 
