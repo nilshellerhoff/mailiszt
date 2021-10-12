@@ -40,3 +40,4 @@ include('members.php');
 include('groups.php');
 include('mailboxes.php');
 include('user.php');
+include('mail.php');

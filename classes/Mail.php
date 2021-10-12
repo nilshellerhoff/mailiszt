@@ -145,4 +145,13 @@ class Mail extends Base {
             ]
         );
     }
+
+    public function getRecipients() {
+        // get the recipients which a mail has been sent to
+        $db = new DB();
+        return $db->queryAll(
+            "SELECT * FROM mail2member WHERE i_mail = ?",
+            [$this->properties["i_mail"]]
+        );
+    }
 }
