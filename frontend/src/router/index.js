@@ -17,6 +17,9 @@ import AddMailbox from '@/views/mailboxes/AddMailbox.vue'
 import Mailboxes from '@/views/mailboxes/Mailboxes.vue'
 import EditMailbox from '@/views/mailboxes/EditMailbox.vue'
 
+import Mails from '@/views/mails/Mails.vue'
+import ViewMail from '@/views/mails/ViewMail.vue'
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -115,6 +118,26 @@ const routes = [
         components: {
           default: Mailboxes,
           dialog: AddMailbox,
+        }
+      },
+    ],
+  },
+  // mails
+  {
+    path: "/mail",
+    component: EmptyRouterView,
+    children: [
+      {
+        name: 'Mails',
+        path: '',
+        component: Mails,
+      },
+      {
+        path: "/:id",
+        name: "Mailboxes.View",
+        components: {
+          default:  Mails,
+          dialog: ViewMail,
         }
       },
     ],
