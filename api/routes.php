@@ -17,10 +17,16 @@ function getPutData() {
     return json_decode(file_get_contents('php://input'), true);
 }
 
-function makeResponse($data, $responseCode = 200, $content_type = 'application/json') {
-    header("Content-Type: $content_type");
+function makeResponse($data, $responseCode = 200, $type = 'json') {
     http_response_code($responseCode);
-    return json_encode($data);
+    if ($type == 'json') {
+        header("Content-Type: 'application/json");
+        return json_encode($data);
+    }
+    else if ($type == 'text') {
+        header("Content-Type 'text/plain'");
+        return $data;
+    }
 }
 
 function checkAuthToken() {

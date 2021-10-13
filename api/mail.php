@@ -7,7 +7,7 @@ use Steampixel\Route;
 Route::add('/api/mail', function() {
     $auth = checkAuthToken();
     if (!$auth) {
-        return 'invalid authentication';
+        return makeResponse('invalid authentication', 403);
     } else {
         $db = new DB();
         $mails = [];
@@ -23,7 +23,7 @@ Route::add('/api/mail', function() {
 Route::add('/api/mail/([0-9]*)/recipient', function($i_mail) {
     $auth = checkAuthToken();
     if (!$auth) {
-        return 'invalid authentication';
+        return makeResponse('invalid authentication', 403);
     } else {
         $mail = new Mail($i_mail);
         return makeResponse($mail->getRecipients());
