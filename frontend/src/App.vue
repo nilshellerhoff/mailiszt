@@ -58,6 +58,11 @@ export default {
       {
         title: "Mailboxes",
         url: "/mailboxes",
+        icon: "mdi-email-multiple",
+      },
+      {
+        title: "Mails",
+        url: "/Mail",
         icon: "mdi-email",
       },
       {
