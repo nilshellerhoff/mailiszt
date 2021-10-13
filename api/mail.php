@@ -20,6 +20,16 @@ Route::add('/api/mail', function() {
     }
 }, 'GET');
 
+Route::add('/api/mail/([0-9]*)', function($i_mail) {
+    $auth = checkAuthToken();
+    if (!$auth) {
+        return makeResponse('invalid authentication', 403);
+    } else {
+        $mail = new Mail($i_mail);
+        return makeResponse($mail->properties);
+    }
+}, 'GET');
+
 Route::add('/api/mail/([0-9]*)/recipient', function($i_mail) {
     $auth = checkAuthToken();
     if (!$auth) {
