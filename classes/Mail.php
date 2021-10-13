@@ -129,19 +129,20 @@ class Mail extends Base {
             $mail->clearAddresses();
 
             // mark mail as sent
-            $this->markSentMail($recipient["i_member"]);
+            $this->markSentMail($recipient);
         }
     }
 
-    private function markSentMail($i_member) {
+    private function markSentMail($recipient) {
         // insert a row into the mail2member table for each time a mail has been sent to a recipient
         $db = new DB();
         $db->insert(
             "mail2member",
             [
                 "i_mail" => $this->properties["i_mail"],
-                "i_member" => $i_member,
+                "i_member" => $recipient["i_member"],
                 "d_sent" => date(DATE_FORMAT),
+                "s_email" => $recipient["s_email"]
             ]
         );
     }
