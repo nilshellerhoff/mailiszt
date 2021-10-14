@@ -9,11 +9,12 @@
       <v-card>
         <v-toolbar dark color="secondary">
           <v-btn icon dark @click="$router.back()">
-            <v-icon>mdi-arrow-left</v-icon>
+            <v-icon>mdi-close</v-icon>
           </v-btn>
           <v-toolbar-title>{{popupTitle}}</v-toolbar-title>
           <v-spacer></v-spacer>
           <v-btn
+            v-if="btnState"
             large
             width="100"
             :disabled="btnState == 'disabled'"
@@ -32,9 +33,9 @@
             <v-icon v-if="btnState === 'failed'">mdi-close</v-icon>
           </v-btn>
         </v-toolbar>
-        <v-card width=98% flat>
+        <div width=98% flat class="pa-4">
             <slot></slot>
-        </v-card>
+        </div>
       </v-card>
     </v-dialog>
   </v-row>
