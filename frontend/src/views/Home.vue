@@ -42,13 +42,11 @@
 </template>
 
 <script>
-import MailList from "@/components/MailList.vue";
 import StatCard from "@/components/StatCard.vue";
 
 export default {
   name: "Home",
   components: {
-    MailList,
     StatCard,
   },
   data: () => ({
