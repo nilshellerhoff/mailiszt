@@ -124,7 +124,7 @@ const routes = [
   },
   // mails
   {
-    path: "/mail",
+    path: "/mails",
     component: EmptyRouterView,
     children: [
       {
@@ -133,7 +133,7 @@ const routes = [
         component: Mails,
       },
       {
-        path: "/:id",
+        path: ":id",
         name: "Mailboxes.View",
         components: {
           default:  Mails,
