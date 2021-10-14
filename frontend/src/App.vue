@@ -62,7 +62,7 @@ export default {
       },
       {
         title: "Mails",
-        url: "/Mail",
+        url: "/mails",
         icon: "mdi-email",
       },
       {
