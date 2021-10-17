@@ -11,6 +11,7 @@
         </v-container>
       </v-container>
     </NavigationDrawer>
+    <confirm ref="confirm"></confirm>
   </v-app>
 </template>
 
@@ -23,11 +24,13 @@ v-sheet {
 
 <script>
 import NavigationDrawer from "@/components/NavigationDrawer.vue";
+import Confirm from '@/components/Confirm.vue'
 
 export default {
   name: "App",
   components: {
     NavigationDrawer,
+    Confirm
   },
   computed: {
     contentWidth() {
@@ -142,6 +145,9 @@ export default {
     this.readCookie();
     this.checkLogin();
     this.getUserInfo();
+
+    // make the confirm dialog accessible
+    this.$root.$confirm = this.$refs.confirm.open
   },
   updated() {
     this.checkLogin();
