@@ -51,6 +51,9 @@ export default {
   },
   mounted() {
     this.getGroup();
+    this.$root.$on('reloadData', () => {
+      this.getGroup()
+    })
   }
 };
 

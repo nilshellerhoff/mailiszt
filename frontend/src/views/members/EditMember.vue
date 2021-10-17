@@ -51,6 +51,9 @@ export default {
   },
   mounted() {
     this.getMember();
+    this.$root.$on('reloadData', () => {
+      this.getMember();
+    })
   },
 };
 </script>

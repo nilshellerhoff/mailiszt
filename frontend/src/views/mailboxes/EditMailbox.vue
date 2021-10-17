@@ -79,6 +79,11 @@ export default {
     this.getMailbox();
     this.getGroupsAvail();
     this.getGroups();
+    this.$root.$on('reloadData', () => {
+      this.getMailbox()
+      this.getGroupsAvail()
+      this.getGroups()
+    })
   },
 };
 </script>
