@@ -7,7 +7,7 @@ use Steampixel\Route;
 Route::add('/api/group', function() {
     $auth = checkAuthToken();
     if (!$auth) {
-        return 'invalid authentication';
+        return makeResponse('invalid authentication', 403);
     } else {
         $db = new DB();
         $group_ids = $db->queryColumn("SELECT i_group FROM _group");
@@ -23,7 +23,7 @@ Route::add('/api/group', function() {
 Route::add('/api/group/add', function() {
     $auth = checkAuthToken();
     if (!$auth) {
-        return 'invalid authentication';
+        return makeResponse('invalid authentication', 403);
     } else {
         $group = new Group(
             $id = null,
@@ -38,7 +38,7 @@ Route::add('/api/group/add', function() {
 Route::add('/api/group/([0-9]*)', function($i_group) {
     $auth = checkAuthToken();
     if (!$auth) {
-        return 'invalid authentication';
+        return makeResponse('invalid authentication', 403);
     } else {
         $group = new Group((int)$i_group);
         return makeResponse($group->apiGetInfo("ADMIN"));
@@ -48,7 +48,7 @@ Route::add('/api/group/([0-9]*)', function($i_group) {
 Route::add('/api/group/([0-9]*)', function($i_group) {
     $auth = checkAuthToken();
     if (!$auth) {
-        return 'invalid authentication';
+        return makeResponse('invalid authentication', 403);
     } else {
         $group = new Group($i_group);
         $group->updateProperties(getPutData());
@@ -59,7 +59,7 @@ Route::add('/api/group/([0-9]*)', function($i_group) {
 Route::add('/api/group/([0-9]*)', function($i_group) {
     $auth = checkAuthToken();
     if (!$auth) {
-        return 'invalid authentication';
+        return makeResponse('invalid authentication', 403);
     } else {
         $group = new Group($i_group);
         $group->delete();
@@ -70,7 +70,7 @@ Route::add('/api/group/([0-9]*)', function($i_group) {
 Route::add('/api/group/([0-9]*)/members', function($i_group) {
     $auth = checkAuthToken();
     if (!$auth) {
-        return 'invalid authentication';
+        return makeResponse('invalid authentication', 403);
     } else {
         $group = new Group($id = $i_group);
         return makeResponse($group->getMembers());
@@ -80,7 +80,7 @@ Route::add('/api/group/([0-9]*)/members', function($i_group) {
 Route::add('/api/group/([0-9]*)/members', function($i_group) {
     $auth = checkAuthToken();
     if (!$auth) {
-        return 'invalid authentication';
+        return makeResponse('invalid authentication', 403);
     } else {
         $group = new Group($id = $i_group);
         $group->setMembers(getPutData());
