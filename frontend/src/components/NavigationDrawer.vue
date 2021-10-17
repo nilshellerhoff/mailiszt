@@ -5,6 +5,7 @@
         dark
         >
         <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+        <v-toolbar-title class="font-weight-bold">{{$route.name}}</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-toolbar-title class="ma-4">{{$root.$refs.App.userInfo.s_username}}</v-toolbar-title>
         <v-btn @click="logout">
@@ -65,7 +66,7 @@
   export default {
     name: "NavigationDrawer",
     props: [
-      "links"
+      "links",
     ],
     data: () => ({
       drawer: false,
