@@ -50,7 +50,7 @@ const routes = [
       },
       {
         path: "edit/:id",
-        name: "Members.Edit",
+        name: "Members",
         components: {
           default:  Members,
           dialog: EditMember,
@@ -58,7 +58,7 @@ const routes = [
       },
       {
         path: "add",
-        name: "Members.Add",
+        name: "Members",
         components: {
           default: Members,
           dialog: AddMember,
@@ -78,7 +78,7 @@ const routes = [
       },
       {
         path: "edit/:id",
-        name: "Groups.Edit",
+        name: "Groups",
         components: {
           default:  Groups,
           dialog: EditGroup,
@@ -86,7 +86,7 @@ const routes = [
       },
       {
         path: "add",
-        name: "Groups.Add",
+        name: "Groups",
         components: {
           default: Groups,
           dialog: AddGroup,
@@ -106,7 +106,7 @@ const routes = [
       },
       {
         path: "edit/:id",
-        name: "Mailboxes.Edit",
+        name: "Mailboxes",
         components: {
           default:  Mailboxes,
           dialog: EditMailbox,
@@ -114,7 +114,7 @@ const routes = [
       },
       {
         path: "add",
-        name: "Mailboxes.Add",
+        name: "Mailboxes",
         components: {
           default: Mailboxes,
           dialog: AddMailbox,
@@ -134,7 +134,7 @@ const routes = [
       },
       {
         path: ":id",
-        name: "Mailboxes.View",
+        name: "Mails",
         components: {
           default:  Mails,
           dialog: ViewMail,
