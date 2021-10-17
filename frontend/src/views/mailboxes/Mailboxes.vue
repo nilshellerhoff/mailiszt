@@ -4,12 +4,12 @@
       <v-col sm="3" cols="6">
         <h1>Mailboxes</h1>
       </v-col>
-      <v-col sm="3" cols="6" align=right order="1" order-sm="2" class=pa-2>
+      <v-col sm="3" cols="6" align="right" order="1" order-sm="2" class="pa-2">
         <router-link to="/mailboxes/add">
           <v-btn color="primary">Add new</v-btn>
         </router-link>
       </v-col>
-      <v-col sm="6" cols="12" order="2" order-sm="1" class=mt-n1>
+      <v-col sm="6" cols="12" order="2" order-sm="1" class="mt-n1">
         <v-text-field
           v-model="search"
           append-icon="mdi-magnify"
@@ -20,17 +20,22 @@
       </v-col>
     </v-row>
     <v-data-table :headers="headers" :items="mailboxes" :search="search">
-
       <!-- edit link -->
       <template v-slot:[`item.actions`]="{ item }">
         <router-link :to="'/mailboxes/edit/' + item.i_mailbox">
-          <v-icon small>mdi-pencil</v-icon>
+          <v-btn small class="mr-2">Edit</v-btn>
         </router-link>
-        <v-icon @click="deleteMember(item.i_mailbox)" small>mdi-delete</v-icon>
+        <v-btn small color="error" @click="deleteMailbox(item.i_mailbox, item.s_name)">delete</v-btn>
       </template>
     </v-data-table>
   </v-container>
 </template>
+
+<style scoped>
+  a {
+    text-decoration: none;
+  }
+</style>
 
 <script>
 export default {
@@ -41,7 +46,7 @@ export default {
     headers: [
       { text: "Name", value: "s_name" },
       { text: "E-Mail address", value: "s_address" },
-      { text: "Actions", value: "actions" },
+      { text: "", value: "actions", sortable: false, align: "right" },
     ],
   }),
   methods: {
@@ -50,13 +55,19 @@ export default {
         this.mailboxes = response.data;
       });
     },
-    deleteMailbox(i_mailbox) {
-      console.log(`Deleting ${i_mailbox}`)
-      this.$api.delete(`/mailbox/${i_mailbox}`).then(() => {
-        console.log(`Deleted ${i_mailbox}`)
-        this.$root.$emit('reloadData')
-      })
-    }
+    deleteMailbox(i_mailbox, name) {
+      this.$root
+        .$confirm("Delete group", `Are you sure you want to delete the mailinglist ${name}?`, {
+          color: "red",
+        })
+        .then((confirm) => {
+          if (confirm) {
+            this.$api.delete(`/mailbox/${i_mailbox}`).then(() => {
+              this.$root.$emit("reloadData");
+            });
+          }
+        });
+    },
   },
   mounted() {
     this.getMailboxes();

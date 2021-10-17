@@ -23,13 +23,20 @@
       <!-- edit link -->
       <template v-slot:[`item.actions`]="{ item }">
         <router-link :to="'/groups/edit/' + item.i_group">
-          <v-icon small>mdi-pencil</v-icon>
+          <v-btn small class="mr-2">Edit</v-btn>
         </router-link>
-        <v-icon @click="deleteGroup(item.i_group)" small>mdi-delete</v-icon>
+        <v-btn small color="error" @click="deleteGroup(item.i_group, item.s_name)">Delete</v-btn>
       </template>
+
     </v-data-table>
   </v-container>
 </template>
+
+<style scoped>
+  a {
+    text-decoration: none;
+  }
+</style>
 
 <script>
 export default {
@@ -39,7 +46,7 @@ export default {
     groups: [],
     headers: [
       { text: "Name", value: "s_name" },
-      { text: "Actions", value: "actions" },
+      { text: "", value: "actions", sortable: false, align: "right" },
     ],
   }),
   methods: {
@@ -48,10 +55,15 @@ export default {
         this.groups = response.data;
       });
     },
-    deleteGroup(i_group) {
-      this.$api.delete(`/group/${i_group}`).then(() => {
-        this.$root.$emit('reloadData')
-      })
+    deleteGroup(i_group, name) {
+      this.$root.$confirm('Delete group', `Are you sure you want to delete the group ${name}?`, { color: 'red' })
+        .then((confirm) => {
+          if (confirm) {
+            this.$api.delete(`/group/${i_group}`).then(() => {
+              this.$root.$emit('reloadData')
+            })
+          }
+        });
     }
   },
   mounted() {

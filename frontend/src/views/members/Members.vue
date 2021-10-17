@@ -57,7 +57,7 @@ export default {
       });
     },
     deleteMember(i_member, name) {
-      this.$root.$confirm('Delete member', `Are you sure you want to delete ${name}?`, { color: 'red' })
+      this.$root.$confirm('Delete member', `Are you sure you want to delete the member ${name}?`, { color: 'red' })
         .then((confirm) => {
           if (confirm) {
             // console.log(`Deleting ${i_member}`)
