@@ -23,16 +23,21 @@
       <!-- edit link -->
       <template v-slot:[`item.actions`]="{ item }">
         <router-link :to="'/members/edit/' + item.i_member">
-          <v-btn>Edit</v-btn>
+          <v-btn small class="mr-2">Edit</v-btn>
         </router-link>
-        <v-btn color="red" @click="deleteMember(item.i_member, item.s_name1 + ' ' + item.s_name2)">Delete</v-btn>
+        <v-btn small color="error" @click="deleteMember(item.i_member, item.s_name1 + ' ' + item.s_name2)">Delete</v-btn>
       </template>
     </v-data-table>
   </v-container>
 </template>
 
-<script>
+<style scoped>
+  a {
+    text-decoration: none;
+  }
+</style>
 
+<script>
 export default {
   name: "Home",
   data: () => ({
@@ -42,7 +47,7 @@ export default {
       { text: "First name", value: "s_name1" },
       { text: "Second name", value: "s_name2" },
       { text: "Email", value: "s_email" },
-      { text: "Actions", value: "actions" },
+      { text: "", value: "actions", sortable: false, align: "right"},
     ],
   }),
   methods: {
