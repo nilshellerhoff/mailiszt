@@ -21,11 +21,11 @@
     <iframe class="mailbody" :srcdoc="getBodyForDisplay()"></iframe>
     <v-row>
       <v-col cols="4">
-        Email sent to:
+        {{recipients.length}} recipients{{recipients.length > 0 ? ':' : ''}}
       </v-col>
       <v-spacer></v-spacer>
       <v-col cols="4">
-        <v-text-field dense label="Search" v-model="recipientsSearch"></v-text-field>
+        <v-text-field dense label="Search" v-model="recipientsSearch" v-if="recipients.length > 0"></v-text-field>
       </v-col>
     </v-row>
     <v-chip-group>
