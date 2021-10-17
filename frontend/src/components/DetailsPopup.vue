@@ -8,7 +8,7 @@
     >
       <v-card>
         <v-toolbar dark color="secondary">
-          <v-btn icon dark @click="$router.back()">
+          <v-btn icon dark @click="$router.push(closeUrl)">
             <v-icon>mdi-close</v-icon>
           </v-btn>
           <v-toolbar-title>{{popupTitle}}</v-toolbar-title>
@@ -46,7 +46,8 @@ export default {
   name: "DetailsPopup",
   props: [
     'btnState',
-    'popupTitle'
+    'popupTitle',
+    'closeUrl'
   ],
   data: () => ({
     dialog: true

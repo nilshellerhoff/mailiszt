@@ -3,6 +3,7 @@
     @save="$emit('save')"
     :btnState="btnState"
     :popupTitle="popupTitle"
+    closeUrl="/groups"
   >
     <v-text-field
       prepend-icon="mdi-form-textbox"

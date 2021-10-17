@@ -1,6 +1,7 @@
 <template>
   <DetailsPopup
     :popupTitle="popupTitle"
+    closeUrl="/mails"
   >
     <table>
       <tr>

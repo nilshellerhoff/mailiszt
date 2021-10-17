@@ -3,6 +3,7 @@
     @save="$emit('save')"
     :btnState="btnState"
     :popupTitle="popupTitle"
+    closeUrl="/members"
   >
     <v-text-field
       prepend-icon="mdi-account-outline"
@@ -74,6 +75,9 @@ export default {
   },
   mounted() {
     this.getAvailableGroups();
+    this.$root.$on('reloadData', () => {
+      this.getAvailableGroups();
+    })
   },
 };
 </script>
