@@ -20,27 +20,19 @@
       </v-col>
     </v-row>
     <v-data-table :headers="headers" :items="members" :search="search">
-      <!-- show active status as checkbox -->
-      <template v-slot:[`item.b_active`]="{ item }">
-        <v-checkbox
-          v-model="item.b_active"
-          :true-value="1"
-          :false-value="0"
-        ></v-checkbox>
-      </template>
-
       <!-- edit link -->
       <template v-slot:[`item.actions`]="{ item }">
         <router-link :to="'/members/edit/' + item.i_member">
-          <v-icon small>mdi-pencil</v-icon>
+          <v-btn>Edit</v-btn>
         </router-link>
-        <v-icon @click="deleteMember(item.i_member)" small>mdi-delete</v-icon>
+        <v-btn color="red" @click="deleteMember(item.i_member, item.s_name1 + ' ' + item.s_name2)">Delete</v-btn>
       </template>
     </v-data-table>
   </v-container>
 </template>
 
 <script>
+
 export default {
   name: "Home",
   data: () => ({
@@ -50,7 +42,6 @@ export default {
       { text: "First name", value: "s_name1" },
       { text: "Second name", value: "s_name2" },
       { text: "Email", value: "s_email" },
-      { text: "Active", value: "b_active" },
       { text: "Actions", value: "actions" },
     ],
   }),
@@ -60,13 +51,18 @@ export default {
         this.members = response.data;
       });
     },
-    deleteMember(i_member) {
-      console.log(`Deleting ${i_member}`)
-      this.$api.delete(`/member/${i_member}`).then(() => {
-        console.log(`Deleted ${i_member}`)
-        this.$root.$emit('reloadData')
-      })
-    }
+    deleteMember(i_member, name) {
+      this.$root.$confirm('Delete member', `Are you sure you want to delete ${name}?`, { color: 'red' })
+        .then((confirm) => {
+          if (confirm) {
+            // console.log(`Deleting ${i_member}`)
+            this.$api.delete(`/member/${i_member}`).then(() => {
+              console.log(`Deleted ${i_member}`)
+              this.$root.$emit('reloadData')
+            })
+          }
+        });
+    },
   },
   mounted() {
     this.getMembers();
