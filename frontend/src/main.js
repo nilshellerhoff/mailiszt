@@ -5,8 +5,6 @@ import router from './router'
 import VueCookies from 'vue-cookies';
 import axios from 'axios'
 
-Vue.config.productionTip = false
-
 Vue.use({
     install (Vue) {
     Vue.prototype.$api = axios.create({
