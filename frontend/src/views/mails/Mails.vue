@@ -42,7 +42,7 @@ export default {
     headers: [
       { text: "List", value: "s_tomail" },
       { text: "Subject", value: "s_subject" },
-      { text: "", value: "actions"}
+      { text: "", value: "actions", sortable: false, align: "right"}
     ],
   }),
   methods: {
