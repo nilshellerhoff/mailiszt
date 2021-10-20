@@ -20,22 +20,30 @@
       </v-col>
     </v-row>
     <v-data-table :headers="headers" :items="members" :search="search">
+      <!-- name -->
+      <template v-slot:[`item.name`]="{ item }">
+        {{ item.s_name1 }} {{ item.s_name2 }}
+      </template>
+
+      <!-- groups --> 
+      <template v-slot:[`item.groups`]="{ item }">
+        <v-chip-group column style="white-space: nowrap">
+          <div v-for="g in item.groups" :key="g.i_group">
+            <v-chip :to="`/groups/edit/${g.i_group}`" class="mr-1">{{ g.s_name }}</v-chip>
+          </div>
+        </v-chip-group>
+      </template>
+
       <!-- edit link -->
       <template v-slot:[`item.actions`]="{ item }">
-        <router-link :to="'/members/edit/' + item.i_member">
-          <v-btn small class="mr-2">Edit</v-btn>
-        </router-link>
-        <v-btn small color="error" @click="deleteMember(item.i_member, item.s_name1 + ' ' + item.s_name2)">Delete</v-btn>
+        <div style="white-space: nowrap">
+          <v-btn small class="mr-1" :to="'/members/edit/' + item.i_member">Edit</v-btn>
+          <v-btn small color="error" @click="deleteMember(item.i_member, item.s_name1 + ' ' + item.s_name2)">Delete</v-btn>
+        </div>
       </template>
     </v-data-table>
   </v-container>
 </template>
-
-<style scoped>
-  a {
-    text-decoration: none;
-  }
-</style>
 
 <script>
 export default {
@@ -44,9 +52,9 @@ export default {
     search: "",
     members: [],
     headers: [
-      { text: "First name", value: "s_name1" },
-      { text: "Second name", value: "s_name2" },
-      { text: "Email", value: "s_email" },
+      { text: "Name", value: "name" },
+      // { text: "Second name", value: "s_name2" },
+      { text: "Groups", value: "groups" },
       { text: "", value: "actions", sortable: false, align: "right"},
     ],
   }),
@@ -54,10 +62,10 @@ export default {
     getMembers() {
       this.$api.get("/member").then((response) => {
         this.members = response.data;
-      });
+      })
     },
     deleteMember(i_member, name) {
-      this.$root.$confirm('Delete member', `Are you sure you want to delete the member ${name}?`, { color: 'red' })
+      this.$root.$confirm('Delete member', `Are you sure you want to delete the member ${name}?`, { color: 'secondary' })
         .then((confirm) => {
           if (confirm) {
             // console.log(`Deleting ${i_member}`)

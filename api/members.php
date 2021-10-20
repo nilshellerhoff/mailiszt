@@ -51,7 +51,11 @@ Route::add('/api/member/([0-9]*)', function($i_member) {
         return makeResponse('invalid authentication', 403);
     } else {
         $member = new Member($i_member);
-        $member->updateProperties(getPutData());
+        $put = getPutData();
+        $memberInfo = $put;
+        unset($memberInfo['groups']);
+        $groupsInfo = $put['groups'];
+        $member->updateProperties($memberInfo);
         $member->save();
     }
 }, 'PUT');
