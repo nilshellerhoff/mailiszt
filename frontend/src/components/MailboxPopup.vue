@@ -72,18 +72,37 @@
         :entities="groupsAvail"
         :condition="groups"
       ></BooleanInput>
-      <v-row>
-        <v-col cols="12">
-          <v-text-field disabled v-model="sql"></v-text-field>
-        </v-col>
-      </v-row>
     </div>
+
+    <v-btn @click="openRecipientsPopup()">Show recipients</v-btn>
+    <Popup
+      ref="recipientsPopup"
+      :title="`Recipients for ${mailbox.s_name}`"
+      width="500"
+    >
+      <v-chip-group column>
+        <div v-for="r in recipients" :key="r.i_member">
+          <router-link :to="`/members/edit/${r.i_member}`">
+            <v-chip>
+              {{ r.s_name1 + " " + r.s_name2 }}
+            </v-chip>
+          </router-link>
+        </div>
+      </v-chip-group>
+    </Popup>
   </DetailsPopup>
 </template>
+
+<style scoped>
+  a {
+    text-decoration: none;
+  }
+</style>
 
 <script>
 import DetailsPopup from "@/components/DetailsPopup.vue";
 import BooleanInput from "@/components/BooleanInput.vue";
+import Popup from "@/components/Popup.vue";
 
 export default {
   name: "MailboxPopup",
@@ -92,15 +111,25 @@ export default {
     return {
       showPassword: false,
       sql: "",
+      recipients: null,
     };
   },
   components: {
     DetailsPopup,
     BooleanInput,
+    Popup,
   },
   methods: {
     getSql() {
       return (this.sql = this.$refs.boolInp.getSqlExpression("i_group"));
+    },
+    openRecipientsPopup() {
+      this.$api
+        .put(`/mailbox/${this.mailbox.i_mailbox}/recipients`, this.groups)
+        .then((response) => {
+          this.recipients = response.data;
+          this.$refs.recipientsPopup.open();
+        });
     },
   },
 };
