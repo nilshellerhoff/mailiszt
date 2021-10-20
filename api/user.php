@@ -8,7 +8,11 @@ Route::add('/api/users/current/login', function() {
     $token = User::authenticate(getPutData()["username"], getPutData()["password"]);
     // sleep one second to prevent brute forcing -> this is bad, later implement a real rate limiter
     sleep(1);
-    return makeResponse($token);
+    if ($token) {
+        return makeResponse($token);
+    } else {
+        return makeResponse('invalid authentication', 403);
+    }
 }, 'PUT');
 
 Route::add('/api/users/current/logout', function() {
