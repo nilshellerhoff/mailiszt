@@ -19,19 +19,11 @@
     <v-data-table :headers="headers" :items="mails" :search="search">
       <!-- details button -->
       <template v-slot:[`item.actions`]="{ item }">
-        <router-link :to="'/mails/' + item.i_mail">
-          <v-btn>Details</v-btn>
-        </router-link>
+        <v-btn :to="'/mails/' + item.i_mail">View</v-btn>
       </template>
     </v-data-table>
   </v-container>
 </template>
-
-<style scoped>
-  a {
-    text-decoration: none;
-  }
-</style>
 
 <script>
 export default {
