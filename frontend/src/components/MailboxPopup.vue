@@ -78,7 +78,7 @@
     <Popup
       ref="recipientsPopup"
       :title="`Recipients for ${mailbox.s_name}`"
-      width="500"
+      :width="500"
     >
       <v-chip-group column>
         <div v-for="r in recipients" :key="r.i_member">
