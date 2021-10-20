@@ -99,6 +99,18 @@ Route::add('/api/mailbox/([0-9]*)/recipients', function($i_mailbox) {
     }
 }, 'GET');
 
+// getting recipients of mailbox with custom groups
+Route::add('/api/mailbox/([0-9]*)/recipients', function($i_mailbox) {
+    $auth = checkAuthToken();
+    if (!$auth) {
+        return makeResponse('invalid authentication', 403);
+    } else {
+        $mailbox = new Mailbox($i_mailbox);
+        $mailbox->setGroups(getPutData());
+        return makeResponse($mailbox->getRecipients());
+    }
+}, 'PUT');
+
 // actions for forwarding mails
 Route::add('/api/mailbox/forward', function() {
     $auth = checkAuthToken();
