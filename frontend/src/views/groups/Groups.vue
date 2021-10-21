@@ -5,9 +5,10 @@
         <h1>Groups</h1>
       </v-col>
       <v-col sm="3" cols="6" align=right order="1" order-sm="2" class=pa-2>
-        <router-link to="/groups/add">
-          <v-btn color="primary">Add new</v-btn>
-        </router-link>
+        <v-btn color="primary" to="/groups/add">
+          <v-icon class="mr-2">mdi-plus</v-icon>
+          Add new
+        </v-btn>
       </v-col>
       <v-col sm="6" cols="12" order="2" order-sm="1" class=mt-n1>
         <v-text-field
