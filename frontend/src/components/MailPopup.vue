@@ -18,7 +18,10 @@
       </tr>
     </table>
     <v-divider class="ma-4"></v-divider>
+    <!-- Mail Body -->
     <iframe class="mailbody" :srcdoc="getBodyForDisplay()"></iframe>
+    <v-divider class="ma-4"></v-divider>
+    <!-- Recipients -->
     <v-row>
       <v-col cols="4">
         {{recipients.length}} recipients{{recipients.length > 0 ? ':' : ''}}
@@ -48,8 +51,15 @@
   table td {
     padding: 0px 6px;
   }
-  .mailbody {
+  /* div.mailbody {
+    height: 300px;
+    display: block;
+    overflow: scroll;
+  } */
+  iframe.mailbody {
     width: 100%;
+    height: 100%;
+    min-height: 300px;
     border-style: none;
   }
 </style>
