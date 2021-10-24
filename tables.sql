@@ -67,7 +67,7 @@ CREATE TABLE user (
     d_updated TEXT
 );
 
-CREATE TABLE iauthtoken (
+CREATE TABLE authtoken (
     i_authtoken INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     i_user INTEGER,
     s_username TEXT,
