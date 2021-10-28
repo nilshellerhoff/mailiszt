@@ -10,5 +10,6 @@ require_once('classes/Mail.php');
 require_once('classes/Mailbox.php');
 require_once('classes/Member.php');
 require_once('classes/User.php');
+require_once('classes/Setting.php');
 
 require_once('vendor/autoload.php');

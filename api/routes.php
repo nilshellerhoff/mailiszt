@@ -5,7 +5,7 @@ include('includes.php');
 use Steampixel\Route;
 
 // add access-control header to all requests
-Route::add('/api/([a-z-0-9/]*)', function() {
+Route::add('/api/([a-z-0-9/_]*)', function() {
     header("Access-Control-Allow-Origin: *");
     header("Access-Control-Allow-Methods: GET,PUT,DELETE");
     header("Access-Control-Allow-Headers: *");
@@ -47,3 +47,4 @@ include('groups.php');
 include('mailboxes.php');
 include('user.php');
 include('mail.php');
+include('settings.php');
