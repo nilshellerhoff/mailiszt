@@ -16,24 +16,11 @@
         <v-navigation-drawer
           v-model="drawer"
           absolute
-          temporary
+          style="top: 64px; height: calc(100vh - 64px)"
         >
         <v-list
           nav
         >
-          <v-list-item>
-            <v-list-item-content>
-              <v-list-item-title class="text-h6">
-                Mailiszt
-              </v-list-item-title>
-              <v-list-item-subtitle>
-                mailing list manager
-              </v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-
-          <v-divider></v-divider>
-
           <v-list-item-group
           v-model="group"
           active-class="blue--text text--accent-4"
