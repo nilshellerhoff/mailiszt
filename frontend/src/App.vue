@@ -1,15 +1,11 @@
 <template>
   <v-app id="app">
-    <NavigationDrawer :links="links">
-      <v-container
-        fluid
-        class="pa-0 ma-0"
-        style="height: calc(100vh - 64px); overflow: scroll"
-      >
-        <v-container style="max-width: 1000px; width: 100%">
+    <NavigationDrawer :links="links" v-show="$route.name == 'Login' ? false : true">
+      <div style="position: absolute; top: 64px; overflow-y: scroll; width: 100vw">
+        <div style="max-width: 1000px; width: 100%; position: relative; margin: 0 auto">
           <router-view />
-        </v-container>
-      </v-container>
+        </div>
+      </div>
     </NavigationDrawer>
     <confirm ref="confirm"></confirm>
   </v-app>

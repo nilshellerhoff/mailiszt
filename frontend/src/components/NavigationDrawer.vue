@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-app-bar
+        <v-app-bar absolute
         color="secondary"
         dark
         >
