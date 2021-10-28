@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <h1>Settings</h1>
+  <v-container fluid class="ma-0 pa-1 pa-sm-4">
+    <h2>Mailiszt version {{ versionNumber }}</h2>
     <h2>Change password</h2>
     <change-password></change-password>
 
@@ -16,7 +16,7 @@
         </v-btn>
       </v-col>
     </v-row>
-  </div>
+  </v-container>
 </template>
 
 <script>
@@ -30,11 +30,19 @@ export default {
   },
   data: () => ({
     cronUrl: process.env.VUE_APP_BASE_URL + '/mailbox/forward',
+    versionNumber: 'blub'
   }),
   methods: {
     urlCopy() {
       copy(this.cronUrl);
     },
+  },
+  mounted() {
+    this.$root.$on('reloadData', () => {
+      this.$api.get(`/setting/version_number`).then(response => {
+        this.versionNumber = response.data
+      })
+    })
   }
 };
 </script>
