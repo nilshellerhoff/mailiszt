@@ -8,6 +8,7 @@ class DB extends SQLite3 {
             // if DB file doesn't exist, create DB, make schema and insert sampledata
             $this->open(DB_FILE);
             $this->executeFile(BASE_DIR . 'tables.sql');
+            $this->executeFile(BASE_DIR . 'basedata.sql');
             $this->executeFile(BASE_DIR .'sampledata.sql');
         }
     }

@@ -101,3 +101,10 @@ CREATE TABLE member2group (
     d_inserted TEXT,
     d_updated TEXT
 );
+
+CREATE TABLE setting (
+    i_setting INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    s_name TEXT,
+    s_type TEXT,
+    v_value
+);
