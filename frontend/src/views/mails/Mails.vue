@@ -1,21 +1,42 @@
 <template>
-  <v-container class="m-10">
+  <v-container class="ma-0 pa-1 pa-sm-4" fluid>
     <v-row no-gutters>
-      <v-col sm="3" cols="6">
-        <h1>Mails</h1>
-      </v-col>
-      <v-col sm="3" cols="6" align=right order="1" order-sm="2" class=pa-2>
-      </v-col>
-      <v-col sm="6" cols="12" order="2" order-sm="1" class=mt-n1>
+      <v-col class="d-none d-sm-flex">
         <v-text-field
           v-model="search"
-          append-icon="mdi-magnify"
+          prepend-icon="mdi-magnify"
+          clearable
           label="Search"
-          single-line
           hide-details
+          autocomplete="false"
+        ></v-text-field>
+      </v-col>
+      <v-col cols=auto class="py-2 pl-2">
+        <!-- search button (only on xs) -->
+        <v-btn
+          class="mx-1 d-sm-none pa-2 pa-sm-4"
+          :color="mobileSearchVisible ? 'grey lighten-2' : 'grey lighten-4'"
+          @click="mobileSearchVisible = !mobileSearchVisible"
+        ><v-icon>mdi-magnify</v-icon>search
+        </v-btn>
+      </v-col>
+    </v-row>
+
+    <!-- search field on mobile -->
+    <v-row no-gutters v-show="mobileSearchVisible" class="d-sm-none">
+      <v-col>
+        <v-text-field
+          v-model="search"
+          prepend-icon="mdi-magnify"
+          clearable
+          label="Search"
+          hide-details
+          autocomplete="false"
         ></v-text-field>
       </v-col>
     </v-row>
+
+    <!-- table -->
     <v-data-table :headers="headers" :items="mails" :search="search">
       <!-- details button -->
       <template v-slot:[`item.actions`]="{ item }">
@@ -36,6 +57,7 @@ export default {
       { text: "Subject", value: "s_subject" },
       { text: "", value: "actions", sortable: false, align: "right"}
     ],
+    mobileSearchVisible: false,
   }),
   methods: {
     getMails() {
