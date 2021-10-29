@@ -10,6 +10,7 @@
             label="Username"
             prepend-icon="mdi-account"
             :error="loginError"
+            autocomplete="off"
           ></v-text-field>
           <PasswordInput
             ref="passwordInput"
