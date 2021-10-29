@@ -19,7 +19,7 @@ class Setting {
         );
         $db->update(
             "setting",
-            ["v_value" => Setting::encodeValue($type, $value)],
+            ["v_value" => Setting::encodeValue($value, $type)],
             ["s_name" => $name]
         );
     }
@@ -28,6 +28,7 @@ class Setting {
         if ($type == 'string') return strval($value);
         if ($type == 'int') return intval($value);
         if ($type == 'float') return floatval($value);
+        if ($type == 'bool') return boolval($value);
         if ($type == 'json') return json_decode($value);
 
     }
@@ -35,6 +36,7 @@ class Setting {
         if ($type == 'string') return strval($value);
         if ($type == 'int') return intval($value);
         if ($type == 'float') return floatval($value);
+        if ($type == 'bool') return intval($value);
         if ($type == 'json') return json_encode($value);
     }
 }

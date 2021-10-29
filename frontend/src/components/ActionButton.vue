@@ -1,5 +1,5 @@
 <template>
-  <div ref="btnContainer">
+  <div ref="btnContainer" style="display: inline-block">
     <v-btn
       :color="compColor"
       :loading="isLoading"

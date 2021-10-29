@@ -16,17 +16,22 @@
         </v-btn>
       </v-col>
     </v-row>
+
+    <h3>DB access</h3>
+    <enable-dbadmin></enable-dbadmin>
   </v-container>
 </template>
 
 <script>
 import copy from 'copy-to-clipboard'
 import ChangePassword from '@/components/Settings/ChangePassword.vue'
+import EnableDbadmin from '@/components/Settings/EnableDbadmin.vue'
 
 export default {
   name: "Settings",
   components: {
-    ChangePassword
+    ChangePassword,
+    EnableDbadmin
   },
   data: () => ({
     cronUrl: process.env.VUE_APP_BASE_URL + '/mailbox/forward',
