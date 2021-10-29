@@ -38,6 +38,11 @@
 
     <!-- table -->
     <v-data-table :headers="headers" :items="mails" :search="search">
+      <!-- sent date -->
+      <template v-slot:[`item.date`]="{ item }">
+        {{ getDate(item.d_sent) }}
+      </template>
+
       <!-- details button -->
       <template v-slot:[`item.actions`]="{ item }">
         <v-btn :to="'/mails/' + item.i_mail">View</v-btn>
@@ -47,6 +52,8 @@
 </template>
 
 <script>
+import { formatDistance, parseISO } from 'date-fns'
+
 export default {
   name: "Home",
   data: () => ({
@@ -54,6 +61,7 @@ export default {
     mails: [],
     headers: [
       { text: "List", value: "s_tomail" },
+      { text: "Sent", value: "date" },
       { text: "Subject", value: "s_subject" },
       { text: "", value: "actions", sortable: false, align: "right"}
     ],
@@ -64,6 +72,10 @@ export default {
       this.$api.get("/mail")
         .then((response) => {this.mails = response.data;});
     },
+    getDate(isodate) {
+      return formatDistance(parseISO(isodate), new Date(), { addSuffix: true })
+
+    }
   },
   mounted() {
     this.getMails();
