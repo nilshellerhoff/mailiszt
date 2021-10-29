@@ -1,13 +1,14 @@
 <template>
   <v-container fluid class="ma-0 pa-1 pa-sm-4">
-    <h2>Mailiszt version {{ versionNumber }}</h2>
-    <h2>Change password</h2>
+    <span class="text-h3">Mailiszt version {{ versionNumber }}</span><br><br>
+
+    <span class="text-h6">Change password</span>
     <change-password></change-password>
 
 
-    <h2>Cron-Job</h2>
+    <span class="text-h6">Cron-Job</span><br>
+    <span class="text-subtitle-1">Call the following URL periodically in order check for new mails</span>
     <v-row>
-      <v-col cols="4">point your cron-job to the following url:</v-col>
       <v-col cols="5"><v-text-field disabled dense single-line v-model="cronUrl"></v-text-field></v-col>
       <v-col cols="3">
         <v-btn @click="urlCopy">
@@ -17,7 +18,9 @@
       </v-col>
     </v-row>
 
-    <h3>DB access</h3>
+    <span class="text-h6">DB access</span><br>
+    <span class="text-subtitle-1">Access the DB directly via a SQL prompt. URL is <code>&lt;host&gt;/dbadmin</code>.
+</span>
     <enable-dbadmin></enable-dbadmin>
   </v-container>
 </template>
