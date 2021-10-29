@@ -113,33 +113,23 @@ Route::add('/api/mailbox/([0-9]*)/recipients', function($i_mailbox) {
 
 // actions for forwarding mails
 Route::add('/api/mailbox/forward', function() {
-    $auth = checkAuthToken();
-    if (!$auth) {
-        return makeResponse('invalid authentication', 403);
-    } else {
-        $db = new DB();
-        $mailbox_ids = $db->queryColumn("SELECT i_mailbox FROM mailbox");
-        foreach ($mailbox_ids as $id) {
-            $mailbox = new Mailbox($id = $id);
-            $mails = $mailbox->fetchMails();
-            foreach ($mails as $mail) {
-                $mail->save();
-                $mail->forwardMail($mailbox);
-            }
-        }
-    }
-});
-
-Route::add('/api/mailbox/([0-9]*)/forward', function($i_mailbox) {
-    $auth = checkAuthToken();
-    if (!$auth) {
-        return makeResponse('invalid authentication', 403);
-    } else {
-        $mailbox = new Mailbox($id = $i_mailbox);
+    $db = new DB();
+    $mailbox_ids = $db->queryColumn("SELECT i_mailbox FROM mailbox");
+    foreach ($mailbox_ids as $id) {
+        $mailbox = new Mailbox($id = $id);
         $mails = $mailbox->fetchMails();
         foreach ($mails as $mail) {
             $mail->save();
             $mail->forwardMail($mailbox);
         }
+    }
+});
+
+Route::add('/api/mailbox/([0-9]*)/forward', function($i_mailbox) {
+    $mailbox = new Mailbox($id = $i_mailbox);
+    $mails = $mailbox->fetchMails();
+    foreach ($mails as $mail) {
+        $mail->save();
+        $mail->forwardMail($mailbox);
     }
 });
