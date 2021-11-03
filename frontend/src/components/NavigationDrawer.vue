@@ -16,6 +16,7 @@
         <v-navigation-drawer
           v-model="drawer"
           absolute
+          temporary
           style="top: 64px; height: calc(100vh - 64px)"
         >
         <v-list
