@@ -56,7 +56,7 @@ CREATE TABLE mail2member (
     s_email TEXT,
     d_inserted TEXT,
     d_updated TEXT
-)
+);
 
 CREATE TABLE user (
     i_user INTEGER PRIMARY KEY,
