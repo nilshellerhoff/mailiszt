@@ -32,7 +32,16 @@ function makeResponse($data, $responseCode = 200, $type = 'json') {
 function checkAuthToken() {
     // return the role of querying user using the supplied token (returns empty if invalid or no token)
     // right now there is only "ADMIN" or no auth
-    $token = getallheaders()['Authorization'];
+
+    // try to get the auth token through authorization header (is probably destroyed by apache)
+    // else get it through cookie (should work on http)
+    $headers = getallheaders();
+    if (array_key_exists('Authorization', $headers)) {
+        $token = $headers['Authorization'];
+    } else {
+        $token = $_COOKIE['accessToken'];
+    }
+    
     $auth = User::checkAuthentication($token);
     if ($auth) {
         $auth["s_role"] = 'ADMIN';
