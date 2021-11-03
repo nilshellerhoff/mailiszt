@@ -111,7 +111,6 @@ class Mail extends Base {
 
             // if cid is set, handle as embedded image, else normal attachment
             if (isset($attachment->properties["s_cid"])) {
-                echo "adding embedded image";
                 $mail->AddEmbeddedImage(
                     $attach_path,
                     $attachment->properties["s_cid"],
