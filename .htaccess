@@ -1,0 +1,18 @@
+# enable apache rewrite engine
+RewriteEngine on
+
+# rewrite base
+RewriteBase /
+
+# serve index.php on request
+RewriteRule index.php index.php [L]
+
+# rewrite api routes
+RewriteRule ^(.*)api(.*)$ index.php [L]
+# # rewrite dbadmin
+RewriteRule ^(.*)dbadmin(.*)$ index.php [L]
+ 
+# rewrite css & js files for frontend
+RewriteRule ^(.*)(js|css)\/(.*)$ frontend/dist/$2/$3 [L]
+# rewrite everything else to index.html
+RewriteRule ^(.*)$ frontend/dist/index.html [L]
