@@ -147,7 +147,10 @@ export default {
       }
       // now filter for the search word
       return members.filter((member) => 
-          String(member.s_name1 + ' ' + member.s_name2).toUpperCase()
+          String(
+            member.s_name1 + ' ' + member.s_name2 + ' '
+            + member.groups.map(g => g.s_name).join()
+          ).toUpperCase()
           .indexOf(this.search.toUpperCase()) != -1
       );
 
