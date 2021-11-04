@@ -110,7 +110,11 @@ class Mailbox extends Base {
                 die("value not allowed");
             }
 
-            $sql .= "EXISTS ( SELECT 1 FROM member2group WHERE i_member = m.i_member AND " . $condition['entity'] . $condition['comparisonOperator'] . $condition['value']. ")";
+            if ($condition['comparisonOperator'] == '<>') {
+                $sql .= "EXISTS ( SELECT 1 FROM member2group WHERE i_member = m.i_member AND {$condition['entity']} = {$condition['value']} )";
+            } else {
+                $sql .= "EXISTS ( SELECT 1 FROM member2group WHERE i_member = m.i_member AND {$condition['entity']} = {$condition['value']} )";
+            }
 
         } else {
             // we have a subcondition
