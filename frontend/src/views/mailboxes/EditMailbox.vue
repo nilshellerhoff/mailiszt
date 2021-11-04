@@ -29,13 +29,13 @@ export default {
         },
       ],
       groups: {
-        id: 1631607982497,
-        comparisonOperator: "=",
-        value: 9,
-        entity: "i_group",
-        logicOperator: "none",
-        arguments: [],
-      },
+        "id": 1635960403820,
+        "logicOperator": "",
+        "comparisonOperator": "=",
+        "entity": "i_group",
+        "value": 1,
+        "arguments": []
+      }
     };
   },
   components: {
@@ -57,7 +57,7 @@ export default {
     },
     getGroups() {
       this.$api.get(`/mailbox/${this.mailboxId}/groups`).then((response) => {
-        this.groups = response.data;
+        if (response.data) this.groups = response.data
       });
     },
     async saveMailbox() {

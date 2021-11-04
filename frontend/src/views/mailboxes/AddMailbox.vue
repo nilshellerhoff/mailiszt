@@ -51,12 +51,16 @@ export default {
     },
     async saveMailbox() {
       this.btnState = "loading";
-      this.$api.put(`/mailbox/add`, this.mailbox).then(() => {
-        this.btnState = "done";
-        setTimeout(() => {
-          this.$root.$emit("reloadData");
-          this.$router.back();
-        }, 500);
+      this.$api.put(`/mailbox/add`, this.mailbox).then((response) => {
+        // populate the element with the new data
+        this.mailbox = response.data
+        this.$api.put(`/mailbox/${this.mailbox.i_mailbox}/groups/`, this.groups).then(() => {
+          this.btnState = "done";
+          setTimeout(() => {
+            this.$root.$emit("reloadData");
+            this.$router.back();
+          }, 500);
+        })
       });
     },
   },

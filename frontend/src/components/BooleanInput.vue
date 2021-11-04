@@ -298,6 +298,12 @@ export default {
       return sql;
     },
   },
+  mounted() {
+    // if the condition is malformed (shouldn't happen), set the default condition
+    if (!this.condition || this.condition == {}) {
+      this.condition = this.getDefaultCondition()
+    }
+  },
   watch: {
     condition: {
       handler() {
