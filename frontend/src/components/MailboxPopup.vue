@@ -125,7 +125,7 @@ export default {
     },
     openRecipientsPopup() {
       this.$api
-        .put(`/mailbox/${this.mailbox.i_mailbox}/recipients`, this.groups)
+        .put(`/mailbox/${this.mailbox.i_mailbox || 0}/recipients`, this.groups)
         .then((response) => {
           this.recipients = response.data;
           this.$refs.recipientsPopup.open();

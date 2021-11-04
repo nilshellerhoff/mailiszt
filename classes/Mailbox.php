@@ -62,10 +62,15 @@ class Mailbox extends Base {
         // get the recipient list for this address
         $db = new DB();
         $whereCond = $this->properties["s_groupssql"];
-        $sql_query = "
-SELECT DISTINCT m.* FROM member m
-WHERE $whereCond
-        ";
+        $sql_query = "SELECT DISTINCT m.* FROM member m WHERE $whereCond";
+        return $db->queryAll($sql_query);
+    }
+
+    public static function getRecipientsCondition($condition) {
+        // static function for getting the recipients when supplying a custom condition
+        $db = new DB();
+        $whereCond = Mailbox::getSqlExpression($condition);
+        $sql_query = "SELECT DISTINCT m.* FROM member m WHERE $whereCond";
         return $db->queryAll($sql_query);
     }
 
@@ -78,11 +83,11 @@ WHERE $whereCond
         // set the groups condition for this mailbox (JSON and SQL)
         $this->properties["s_groupsjson"] = json_encode($groups);
 
-        $sql = $this->getSqlExpression($groups);
+        $sql = Mailbox::getSqlExpression($groups);
         $this->properties["s_groupssql"] = $sql;
     }
 
-    private function getSqlExpression($condition) {
+    private static function getSqlExpression($condition) {
         // get the sql expression from a logical conditional tree
         $sql = '';
 
@@ -112,7 +117,7 @@ WHERE $whereCond
             // recursively call this method on each of the subconditions and put parentheses around it
             for ($i = 0; $i < count($condition["arguments"]); $i++) {
                 $sql .=
-                "(" . $this->getSqlExpression($condition["arguments"][$i]) . ")";
+                "(" . Mailbox::getSqlExpression($condition["arguments"][$i]) . ")";
 
                 // if we are not in the last operation add the operator (so it stands between the arguments)
                 if ($i != count($condition["arguments"]) - 1) {
