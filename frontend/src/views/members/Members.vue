@@ -111,11 +111,23 @@
           >
         </div>
       </template>
+
+      <!-- footer -->
+      <template v-slot:footer.prepend>
+        <v-btn
+          class="mx-1 pa-2 pa-sm-4"
+          @click="exportSelection()"
+        ><v-icon>mdi-export</v-icon>export selection
+        </v-btn>
+      </template>
+
     </v-data-table>
   </v-container>
 </template>
 
 <script>
+import { ExportToCsv } from 'export-to-csv';
+
 export default {
   name: "Home",
   data: () => ({
@@ -189,6 +201,25 @@ export default {
         this.groupsFilter.push(i_group);
       }
     },
+    exportSelection() {
+      // create a CSV with the currently selected members and download it
+      let csvMembers = this.filteredMembers.map(m => {
+        return {
+          "first name"    : m.s_name1 || '',
+          "second name"   : m.s_name2 || '',
+          "email address" : m.s_email || '',
+          "phone number"  : m.s_phone || '',
+          "birthdate"     : m.d_birthdate || '',
+          "groups"        : m.groups.map(g => g.s_name).join(', ') || '',
+          "inserted"      : m.d_inserted || '',
+        }
+      })
+      const csvExporter = new ExportToCsv({
+            showLabels: true, 
+            useKeysAsHeaders: true,
+      })
+      csvExporter.generateCsv(csvMembers)
+    }
   },
   mounted() {
     this.getMembers();
