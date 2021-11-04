@@ -37,8 +37,7 @@ class Base {
         }
     }
 
-    protected function populateFromObject() {        echo "\"populating\"";
-    }
+    protected function populateFromObject() {}
 
     public function updateProperties($properties) {
         // update the member properties without overwriting the properties array
