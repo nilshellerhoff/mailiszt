@@ -163,7 +163,7 @@ export default {
             member.s_name1 + ' ' + member.s_name2 + ' '
             + member.groups.map(g => g.s_name).join()
           ).toUpperCase()
-          .indexOf(this.search.toUpperCase()) != -1
+          .indexOf((this.search || '').toUpperCase()) != -1
       );
 
     },
