@@ -38,7 +38,7 @@ export default {
   },
   data: () => ({
     cronUrl: process.env.VUE_APP_BASE_URL + '/mailbox/forward',
-    versionNumber: 'blub'
+    versionNumber: ''
   }),
   methods: {
     urlCopy() {
