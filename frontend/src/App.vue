@@ -90,19 +90,16 @@ export default {
       this.readCookie();
       return this.accessToken != null;
     },
-    checkLogin() {
-      // if not loggedin, redirect to login screen
-      if (!this.loggedIn() && this.$route.name != "Login") {
-        this.$router.push({ name: "Login" });
-      }
-    },
     getUserInfo() {
       if (this.loggedIn()) {
         // populate the userinfo object
-        this.$api.put("users/current/", { accessToken: this.accessToken }).then(response => {
+        // if we get a 403 delete the local login data and redirect to login page
+        this.$api.put("users/current/", { accessToken: this.accessToken })
+        .then(response => {
           this.userInfo = response.data
         })
-      }
+        .catch(() => { this.logoutLocal() })
+      } else { this.logoutLocal() }
     },
 
     // generic functions for login managment
@@ -121,16 +118,20 @@ export default {
           }
         });
     },
+    logoutLocal() {
+      // delete the accessToken from storage and cookie
+      this.accessToken = null;
+      this.$api.defaults.headers["Authorization"] = null;
+      this.$cookies.set("accessToken", "");
+      this.$router.push({ name: "Login" })
+    },
     logout() {
       // delete the accessToken from storage and cookie
       return this.$api
         .put("users/current/logout", { accessToken: this.accessToken })
         .then(() => {
-          this.accessToken = null;
-          this.$api.defaults.headers["Authorization"] = null;
-          this.$cookies.set("accessToken", "");
-          this.$router.push({ name: "Login" })
-          return true;
+          this.logoutLocal()
+          return true
         });
     },
   },
@@ -138,15 +139,12 @@ export default {
     this.$root.$refs.App = this;
   },
   mounted() {
-    this.readCookie();
-    this.checkLogin();
     this.getUserInfo();
 
     // make the confirm dialog accessible
     this.$root.$confirm = this.$refs.confirm.open
   },
   updated() {
-    this.checkLogin();
     this.getUserInfo();
   },
 };
