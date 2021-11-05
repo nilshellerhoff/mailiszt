@@ -1,15 +1,41 @@
-# mailiszt
+# Mailiszt
 Simple Mailing List Manager written in PHP
 
-### TODOs 
+## Building
 
-- specifiy format for group select sql query
-- sending mails
-- user class & table
-    - calculate password hash
-    - add user method
-    - authenticate method
-    - authentication tokens
-    - verify token method
+Clone the repository
+```
+git clone https://github.com/nilshellerhoff/mailiszt
+```
 
-- frontend
+Install php dependencies
+```
+cd mailiszt
+php composer.phar update
+```
+
+Run the backend developer server (port can be adjusted in `frontend/.env.development`)
+```
+php -S 0.0.0.0:8081 index.php
+```
+
+Install node dependencies
+```
+cd frontend
+npm i
+```
+
+Run the frontend development server
+```
+npm run serve
+```
+
+## Installing
+
+Build the frontend
+```
+cd frontend 
+npm run build
+```
+
+Copy the base directory to your server (everything in `frontend` except the `dist`-folder can be ignored)
