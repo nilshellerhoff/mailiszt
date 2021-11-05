@@ -113,7 +113,7 @@
       </template>
 
       <!-- footer -->
-      <template v-slot:footer.prepend>
+      <template v-slot:[`footer.prepend`]>
         <v-btn
           class="mx-1 pa-2 pa-sm-4"
           @click="exportSelection()"
