@@ -12,7 +12,7 @@ define('DB_FILE', __DIR__ . '/mailiszt.db');
 define('ATTACHMENT_PATH', __DIR__ . '/data/attachments/');
 
 // what to do with mails when processed, values are 'move' or 'delete'
-define('MAIL_PROCESSED_ACTION', 'nada');
+define('MAIL_PROCESSED_ACTION', 'move');
 
 // where to move mails when processed if MAIL_PROCESSED_ACTION is 'move'
 define('MAIL_PROCESSED_FOLDER', 'INBOX/mailiszt_processed');
