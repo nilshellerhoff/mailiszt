@@ -10,9 +10,10 @@ Clone the repository
 git clone https://github.com/nilshellerhoff/mailiszt
 ```
 
-Install php dependencies
+Install composer and php dependencies
 ```
 cd mailiszt
+php -r "readfile('https://getcomposer.org/installer');" | php
 php composer.phar update
 ```
 
