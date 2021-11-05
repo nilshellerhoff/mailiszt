@@ -1,5 +1,7 @@
 # Mailiszt
-Simple Mailing List Manager written in PHP
+Simple Mailing List Manager written in PHP and Vue. Includes group management
+
+!!! very early development stage, bugs and missing features are present!
 
 ## Building
 
