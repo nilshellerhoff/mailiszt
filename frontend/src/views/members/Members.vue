@@ -215,6 +215,7 @@ export default {
         }
       })
       const csvExporter = new ExportToCsv({
+            filename: 'members',
             showLabels: true, 
             useKeysAsHeaders: true,
       })
