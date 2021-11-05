@@ -11,8 +11,10 @@ define('DB_FILE', __DIR__ . '/mailiszt.db');
 // path where attachments are saved
 define('ATTACHMENT_PATH', __DIR__ . '/data/attachments/');
 
-// what to do with mails when processed
+// what to do with mails when processed, values are 'move' or 'delete'
 define('MAIL_PROCESSED_ACTION', 'nada');
+
+// where to move mails when processed if MAIL_PROCESSED_ACTION is 'move'
 define('MAIL_PROCESSED_FOLDER', 'INBOX/mailiszt_processed');
 
 // php-imap communication sequence type
