@@ -20,7 +20,7 @@ function getPutData() {
 function makeResponse($data, $responseCode = 200, $type = 'json') {
     http_response_code($responseCode);
     if ($type == 'json') {
-        header("Content-Type: 'application/json");
+        header("Content-Type: application/json");
         return json_encode($data);
     }
     else if ($type == 'text') {
