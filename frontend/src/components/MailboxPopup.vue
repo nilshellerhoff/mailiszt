@@ -110,6 +110,8 @@
             multiple
             chips
             deletable-chips
+            :search-input.sync="simpleGroupsSearchInput"
+            @change="simpleGroupsSearchInput = ''"
           ></v-autocomplete>
         </div>
 
@@ -163,6 +165,7 @@ export default {
       showPassword: false,
       recipients: null,
       currentTab: null,
+      simpleGroupsSearchInput: '',
     };
   },
   components: {
