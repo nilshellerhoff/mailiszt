@@ -161,7 +161,6 @@ export default {
   data: function () {
     return {
       showPassword: false,
-      sql: "",
       recipients: null,
       currentTab: null,
     };
@@ -172,9 +171,6 @@ export default {
     Popup,
   },
   methods: {
-    getSql() {
-      return (this.sql = this.$refs.boolInp.getSqlExpression("i_group"));
-    },
     openRecipientsPopup() {
       this.mailbox.j_groups = JSON.stringify(this.groups.groups)
       this.mailbox.j_groupslogic = JSON.stringify(this.groupsLogic)
