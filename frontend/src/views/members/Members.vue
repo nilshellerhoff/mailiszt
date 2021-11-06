@@ -23,7 +23,7 @@
         <v-btn
           class="mx-1 pa-2 pa-sm-4"
           :color="groupsFilterVisible ? 'grey lighten-2' : 'grey lighten-4'"
-          @click="groupsFilterVisible = !groupsFilterVisible; searchVisible = false"
+          @click="groupsFilterVisible = !groupsFilterVisible; groupsFilter = []; searchVisible = false"
         ><v-icon>mdi-filter</v-icon>filter
         </v-btn>
         <!-- add new button -->
