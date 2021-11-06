@@ -109,7 +109,6 @@
           <div class="pa-4" v-show="mailbox.s_groupsmethod == 'logic'">
             <BooleanInput
               ref="boolInp"
-              @change="getSql()"
               :entities="groupsAvail"
               :condition="groupsLogic"
             ></BooleanInput>
