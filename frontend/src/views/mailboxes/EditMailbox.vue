@@ -29,7 +29,7 @@ export default {
           items: [{ text: "", value: "" }],
         },
       ],
-      groups: [],
+      groups: { groups : [] },
       groupsLogic: {
         "id": 1635960403820,
         "logicOperator": "",

@@ -6,6 +6,7 @@
     :mailbox="mailbox"
     :groupsAvail="groupsAvail"
     :groups="groups"
+    :groupsLogic="groupsLogic"
   >
   </MailboxPopup>
 </template>
@@ -27,7 +28,8 @@ export default {
           items: [{ text: "", value: "" }],
         },
       ],
-      groups: {
+      groups: { groups : [] },
+      groupsLogic: {
         id: 1631607982497,
         comparisonOperator: "=",
         value: 1,
@@ -51,17 +53,18 @@ export default {
     },
     async saveMailbox() {
       this.btnState = "loading";
+      this.mailbox.j_groups = JSON.stringify(this.groups.groups)
+      this.mailbox.j_groupslogic = JSON.stringify(this.groupsLogic)
+
       this.$api.put(`/mailbox/add`, this.mailbox).then((response) => {
         // populate the element with the new data
         this.mailbox = response.data
-        this.$api.put(`/mailbox/${this.mailbox.i_mailbox}/groups/`, this.groups).then(() => {
           this.btnState = "done";
           setTimeout(() => {
             this.$root.$emit("reloadData");
             this.$router.back();
           }, 500);
         })
-      });
     },
   },
   mounted() {
