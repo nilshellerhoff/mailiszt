@@ -127,7 +127,7 @@ SQL;
             }
 
             if ($condition['comparisonOperator'] == '<>') {
-                $sql .= "EXISTS ( SELECT 1 FROM member2group WHERE i_member = m.i_member AND {$condition['entity']} = {$condition['value']} )";
+                $sql .= "NOT EXISTS ( SELECT 1 FROM member2group WHERE i_member = m.i_member AND {$condition['entity']} = {$condition['value']} )";
             } else {
                 $sql .= "EXISTS ( SELECT 1 FROM member2group WHERE i_member = m.i_member AND {$condition['entity']} = {$condition['value']} )";
             }
