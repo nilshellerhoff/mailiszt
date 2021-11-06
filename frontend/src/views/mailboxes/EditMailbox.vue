@@ -1,7 +1,7 @@
 <template>
   <MailboxPopup
     @save="saveMailbox()"
-    :popupTitle="`Add mailbox`"
+    :popupTitle="`Edit mailbox '${this.mailbox.s_name}'`"
     :btnState="btnState"
     :mailbox="mailbox"
     :groupsAvail="groupsAvail"
