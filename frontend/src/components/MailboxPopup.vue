@@ -80,13 +80,46 @@
       <v-tab-item>
 
         <!-- group selector -->
-        <span class="text-subtitle-2">Groups selector</span>
-        <div class="pa-4">
+        <span class="text-subtitle-2">Groups selector</span>  
+
+        <!-- method -->
+        <v-radio-group
+          v-model="mailbox.s_groupsmethod"
+          row
+          hide-details
+        >
+          <v-radio
+            label="simple selector"
+            value="simple"
+          ></v-radio>
+          <v-radio
+            label="logic selector"
+            value="logic"
+          ></v-radio>
+        </v-radio-group>
+
+        <!-- simple selector -->
+        <div class="px-4" v-show="mailbox.s_groupsmethod == 'simple'">
+          <v-autocomplete
+            prepend-icon="mdi-account-group"
+            label="Groups"
+            v-model="groups.groups"
+            :items="groupsAvail[0].items"
+            item-text="text"
+            item-value="value"
+            multiple
+            chips
+            deletable-chips
+          ></v-autocomplete>
+        </div>
+
+        <!-- logic selector -->
+        <div class="pa-4" v-show="mailbox.s_groupsmethod == 'logic'">
           <BooleanInput
             ref="boolInp"
             @change="getSql()"
             :entities="groupsAvail"
-            :condition="groups"
+            :condition="groupsLogic"
           ></BooleanInput>
         </div>
 
@@ -124,7 +157,7 @@ import Popup from "@/components/Popup.vue";
 
 export default {
   name: "MailboxPopup",
-  props: ["popupTitle", "mailbox", "btnState", "groupsAvail", "groups"],
+  props: ["popupTitle", "mailbox", "btnState", "groups", "groupsAvail", "groupsLogic"],
   data: function () {
     return {
       showPassword: false,
@@ -143,8 +176,11 @@ export default {
       return (this.sql = this.$refs.boolInp.getSqlExpression("i_group"));
     },
     openRecipientsPopup() {
+      this.mailbox.j_groups = JSON.stringify(this.groups.groups)
+      this.mailbox.j_groupslogic = JSON.stringify(this.groupsLogic)
+
       this.$api
-        .put(`/mailbox/${this.mailbox.i_mailbox || 0}/recipients`, this.groups)
+        .put(`/mailbox/${this.mailbox.i_mailbox || 0}/recipients`, this.mailbox )
         .then((response) => {
           this.recipients = response.data;
           this.$refs.recipientsPopup.open();

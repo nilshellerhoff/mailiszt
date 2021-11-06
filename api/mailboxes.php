@@ -105,7 +105,12 @@ Route::add('/api/mailbox/([0-9]*)/recipients', function($i_mailbox) {
     if (!$auth) {
         return makeResponse('invalid authentication', 403);
     } else {
-        return makeResponse(Mailbox::getRecipientsCondition(getPutData()));
+        $mailbox = new Mailbox(
+            $id = null,
+            $obj = null,
+            $properties = getPutData()
+        );
+        return makeResponse($mailbox->getRecipients());
     }
 }, 'PUT');
 

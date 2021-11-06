@@ -8,8 +8,9 @@ CREATE TABLE mailbox (
     n_smtpport TEXT,
     s_username TEXT,
     s_password TEXT,
-    s_groupsjson TEXT,
-    s_groupssql TEXT,
+    s_groupsmethod TEXT,
+    j_groups TEXT,
+    j_groupslogic TEXT,
     d_inserted TEXT,
     d_updated TEXT
 );

@@ -6,6 +6,7 @@
     :mailbox="mailbox"
     :groupsAvail="groupsAvail"
     :groups="groups"
+    :groupsLogic="groupsLogic"
   >
   </MailboxPopup>
 </template>
@@ -28,7 +29,8 @@ export default {
           items: [{ text: "", value: "" }],
         },
       ],
-      groups: {
+      groups: [],
+      groupsLogic: {
         "id": 1635960403820,
         "logicOperator": "",
         "comparisonOperator": "=",
@@ -45,6 +47,8 @@ export default {
     getMailbox() {
       this.$api.get(`/mailbox/${this.mailboxId}`).then((response) => {
         this.mailbox = response.data;
+        this.groups = { groups : JSON.parse(this.mailbox.j_groups) }
+        this.groupsLogic = JSON.parse(this.mailbox.j_groupslogic)
       });
     },
     getGroupsAvail() {
@@ -55,34 +59,26 @@ export default {
         }));
       });
     },
-    getGroups() {
-      this.$api.get(`/mailbox/${this.mailboxId}/groups`).then((response) => {
-        if (response.data) this.groups = response.data
-      });
-    },
     async saveMailbox() {
       this.btnState = "loading";
+      this.mailbox.j_groups = JSON.stringify(this.groups.groups)
+      this.mailbox.j_groupslogic = JSON.stringify(this.groupsLogic)
+
       this.$api.put(`/mailbox/${this.mailboxId}`, this.mailbox).then(() => {
-        this.$api
-          .put(`/mailbox/${this.mailboxId}/groups`, this.groups)
-          .then(() => {
             this.btnState = "done";
             setTimeout(() => {
               this.$root.$emit("reloadData");
               this.$router.back();
             }, 500);
           });
-      });
     },
   },
   mounted() {
     this.getMailbox();
     this.getGroupsAvail();
-    this.getGroups();
     this.$root.$on('reloadData', () => {
       this.getMailbox()
       this.getGroupsAvail()
-      this.getGroups()
     })
   },
 };

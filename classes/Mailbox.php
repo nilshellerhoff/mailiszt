@@ -11,8 +11,8 @@ class Mailbox extends Base {
     public $identifier = "i_mailbox";
 
     public $exposedInfo = [
-        "READER"    => ["i_mailbox", "s_name", "s_address", "s_imapserver", "n_imapport", "s_smtpserver", "n_smtpport", "s_username", "s_groupselectionsql", "d_inserted", "d_updated"],
-        "ADMIN"     => ["i_mailbox", "s_name", "s_address", "s_imapserver", "n_imapport", "s_smtpserver", "n_smtpport", "s_username", "s_groupselectionsql", "d_inserted", "d_updated"],
+        "READER"    => ["i_mailbox", "s_name", "s_address", "s_imapserver", "n_imapport", "s_smtpserver", "n_smtpport", "s_username", "s_groupsmethod", "j_groups", "j_groupslogic", "d_inserted", "d_updated"],
+        "ADMIN"     => ["i_mailbox", "s_name", "s_address", "s_imapserver", "n_imapport", "s_smtpserver", "n_smtpport", "s_username", "s_groupsmethod", "j_groups", "j_groupslogic", "d_inserted", "d_updated"],
     ];
 
     public $properties;
@@ -60,9 +60,28 @@ class Mailbox extends Base {
 
     public function getRecipients() {
         // get the recipient list for this address
+        if ($this->properties["s_groupsmethod"] == 'logic') {
+            return Mailbox::getRecipientsCondition(
+                json_decode($this->properties["j_groupslogic"], true)
+            );
+        } else {
+            return Mailbox::getRecipientsSimple(
+                json_decode($this->properties["j_groups"])
+            );
+        }
+    }
+
+    public static function getRecipientsSimple($groups) {
+        // get the recipients for the mailbox based on a simple list of group IDs
+        // get a list of group IDs, make sure we are dealing with ints
+        $groups_list = implode(',', array_map('intval', $groups));
+        $sql_query = <<<SQL
+SELECT DISTINCT m.* FROM member m
+INNER JOIN member2group mg ON mg.i_member = m.i_member
+WHERE mg.i_group IN ($groups_list)
+SQL;
+
         $db = new DB();
-        $whereCond = $this->properties["s_groupssql"];
-        $sql_query = "SELECT DISTINCT m.* FROM member m WHERE $whereCond";
         return $db->queryAll($sql_query);
     }
 
@@ -81,10 +100,7 @@ class Mailbox extends Base {
 
     public function setGroups($groups) {
         // set the groups condition for this mailbox (JSON and SQL)
-        $this->properties["s_groupsjson"] = json_encode($groups);
-
-        $sql = Mailbox::getSqlExpression($groups);
-        $this->properties["s_groupssql"] = $sql;
+        $this->properties["j_groupslogic"] = json_encode($groups);
     }
 
     private static function getSqlExpression($condition) {
