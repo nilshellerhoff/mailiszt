@@ -33,7 +33,7 @@
             <v-icon v-if="btnState === 'failed'">mdi-close</v-icon>
           </v-btn>
         </v-toolbar>
-        <div width=98% flat class="pa-4">
+        <div>
             <slot></slot>
         </div>
       </v-card>
