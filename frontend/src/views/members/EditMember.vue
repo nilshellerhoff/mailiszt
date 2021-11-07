@@ -33,7 +33,7 @@ export default {
         this.member = response.data;
       });
       this.$api.get(`/member/${this.memberId}/groups`).then((response) => {
-        this.groups.member = response.data
+        this.groups.member = response.data.map(g => g.i_group)
       })
     },
     async saveMember() {
