@@ -26,7 +26,7 @@ class Mail extends Base {
         $this->properties["s_toname"]       = $attributes["to"]->toArray()[0]->toArray()["personal"] ?: NULL;
         $this->properties["s_bodytext"]     = $this->object->getTextBody();
         $this->properties["s_bodyhtml"]     = $this->object->getHtmlBody();
-        $this->properties["s_messageid"]    = $attributes["message_id"]->toString();
+        $this->properties["s_messageid"]    = isset($attributes["message_id"]) ? $attributes["message_id"]->toString() : null;
         $this->properties["d_sent"]         = $attributes["date"]->toString();
         $this->properties["s_internalid"]   = $this->calculateHash();
 
@@ -80,6 +80,11 @@ class Mail extends Base {
     }
 
     public function forwardMail($mailbox) {
+        // check if sender address is some automatic mailer deamon (delivery notifications) and exit
+        if (preg_match('/(postmaster|mailer-daemon)@.*/', $this->properties["s_frommail"])) {
+            return false;
+        }
+
         // send this mail to all the addresses in mailbox
         $mail = new PHPMailer();
 
