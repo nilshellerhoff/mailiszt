@@ -95,6 +95,9 @@ class Mail extends Base {
         $mail->Password   = $mailbox->properties["s_password"];
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port       = $mailbox->properties["n_smtpport"];
+
+        // allow the mail body to be empty
+        $mail->AllowEmpty = true;
         
         $mail->setFrom($mailbox->properties["s_address"], $mailbox->properties["s_name"]);
 
@@ -107,7 +110,7 @@ class Mail extends Base {
             $mail->AltBody = $this->properties["s_bodytext"];
         } else {
             // mail is only text type
-            $mail->Body = $this->properties["s_bodytext"];
+            $mail->Body = $this->properties["s_bodytext"] ?? '';
         }
 
         // add attachments to mail
