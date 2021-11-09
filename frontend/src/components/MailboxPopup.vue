@@ -79,6 +79,25 @@
 
         <!-- group/user configuration -->
         <v-tab-item>
+          <!-- reply to -->
+          <span class="text-subtitle-1 font-weight-medium">Reply to</span>
+          <v-row no-gutters>
+            <v-col cols=5>
+              <v-select
+                v-model="mailbox.s_replyto"
+                :items="replyToItems"
+                label="Default reply-to header"
+              ></v-select>
+            </v-col>
+            <v-col cols=1></v-col>
+            <v-col cols=6>
+              <v-checkbox
+                v-model="mailbox.b_overridereplyto"
+                label="allow reply to header to be overridden?"
+              ></v-checkbox>
+            </v-col>
+          </v-row>
+
           <!-- group selector -->
           <span class="text-subtitle-2">Groups selector</span>
 
@@ -163,6 +182,10 @@ export default {
       recipients: null,
       currentTab: null,
       simpleGroupsSearchInput: "",
+      replyToItems: [
+        { text : 'Sender', value : 'sender' },
+        { text : 'Mailinglist', value : 'mailinglist' },
+      ]
     };
   },
   components: {

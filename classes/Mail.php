@@ -20,8 +20,8 @@ class Mail extends Base {
         $this->properties["s_subject"]      = $this->object->getSubject();
         $this->properties["s_frommail"]     = $attributes["from"]->toArray()[0]->toArray()["mail"];
         $this->properties["s_fromname"]     = $attributes["from"]->toArray()[0]->toArray()["personal"] ?: NULL;
-        $this->properties["s_replytomail"]  = $attributes["reply_to"]->toArray()[0]->toArray()["mail"];
-        $this->properties["s_replytoname"]  = $attributes["reply_to"]->toArray()[0]->toArray()["personal"] ?: NULL;
+        $this->properties["s_replytomail"]  = $attributes["reply_to"] ? $attributes["reply_to"]->toArray()[0]->toArray()["mail"] : NULL;
+        $this->properties["s_replytoname"]  = $attributes["reply_to"] ? $attributes["reply_to"]->toArray()[0]->toArray()["personal"] : NULL;
         $this->properties["s_tomail"]       = $attributes["to"]->toArray()[0]->toArray()["mail"];
         $this->properties["s_toname"]       = $attributes["to"]->toArray()[0]->toArray()["personal"] ?: NULL;
         $this->properties["s_bodytext"]     = $this->object->getTextBody();
@@ -127,6 +127,27 @@ class Mail extends Base {
             } else {
                 $mail->addAttachment($attach_path, $attachment->properties["s_name"]);
             }
+        }
+
+        // set the reply to address
+        if ($mailbox->properties["s_replyto"] == 'sender') {
+            $replyTo = [
+                "address" => $this->properties["s_frommail"],
+                "name" => $this->properties["s_fromname"]
+            ];
+        }
+
+        if ($mailbox->properties["b_overridereplyto"]) {
+            if (( $this->properties["s_replytomail"] ?? '' ) != '') {
+                $replyTo = [
+                    "address" => $this->properties["s_replytomail"],
+                    "name" => $this->properties["s_replytoname"]
+                ];
+            }
+        }
+
+        if ($replyTo) {
+            $mail->addReplyTo($replyTo["address"], $replyTo["name"]);
         }
 
         // send the mail to all recipients in $mailbox

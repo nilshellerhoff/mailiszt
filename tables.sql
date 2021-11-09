@@ -11,6 +11,8 @@ CREATE TABLE mailbox (
     s_groupsmethod TEXT,
     j_groups TEXT,
     j_groupslogic TEXT,
+    s_replyto TEXT,
+    b_overridereplyto INT,
     d_inserted TEXT,
     d_updated TEXT
 );

@@ -2,17 +2,13 @@
 
 require_once('Base.php');
 
-// php-imap
-use Webklex\PHPIMAP\ClientManager;
-use Webklex\PHPIMAP\Client;
-
 class Mailbox extends Base {
     public $table = "mailbox";
     public $identifier = "i_mailbox";
 
     public $exposedInfo = [
-        "READER"    => ["i_mailbox", "s_name", "s_address", "s_imapserver", "n_imapport", "s_smtpserver", "n_smtpport", "s_username", "s_groupsmethod", "j_groups", "j_groupslogic", "d_inserted", "d_updated"],
-        "ADMIN"     => ["i_mailbox", "s_name", "s_address", "s_imapserver", "n_imapport", "s_smtpserver", "n_smtpport", "s_username", "s_groupsmethod", "j_groups", "j_groupslogic", "d_inserted", "d_updated"],
+        "READER"    => ["i_mailbox", "s_name", "s_address", "s_imapserver", "n_imapport", "s_smtpserver", "n_smtpport", "s_username", "s_groupsmethod", "j_groups", "j_groupslogic", "s_replyto", "b_overridereplyto", "d_inserted", "d_updated"],
+        "ADMIN"     => ["i_mailbox", "s_name", "s_address", "s_imapserver", "n_imapport", "s_smtpserver", "n_smtpport", "s_username", "s_groupsmethod", "j_groups", "j_groupslogic", "s_replyto", "b_overridereplyto", "d_inserted", "d_updated"],
     ];
 
     public $properties;
@@ -26,7 +22,12 @@ class Mailbox extends Base {
 
     public function fetchMails() {
         // connect to the mailbox
-        $cm = new ClientManager('php_imap_config.php');
+        $cm = new Webklex\PHPIMAP\ClientManager($config = [
+            'options' => [
+                'sequence' => \Webklex\PHPIMAP\IMAP::ST_UID,
+                'rfc822' => false
+            ]
+        ]);
         $client = $cm->make([
             'host'          => $this->properties["s_imapserver"],
             'port'          => $this->properties["n_imapport"],
