@@ -51,3 +51,8 @@ or if you only want to forward certain mailboxes
 ```
 <url of server>/api/mailbox/<id of mailbox>/forward
 ```
+
+## What is missing
+- proper validation of inputs
+- multi user functionality with customizable access levels
+- allow member self-registration
