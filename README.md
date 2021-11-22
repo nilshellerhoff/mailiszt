@@ -42,3 +42,12 @@ npm run build
 ```
 
 Copy the base directory to your server (everything in `frontend` except the `dist`-folder can be ignored)
+
+Point a cron job to the following URL in order to forward emails for all registered mailboxes:
+```
+<url of server>/api/mailbox/forward
+```
+or if you only want to forward certain mailboxes
+```
+<url of server>/api/mailbox/<id of mailbox>/forward
+```
