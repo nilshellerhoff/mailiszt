@@ -7,6 +7,7 @@
     :groupsAvail="groupsAvail"
     :groups="groups"
     :groupsLogic="groupsLogic"
+    :allowedSendersPeople="allowedSendersPeople"
   >
   </MailboxPopup>
 </template>
@@ -37,7 +38,8 @@ export default {
         "entity": "i_group",
         "value": 1,
         "arguments": []
-      }
+      },
+      allowedSendersPeople: { people : [] },
     };
   },
   components: {
@@ -47,8 +49,11 @@ export default {
     getMailbox() {
       this.$api.get(`/mailbox/${this.mailboxId}`).then((response) => {
         this.mailbox = response.data;
+
+        // convert json types into objects
         this.groups = { groups : JSON.parse(this.mailbox.j_groups) }
         this.groupsLogic = JSON.parse(this.mailbox.j_groupslogic)
+        this.allowedSendersPeople.people = JSON.parse(this.mailbox.j_allowedsenderspeople)
       });
     },
     getGroupsAvail() {
@@ -61,8 +66,11 @@ export default {
     },
     async saveMailbox() {
       this.btnState = "loading";
+
+      // convert json types into string so they go into DB
       this.mailbox.j_groups = JSON.stringify(this.groups.groups)
       this.mailbox.j_groupslogic = JSON.stringify(this.groupsLogic)
+      this.mailbox.j_allowedsenderspeople = JSON.stringify(this.allowedSendersPeople.people)
 
       this.$api.put(`/mailbox/${this.mailboxId}`, this.mailbox).then(() => {
             this.btnState = "done";

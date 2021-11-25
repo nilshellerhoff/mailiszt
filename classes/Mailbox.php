@@ -7,8 +7,25 @@ class Mailbox extends Base {
     public $identifier = "i_mailbox";
 
     public $exposedInfo = [
-        "READER"    => ["i_mailbox", "s_name", "s_address", "s_imapserver", "n_imapport", "s_smtpserver", "n_smtpport", "s_username", "s_groupsmethod", "j_groups", "j_groupslogic", "s_replyto", "b_overridereplyto", "d_inserted", "d_updated"],
-        "ADMIN"     => ["i_mailbox", "s_name", "s_address", "s_imapserver", "n_imapport", "s_smtpserver", "n_smtpport", "s_username", "s_groupsmethod", "j_groups", "j_groupslogic", "s_replyto", "b_overridereplyto", "d_inserted", "d_updated"],
+        "ADMIN" => [
+            "i_mailbox",
+            "s_name",
+            "s_address",
+            "s_imapserver",
+            "n_imapport",
+            "s_smtpserver",
+            "n_smtpport",
+            "s_username",
+            "s_groupsmethod",
+            "j_groups",
+            "j_groupslogic",
+            "s_replyto",
+            "b_overridereplyto",
+            "s_allowedsenders",
+            "j_allowedsenderspeople",
+            "d_inserted", 
+            "d_updated"
+        ],
     ];
 
     public $properties;

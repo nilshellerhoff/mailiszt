@@ -7,13 +7,14 @@
   >
     <!-- tabs list -->
     <v-tabs v-model="currentTab">
+      <v-tab>general</v-tab>
       <v-tab>server</v-tab>
       <v-tab>groups</v-tab>
     </v-tabs>
 
     <div class="pa-4">
-      <!-- server configuration -->
       <v-tabs-items v-model="currentTab">
+        <!-- general configuration -->
         <v-tab-item>
           <v-text-field
             prepend-icon="mdi-form-textbox"
@@ -25,6 +26,60 @@
             label="Email Address"
             v-model="mailbox.s_address"
           ></v-text-field>
+
+          <!-- allowed senders -->
+          <span class="text-subtitle-1 font-weight-medium">Allowed senders</span>
+          <v-row no-gutters align="center">
+            <v-col cols=5 >
+              <v-select
+                v-model="mailbox.s_allowedsenders"
+                :items="allowedSendersItems"
+                label="who can address this list"
+              >
+              </v-select>
+            </v-col>
+            <v-col cols=1></v-col>
+            <v-col cols=6 >
+              <v-autocomplete
+                v-if="mailbox.s_allowedsenders == 'specific'"
+                v-model="allowedSendersPeople.people"
+                label="allowed senders"
+                :items="members"
+                :item-text="el => el.s_name1 + ' ' + el.s_name2"
+                item-value="i_member"
+                multiple
+                small-chips
+                deletable-chips
+                :search-input.sync="simpleGroupsSearchInput"
+                @change="simpleGroupsSearchInput = ''"
+              ></v-autocomplete>
+            </v-col>
+          </v-row>
+
+          <!-- reply to -->
+          <span class="text-subtitle-1 font-weight-medium">Reply to</span>
+          <v-row no-gutters>
+            <v-col cols=5>
+              <v-select
+                v-model="mailbox.s_replyto"
+                :items="replyToItems"
+                label="Default reply-to header"
+              ></v-select>
+            </v-col>
+            <v-col cols=1></v-col>
+            <v-col cols=6>
+              <v-checkbox
+                v-model="mailbox.b_overridereplyto"
+                label="allow reply to header to be overridden?"
+              ></v-checkbox>
+            </v-col>
+          </v-row>
+
+
+
+        </v-tab-item>
+        <!-- server configuration -->
+        <v-tab-item>
           <v-row no-gutters>
             <v-col cols="8" class="pr-2">
               <v-text-field
@@ -79,25 +134,6 @@
 
         <!-- group/user configuration -->
         <v-tab-item>
-          <!-- reply to -->
-          <span class="text-subtitle-1 font-weight-medium">Reply to</span>
-          <v-row no-gutters>
-            <v-col cols=5>
-              <v-select
-                v-model="mailbox.s_replyto"
-                :items="replyToItems"
-                label="Default reply-to header"
-              ></v-select>
-            </v-col>
-            <v-col cols=1></v-col>
-            <v-col cols=6>
-              <v-checkbox
-                v-model="mailbox.b_overridereplyto"
-                label="allow reply to header to be overridden?"
-              ></v-checkbox>
-            </v-col>
-          </v-row>
-
           <!-- group selector -->
           <span class="text-subtitle-2">Groups selector</span>
 
@@ -175,6 +211,7 @@ export default {
     "groups",
     "groupsAvail",
     "groupsLogic",
+    "allowedSendersPeople",
   ],
   data: function () {
     return {
@@ -185,7 +222,13 @@ export default {
       replyToItems: [
         { text : 'Sender', value : 'sender' },
         { text : 'Mailinglist', value : 'mailinglist' },
-      ]
+      ],
+      allowedSendersItems: [
+        { text : 'Everybody', value : 'everybody' },
+        { text : 'Members of the list', value : 'members' },
+        { text : 'Specific people', value : 'specific' },
+      ],
+      members: [],
     };
   },
   components: {
@@ -205,6 +248,18 @@ export default {
           this.$refs.recipientsPopup.open();
         });
     },
+
+    getMembers() {
+      this.$api.get(`/member`).then(response => {
+        this.members = response.data
+      })
+    }
   },
+  mounted() {
+    this.getMembers()
+    this.$root.$on('reloadData', () => {
+      this.getMembers()
+    })
+  }
 };
 </script>

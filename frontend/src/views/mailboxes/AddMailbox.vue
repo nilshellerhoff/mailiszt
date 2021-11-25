@@ -7,6 +7,7 @@
     :groupsAvail="groupsAvail"
     :groups="groups"
     :groupsLogic="groupsLogic"
+    :allowedSendersPeople="allowedSendersPeople"
   >
   </MailboxPopup>
 </template>
@@ -37,6 +38,7 @@ export default {
         logicOperator: "none",
         arguments: [],
       },
+      allowedSendersPeople: { people: [] },
     };
   },
   components: {

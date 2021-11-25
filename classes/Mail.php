@@ -85,6 +85,37 @@ class Mail extends Base {
             return false;
         }
 
+        // is the sender allowed to write to this mailinglist?
+        switch ($mailbox->properties['s_allowedsenders']) {
+            case 'everybody':
+                // everybody is allowed, continue
+                break;
+            case 'members':
+                // members allowed, check if sender is in recipients list
+                $allowed_mails = array_map(
+                    function ($m) { return $m["s_email"]; },
+                    $mailbox->getRecipients()
+                );
+                if ( in_array($this->properties["s_frommail"], $allowed_mails)) {
+                    break;
+                } else {
+                    return false;
+                }
+            case 'specific':
+                // specific people only allowed
+                $allowed_ids = json_decode($mailbox->properties["j_allowedsenderspeople"]);
+                $allowed_mails = [];
+                foreach($allowed_ids as $id) {
+                    $member = new Member($id);
+                    $allowed_mails[] = $member->properties["s_email"];
+                }
+                if ( in_array($this->properties["s_frommail"], $allowed_mails)) {
+                    break;
+                } else {
+                    return false;
+                }
+        }
+
         // send this mail to all the addresses in mailbox
         $mail = new PHPMailer();
 

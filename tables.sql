@@ -13,6 +13,8 @@ CREATE TABLE mailbox (
     j_groupslogic TEXT,
     s_replyto TEXT,
     b_overridereplyto INT,
+    s_allowedsenders TEXT,
+    j_allowedsenderspeople TEXT,
     d_inserted TEXT,
     d_updated TEXT
 );
