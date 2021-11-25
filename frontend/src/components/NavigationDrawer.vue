@@ -3,6 +3,7 @@
         <v-app-bar absolute
         color="secondary"
         dark
+        style="z-index: 10"
         >
         <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
         <v-toolbar-title class="font-weight-bold">{{$route.name}}</v-toolbar-title>
