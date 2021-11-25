@@ -30,7 +30,7 @@
           <!-- allowed senders -->
           <span class="text-subtitle-1 font-weight-medium">Allowed senders</span>
           <v-row no-gutters align="center">
-            <v-col cols=5 >
+            <v-col cols=12 sm=5>
               <v-select
                 v-model="mailbox.s_allowedsenders"
                 :items="allowedSendersItems"
@@ -38,10 +38,10 @@
               >
               </v-select>
             </v-col>
-            <v-col cols=1></v-col>
-            <v-col cols=6 >
+            <v-col cols=0 sm=1></v-col>
+            <v-col cols=12 sm=6>
               <v-autocomplete
-                v-if="mailbox.s_allowedsenders == 'specific'"
+                :disabled="mailbox.s_allowedsenders != 'specific'"
                 v-model="allowedSendersPeople.people"
                 label="allowed senders"
                 :items="members"
@@ -59,15 +59,15 @@
           <!-- reply to -->
           <span class="text-subtitle-1 font-weight-medium">Reply to</span>
           <v-row no-gutters>
-            <v-col cols=5>
+            <v-col cols=12 sm=5>
               <v-select
                 v-model="mailbox.s_replyto"
                 :items="replyToItems"
                 label="Default reply-to header"
               ></v-select>
             </v-col>
-            <v-col cols=1></v-col>
-            <v-col cols=6>
+            <v-col cols=0 sm=1></v-col>
+            <v-col cols=12 sm=6>
               <v-checkbox
                 v-model="mailbox.b_overridereplyto"
                 label="allow reply to header to be overridden?"
