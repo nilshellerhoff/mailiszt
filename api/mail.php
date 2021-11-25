@@ -11,7 +11,7 @@ Route::add('/api/mail', function() {
     } else {
         $db = new DB();
         $mails = [];
-        $mailids = $db->queryColumn("SELECT i_mail FROM mail");
+        $mailids = $db->queryColumn("SELECT i_mail FROM mail ORDER BY i_mail desc");
         foreach ($mailids as $mailid) {
             $mail = new Mail($mailid);
             $mails[] = $mail->properties;
