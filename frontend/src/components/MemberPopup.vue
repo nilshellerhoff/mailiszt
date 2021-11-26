@@ -41,12 +41,13 @@
         :search-input.sync="groupsSearchInput"
         @change="groupsSearchInput = ''"
       ></v-autocomplete>
-      <v-checkbox
+      <!-- disable active status for now (has now influence) -->
+      <!-- <v-checkbox
         v-model="member.b_active"
         :true-value="1"
         :false-value="0"
         label="Active?"
-      ></v-checkbox>
+      ></v-checkbox> -->
     </div>
   </DetailsPopup>
 </template>
