@@ -113,3 +113,11 @@ CREATE TABLE setting (
     s_type TEXT,
     v_value
 );
+
+CREATE TABLE log (
+    i_log INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    s_level TEXT,
+    s_message TEXT,
+    d_inserted TEXT,
+    d_updated TEXT
+);
