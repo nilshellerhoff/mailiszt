@@ -86,34 +86,44 @@ class Mail extends Base {
         }
 
         // is the sender allowed to write to this mailinglist?
-        switch ($mailbox->properties['s_allowedsenders']) {
-            case 'everybody':
-                // everybody is allowed, continue
-                break;
-            case 'registered':
-                // only members registered in Mailiszt are allowed to address the list
-                $db = new DB();
-                $allowed_mails = $db->queryColumn('SELECT s_email FROM member');
-            case 'members':
-                // members allowed, check if sender is in recipients list
-                $allowed_mails = array_map(
-                    function ($m) { return $m["s_email"]; },
-                    $mailbox->getRecipients()
-                );
-            case 'specific':
-                // specific people only allowed
-                $allowed_ids = json_decode($mailbox->properties["j_allowedsenderspeople"]);
-                $allowed_mails = [];
-                foreach($allowed_ids as $id) {
-                    $member = new Member($id);
-                    $allowed_mails[] = $member->properties["s_email"];
-                }
-                if ( in_array($this->properties["s_frommail"], $allowed_mails) ) {
+        if ($mailbox->properties['s_allowedsenders'] == 'everybody') {
+            // everybody is allowed, continue
+            Logger::log("forwarding mail \"{$this->properties['s_subject']}\" because allowed senders is '{$mailbox->properties['s_allowedsenders']}'");
+        } else {
+            // not everybody is allowed, populate an array of allowed mails
+            $allowed_mails = [];
+
+            switch ($mailbox->properties['s_allowedsenders']) {
+                case 'registered':
+                    // only members registered in Mailiszt are allowed to address the list
+                    $db = new DB();
+                    $allowed_mails = $db->queryColumn('SELECT s_email FROM member');
                     break;
-                } else {
-                    return false;
+                case 'members':
+                    // members allowed, check if sender is in recipients list
+                    $allowed_mails = array_map(
+                        function ($m) { return $m["s_email"]; },
+                        $mailbox->getRecipients()
+                    );
+                    break;
+                case 'specific':
+                    // specific people only allowed
+                    $allowed_ids = json_decode($mailbox->properties["j_allowedsenderspeople"]);
+                    $allowed_mails = [];
+                    foreach($allowed_ids as $id) {
+                        $member = new Member($id);
+                        $allowed_mails[] = $member->properties["s_email"];
+                    }
                     break;
                 }
+
+            // check whether sender is in allowed mails
+            if ( in_array($this->properties["s_frommail"], $allowed_mails) ) {
+                Logger::log("forwarding mail \"{$this->properties['s_subject']}\" because allowed senders is '{$mailbox->properties['s_allowedsenders']}' and '{$this->properties['s_frommail']}' is in " . json_encode($allowed_mails));
+            } else {
+                Logger::log("not forwarding mail \"{$this->properties['s_subject']}\" because allowed senders is '{$mailbox->properties['s_allowedsenders']}' and '{$this->properties['s_frommail']}' is not in " . json_encode($allowed_mails));
+                return false;
+            }
         }
 
         // send this mail to all the addresses in mailbox
