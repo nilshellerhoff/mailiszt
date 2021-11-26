@@ -94,23 +94,12 @@ class Mail extends Base {
                 // only members registered in Mailiszt are allowed to address the list
                 $db = new DB();
                 $allowed_mails = $db->queryColumn('SELECT s_email FROM member');
-                if ( in_array($this->properties["s_frommail"], $allowed_mails)) {
-                    break;
-                } else {
-                    return false;
-                }
-                break;
             case 'members':
                 // members allowed, check if sender is in recipients list
                 $allowed_mails = array_map(
                     function ($m) { return $m["s_email"]; },
                     $mailbox->getRecipients()
                 );
-                if ( in_array($this->properties["s_frommail"], $allowed_mails)) {
-                    break;
-                } else {
-                    return false;
-                }
             case 'specific':
                 // specific people only allowed
                 $allowed_ids = json_decode($mailbox->properties["j_allowedsenderspeople"]);
@@ -119,10 +108,11 @@ class Mail extends Base {
                     $member = new Member($id);
                     $allowed_mails[] = $member->properties["s_email"];
                 }
-                if ( in_array($this->properties["s_frommail"], $allowed_mails)) {
+                if ( in_array($this->properties["s_frommail"], $allowed_mails) ) {
                     break;
                 } else {
                     return false;
+                    break;
                 }
         }
 
