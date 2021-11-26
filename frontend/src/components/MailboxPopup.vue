@@ -225,6 +225,7 @@ export default {
       ],
       allowedSendersItems: [
         { text : 'Everybody', value : 'everybody' },
+        { text : 'Registered members', value : 'registered' },
         { text : 'Members of the list', value : 'members' },
         { text : 'Specific people', value : 'specific' },
       ],

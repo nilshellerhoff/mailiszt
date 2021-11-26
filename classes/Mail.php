@@ -90,6 +90,16 @@ class Mail extends Base {
             case 'everybody':
                 // everybody is allowed, continue
                 break;
+            case 'registered':
+                // only members registered in Mailiszt are allowed to address the list
+                $db = new DB();
+                $allowed_mails = $db->queryColumn('SELECT s_email FROM member');
+                if ( in_array($this->properties["s_frommail"], $allowed_mails)) {
+                    break;
+                } else {
+                    return false;
+                }
+                break;
             case 'members':
                 // members allowed, check if sender is in recipients list
                 $allowed_mails = array_map(
