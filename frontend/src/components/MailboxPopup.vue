@@ -50,8 +50,8 @@
                 multiple
                 small-chips
                 deletable-chips
-                :search-input.sync="simpleGroupsSearchInput"
-                @change="simpleGroupsSearchInput = ''"
+                :search-input.sync="allowedSendersSearchInput"
+                @change="allowedSendersSearchInput = ''"
               ></v-autocomplete>
             </v-col>
           </v-row>
@@ -229,6 +229,7 @@ export default {
         { text : 'Members of the list', value : 'members' },
         { text : 'Specific people', value : 'specific' },
       ],
+      allowedSendersSearchInput: '',
       members: [],
     };
   },
