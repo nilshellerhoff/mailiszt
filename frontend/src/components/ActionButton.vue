@@ -46,7 +46,7 @@ export default {
     },
   },
   methods: {
-    loading(b) {
+    loading(b = true) {
       if (b) {
         this.fixedWidth = this.$refs.btnContainer.clientWidth;
         this.isLoading = true;
@@ -54,12 +54,14 @@ export default {
     },
     error() {
       this.isError = true;
+      if (this.isLoading) this.isLoading = false;
       setTimeout(() => {
         this.isError = false;
       }, this.timeout);
     },
     success() {
       this.isSuccess = true;
+      if (this.isLoading) this.isLoading = false;
       setTimeout(() => {
         this.isSuccess = false;
       }, this.timeout);

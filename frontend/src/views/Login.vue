@@ -64,7 +64,7 @@ export default {
   methods: {
     login() {
       this.password = this.$refs.passwordInput.password;
-      this.$refs.loginButton.loading(true);
+      this.$refs.loginButton.loading();
       this.$root.$refs.App.login(this.username, this.password)
       .then(() => {
           this.$router.push("/");
@@ -73,7 +73,6 @@ export default {
       ).catch(() => {
           this.password = ""
           this.$refs.passwordInput.password = this.password
-          this.$refs.loginButton.loading(false);
           this.$refs.loginButton.error();
           this.loginError = true;
       })
