@@ -22,10 +22,11 @@
           ></PasswordInput>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="primary" type="submit" :loading="btnLoading">
-              <v-icon>mdi-login</v-icon>
-              Log in
-            </v-btn>
+            <ActionButton
+              ref="loginButton"
+              label="login"
+              type="submit"
+            ></ActionButton>
           </v-card-actions>
         </v-form>
       </v-card>
@@ -47,33 +48,35 @@
 </style>
 
 <script>
+import ActionButton from "@/components/ActionButton.vue";
 import PasswordInput from "@/components/PasswordInput.vue";
 
 export default {
   name: "Login",
-  components: { PasswordInput },
+  components: { PasswordInput, ActionButton },
   data: () => ({
     username: "",
     password: "",
     showPassword: false,
-    btnLoading: false,
+    loading: false,
     loginError: false,
   }),
   methods: {
     login() {
       this.password = this.$refs.passwordInput.password;
-      this.btnLoading = true;
-      this.$root.$refs.App.login(this.username, this.password).then(
-        (status) => {
-          if (status) {
-            this.$router.push("/");
-          } else {
-            this.loginError = true;
-            this.password = "";
-            this.btnLoading = false;
-          }
+      this.$refs.loginButton.loading(true);
+      this.$root.$refs.App.login(this.username, this.password)
+      .then(() => {
+          this.$router.push("/");
+          this.$refs.loginButton.success();
         }
-      );
+      ).catch(() => {
+          this.password = ""
+          this.$refs.passwordInput.password = this.password
+          this.$refs.loginButton.loading(false);
+          this.$refs.loginButton.error();
+          this.loginError = true;
+      })
     },
   },
   mounted() {

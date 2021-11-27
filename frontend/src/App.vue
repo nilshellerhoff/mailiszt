@@ -107,6 +107,7 @@ export default {
       // request a login at the server and store the accessToken as cookie and global var
       return this.$api
         .put("users/current/login", { username: username, password: password })
+        .catch((response) => {return Promise.reject(response.status)})
         .then((response) => {
           if (response.data) {
             this.accessToken = response.data;

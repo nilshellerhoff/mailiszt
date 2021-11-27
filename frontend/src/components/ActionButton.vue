@@ -4,6 +4,7 @@
       :color="compColor"
       :loading="isLoading"
       :width="compWidth ? compWidth : ''"
+      :type="type"
       @click="$emit('click')"
     >
       <span v-if="!isSuccess && !isError">{{ label }}</span>
@@ -22,6 +23,7 @@ export default {
     icon: { type: String, required: false },
     width: { type: Number, required: false },
     timeout: { type: Number, default: 2000 },
+    type: { type: String, default: "button" },
   },
   data() {
     return {
