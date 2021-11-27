@@ -4,6 +4,7 @@
     :btnState="btnState"
     :popupTitle="popupTitle"
     closeUrl="/mailboxes"
+    :loading="loading"
   >
     <!-- tabs list -->
     <v-tabs v-model="currentTab">
@@ -212,6 +213,7 @@ export default {
     "groupsAvail",
     "groupsLogic",
     "allowedSendersPeople",
+    "loading"
   ],
   data: function () {
     return {

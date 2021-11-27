@@ -8,6 +8,7 @@
     :groups="groups"
     :groupsLogic="groupsLogic"
     :allowedSendersPeople="allowedSendersPeople"
+    :loading="loading"
   >
   </MailboxPopup>
 </template>
@@ -19,6 +20,7 @@ export default {
   name: "EditMailbox",
   data: function () {
     return {
+      loading: true,
       mailboxId: this.$route.params.id,
       mailbox: {},
       btnState: "ready",
