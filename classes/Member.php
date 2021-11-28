@@ -48,13 +48,7 @@ class Member extends Base {
         );
     }
 
-    public function apiGetInfo($role) {
-        // get the info appropriate to the user role
-        $member = array_intersect_key(
-            $this->properties,
-            array_flip($this->exposedInfo[$role])
-        );
-
+    public function apiGetAddInfo($member) {
         $member["groups"] = $this->getGroups();
         return $member;
     }

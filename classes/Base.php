@@ -106,9 +106,16 @@ class Base {
 
     public function apiGetInfo($role) {
         // get the info appropriate to the user role
-        return array_intersect_key(
+        $properties = array_intersect_key(
             $this->properties,
             array_flip($this->exposedInfo[$role])
-        ); 
+        );
+        return $this->apiGetAddInfo($properties);
+    }
+
+    public function apiGetAddInfo($properties) {
+        // empty function, which can be overwritten by subclasses
+        // this can be used to add additional information to the api response and is called by apiGetInfo()
+        return $properties;
     }
 }
