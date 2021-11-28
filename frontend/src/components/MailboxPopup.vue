@@ -169,12 +169,14 @@
           </div>
 
           <!-- logic selector -->
-          <div class="pa-4" v-show="mailbox.s_groupsmethod == 'logic'">
+          <div class="pa-4" v-show="mailbox.s_groupsmethod == 'logic'" style="overflow-x: scroll">
+            <div style="display: block; min-width: 600px">
             <BooleanInput
               ref="boolInp"
               :entities="groupsAvail"
               :condition="groupsLogic"
             ></BooleanInput>
+          </div>
           </div>
 
           <v-btn @click="openRecipientsPopup()">Show recipients</v-btn>
