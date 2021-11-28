@@ -43,6 +43,11 @@
         {{ getDate(item.d_sent) }}
       </template>
 
+      <!-- num_recipients -->
+      <template v-slot:[`item.num_recipients`]="{ item }">
+        {{ item.recipients.length }}
+      </template>
+
       <!-- details button -->
       <template v-slot:[`item.actions`]="{ item }">
         <v-btn :to="'/mails/' + item.i_mail">View</v-btn>
@@ -63,6 +68,7 @@ export default {
       { text: "List", value: "s_tomail" },
       { text: "Sent", value: "date" },
       { text: "Subject", value: "s_subject" },
+      { text: "Recipients", value: "num_recipients"},
       { text: "", value: "actions", sortable: false, align: "right"}
     ],
     mobileSearchVisible: false,
