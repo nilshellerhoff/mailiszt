@@ -2,7 +2,7 @@
     <MailPopup
       :popupTitle='`Message "${mail.s_subject}"`'
       :mail="mail"
-      :recipients="recipients"
+      :recipients="mail.recipients"
     >
     </MailPopup>
 </template>
@@ -16,7 +16,6 @@ export default {
     return {
       mailId: this.$route.params.id,
       mail: {},
-      recipients: [],
     }
   },
   components: {
@@ -28,18 +27,11 @@ export default {
         this.mail = response.data;
       });
     },
-    getRecipients() {
-      this.$api.get(`/mail/${this.mailId}/recipient`).then((response) => {
-        this.recipients = response.data;
-      });
-    }
   },
   mounted() {
     this.getMail();
-    this.getRecipients();
     this.$root.$on('reloadData', () => {
       this.getMail()
-      this.getRecipients()
     })
   },
 };
