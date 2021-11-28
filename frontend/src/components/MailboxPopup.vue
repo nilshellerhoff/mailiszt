@@ -93,35 +93,43 @@
                 prepend-icon=""
                 label="IMAP port"
                 v-model="mailbox.n_imapport"
-              ></v-text-field>
+              >
+                <template v-slot:append-outer>
+                  <InfoTooltip>Only SSL is supported (usually 993)</InfoTooltip>
+                </template>
+              </v-text-field>
             </v-col>
           </v-row>
-          <v-row no-gutters>
-            <v-col cols="8" class="pr-2">
+          <v-row no-gutters align="center">
+            <v-col cols=8 class="pr-2">
               <v-text-field
                 prepend-icon="mdi-email-send"
                 label="SMTP server"
                 v-model="mailbox.s_smtpserver"
               ></v-text-field>
             </v-col>
-            <v-col cols="4">
+            <v-col cols=4>
               <v-text-field
-                prepend-icon=""
                 label="SMTP port"
                 v-model="mailbox.n_smtpport"
-              ></v-text-field>
+              >
+                <template v-slot:append-outer>
+                  <InfoTooltip>Only STARTTLS is supported (usually 587)</InfoTooltip>
+                </template>
+              </v-text-field>
             </v-col>
           </v-row>
           <v-row no-gutters>
-            <v-col cols="6" class="pr-2">
+            <v-col cols="12" sm="6" class="pr-2">
               <v-text-field
                 prepend-icon="mdi-account"
                 label="Username"
                 v-model="mailbox.s_username"
               ></v-text-field>
             </v-col>
-            <v-col cols="6">
+            <v-col cols="12" sm="6">
               <v-text-field
+                prepend-icon="mdi-lock"
                 v-model="mailbox.s_password"
                 :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                 :type="showPassword ? 'text' : 'password'"
@@ -201,6 +209,7 @@ a {
 import DetailsPopup from "@/components/DetailsPopup.vue";
 import BooleanInput from "@/components/BooleanInput.vue";
 import Popup from "@/components/Popup.vue";
+import InfoTooltip from "@/components/InfoTooltip.vue"
 
 export default {
   name: "MailboxPopup",
@@ -237,6 +246,7 @@ export default {
     DetailsPopup,
     BooleanInput,
     Popup,
+    InfoTooltip,
   },
   methods: {
     openRecipientsPopup() {
