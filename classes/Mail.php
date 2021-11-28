@@ -14,6 +14,30 @@ class Mail extends Base {
     public $attachments = [];
     public $saved;
 
+    public $exposedInfo = [
+        "ADMIN"     => [
+            "i_mail",
+            "i_mailbo",
+            "s_internalid",
+            "s_frommail",
+            "s_fromname",
+            "s_replytomail",
+            "s_replytoname",
+            "s_tomail",
+            "s_toname",
+            "s_messageid",
+            "d_sent",
+            "s_subject",
+            "s_bodytext",
+            "s_bodyhtml",
+            "n_attachments",
+            "d_forwarded",
+            "d_inserted",
+            "d_update",
+        ]
+    ];
+
+
     protected function populateFromObject() {
         $attributes = $this->object->getAttributes();
 
@@ -223,5 +247,10 @@ class Mail extends Base {
             "SELECT * FROM mail2member WHERE i_mail = ?",
             [$this->properties["i_mail"]]
         );
+    }
+
+    public function apiGetAddInfo($mail) {
+        $mail["recipients"] = $this->getRecipients();
+        return $mail;
     }
 }

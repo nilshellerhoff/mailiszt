@@ -14,7 +14,7 @@ Route::add('/api/mail', function() {
         $mailids = $db->queryColumn("SELECT i_mail FROM mail ORDER BY i_mail desc");
         foreach ($mailids as $mailid) {
             $mail = new Mail($mailid);
-            $mails[] = $mail->properties;
+            $mails[] = $mail->apiGetInfo("ADMIN");
         }
         return makeResponse($mails);
     }
@@ -26,7 +26,7 @@ Route::add('/api/mail/([0-9]*)', function($i_mail) {
         return makeResponse('invalid authentication', 403);
     } else {
         $mail = new Mail($i_mail);
-        return makeResponse($mail->properties);
+        return makeResponse($mail->apiGetInfo("ADMIN"));
     }
 }, 'GET');
 
