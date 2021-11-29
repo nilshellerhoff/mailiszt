@@ -5,6 +5,7 @@
     :btnState="btnState"
     :member="member"
     :groups="groups"
+    :closeUrl="active ? '/members' : '/members/inactive'"
   >
   </MemberPopup>
 </template>
@@ -13,11 +14,17 @@
 import MemberPopup from "@/components/MemberPopup.vue";
 
 export default {
-  name: "EditMember",
+  name: "AddMember",
+  props: {
+    active : {
+      type: Boolean,
+      default: true,
+    }
+  },
   data: function () {
     return {
       member: {
-        b_active: 1,
+        b_active: Number(this.active),
       },
       groups: {
         member: [],

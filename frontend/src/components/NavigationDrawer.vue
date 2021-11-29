@@ -54,14 +54,47 @@
 <script>
   export default {
     name: "NavigationDrawer",
-    props: [
-      "links",
-    ],
     data: () => ({
+      links: [
+        {
+          title: "Home",
+          url: "/",
+          icon: "mdi-home",
+        },
+        {
+          title: "Members",
+          url: "/members",
+          icon: "mdi-account",
+        },
+        {
+          title: "Inactive members",
+          url: "/members/inactive",
+          icon: "mdi-account-off",
+        },
+        {
+          title: "Groups",
+          url: "/groups",
+          icon: "mdi-account-group",
+        },
+        {
+          title: "Mailboxes",
+          url: "/mailboxes",
+          icon: "mdi-email-multiple",
+        },
+        {
+          title: "Mails",
+          url: "/mails",
+          icon: "mdi-email",
+        },
+        {
+          title: "Settings",
+          url: "/settings",
+          icon: "mdi-cog",
+        },
+      ],
       drawer: false,
-      group: null,
+      // group: null,
     }),
-
     watch: {
       group () {
         this.drawer = false
@@ -70,6 +103,16 @@
     computed: {
         mobile() {
             return this.$vuetify.breakpoint.sm;
+        },
+        group: {
+          get() {
+            let currPath = this.$route.path
+            let links = this.links.map(l => l.url)
+            return links.indexOf(currPath)
+          },
+          set (newGroup) {
+            return newGroup
+          }
         }
     },
     methods: {

@@ -66,6 +66,43 @@ const routes = [
       },
     ],
   },
+  // inactive members
+  {
+    path: "/members/inactive",
+    component: EmptyRouterView,
+    children: [
+      {
+        name: 'Inactive members',
+        path: '',
+        component: Members,
+        props: { active: false }
+      },
+      {
+        path: "edit/:id",
+        name: "Inactive members",
+        components: {
+          default:  Members,
+          dialog: EditMember,
+        },
+        props: {
+          default: { active: false },
+          dialog: { active: false }
+        }
+      },
+      {
+        path: "add",
+        name: "Inactive members",
+        components: {
+          default: Members,
+          dialog: AddMember,
+        },
+        props: {
+          default: { active: false },
+          dialog: { active: false }
+        }
+      },
+    ],
+  },
   // groups
   {
     path: "/groups",

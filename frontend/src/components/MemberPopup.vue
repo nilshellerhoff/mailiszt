@@ -3,7 +3,7 @@
     @save="$emit('save')"
     :btnState="btnState"
     :popupTitle="popupTitle"
-    closeUrl="/members"
+    :closeUrl="closeUrl"
   >
     <div class="pa-4">
       <v-text-field
@@ -41,13 +41,12 @@
         :search-input.sync="groupsSearchInput"
         @change="groupsSearchInput = ''"
       ></v-autocomplete>
-      <!-- disable active status for now (has now influence) -->
-      <!-- <v-checkbox
+      <v-switch
         v-model="member.b_active"
         :true-value="1"
         :false-value="0"
-        label="Active?"
-      ></v-checkbox> -->
+        label="active"
+      ></v-switch>
     </div>
   </DetailsPopup>
 </template>
@@ -58,7 +57,7 @@ import BirthdayPicker from "@/components/BirthdayPicker.vue";
 
 export default {
   name: "MemberPopup",
-  props: ["popupTitle", "member", "groups", "btnState"],
+  props: ["popupTitle", "member", "groups", "btnState", "closeUrl"],
   data: function () {
     return {
       groupsSearchInput: "",
