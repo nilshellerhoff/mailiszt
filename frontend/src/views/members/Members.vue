@@ -30,7 +30,7 @@
         <v-btn
           class="mx-1 pa-2 pa-sm-4"
           color="primary"
-          to="/members/add"
+          :to="addUrl"
           >
           <v-icon class="mr-2">mdi-plus</v-icon>
           add new
@@ -98,7 +98,7 @@
       <!-- edit link -->
       <template v-slot:[`item.actions`]="{ item }">
         <div style="white-space: nowrap">
-          <v-btn small class="mr-1" :to="'/members/edit/' + item.i_member"
+          <v-btn small class="mr-1" :to="editUrl + item.i_member"
             >Edit</v-btn
           >
           <v-btn
@@ -130,6 +130,12 @@ import { ExportToCsv } from 'export-to-csv';
 
 export default {
   name: "Home",
+  props: {
+    active : {
+      type: Boolean,
+      default: true,
+    }
+  },
   data: () => ({
     search: "",
     members: [],
@@ -145,18 +151,21 @@ export default {
   }),
   computed: {
     filteredMembers() {
-      let members = []
+      let members = this.members
+      // filter for active status
+      if (this.active) { members = members.filter(m => m.b_active) }
+      else { members = members.filter(m => !m.b_active) }
+
       // filter for the groups input
       if (this.groupsFilter.length > 0) {
-        members = this.members
+        members = members
         .filter((member) =>
           member.groups
             .map((group) => group.i_group)
             .some((g) => this.groupsFilter.includes(g))
         )
-      } else {
-        members = this.members;
       }
+
       // now filter for the search word
       return members.filter((member) => 
           String(
@@ -165,8 +174,9 @@ export default {
           ).toUpperCase()
           .indexOf((this.search || '').toUpperCase()) != -1
       );
-
     },
+    editUrl() { return this.active ? '/members/edit/' : '/members/inactive/edit/' },
+    addUrl() { return this.active ? '/members/add' : '/members/inactive/add' }
   },
   methods: {
     getMembers() {

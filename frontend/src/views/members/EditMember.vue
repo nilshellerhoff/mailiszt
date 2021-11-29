@@ -5,6 +5,7 @@
       :btnState="btnState"
       :member="member"
       :groups="groups"
+      :closeUrl="active ? '/members' : '/members/inactive'"
     >
     </MemberPopup>
 </template>
@@ -14,6 +15,12 @@ import MemberPopup from '@/components/MemberPopup.vue'
 
 export default {
   name: "EditMember",
+  props: {
+    active : {
+      type: Boolean,
+      default: true,
+    }
+  },
   data: function () {
     return {
       memberId: this.$route.params.id,
