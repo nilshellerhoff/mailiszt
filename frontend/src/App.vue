@@ -1,6 +1,6 @@
 <template>
   <v-app id="app">
-    <NavigationDrawer :links="links" v-show="$route.name == 'Login' ? false : true">
+    <NavigationDrawer v-show="$route.name == 'Login' ? false : true">
       <div style="position: absolute; top: 64px; overflow-y: scroll; width: 100vw">
         <div style="max-width: 1000px; width: 100%; position: relative; margin: 0 auto">
           <router-view />
@@ -38,38 +38,6 @@ export default {
     },
   },
   data: () => ({
-    links: [
-      {
-        title: "Home",
-        url: "/",
-        icon: "mdi-home",
-      },
-      {
-        title: "Members",
-        url: "/members",
-        icon: "mdi-account",
-      },
-      {
-        title: "Groups",
-        url: "/groups",
-        icon: "mdi-account-group",
-      },
-      {
-        title: "Mailboxes",
-        url: "/mailboxes",
-        icon: "mdi-email-multiple",
-      },
-      {
-        title: "Mails",
-        url: "/mails",
-        icon: "mdi-email",
-      },
-      {
-        title: "Settings",
-        url: "/settings",
-        icon: "mdi-cog",
-      },
-    ],
     accessToken: null,
     userInfo: {
       "i_user": "",

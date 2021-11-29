@@ -54,10 +54,39 @@
 <script>
   export default {
     name: "NavigationDrawer",
-    props: [
-      "links",
-    ],
     data: () => ({
+      links: [
+        {
+          title: "Home",
+          url: "/",
+          icon: "mdi-home",
+        },
+        {
+          title: "Members",
+          url: "/members",
+          icon: "mdi-account",
+        },
+        {
+          title: "Groups",
+          url: "/groups",
+          icon: "mdi-account-group",
+        },
+        {
+          title: "Mailboxes",
+          url: "/mailboxes",
+          icon: "mdi-email-multiple",
+        },
+        {
+          title: "Mails",
+          url: "/mails",
+          icon: "mdi-email",
+        },
+        {
+          title: "Settings",
+          url: "/settings",
+          icon: "mdi-cog",
+        },
+      ],
       drawer: false,
       group: null,
     }),
