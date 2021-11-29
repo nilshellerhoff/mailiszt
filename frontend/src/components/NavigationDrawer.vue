@@ -67,6 +67,11 @@
           icon: "mdi-account",
         },
         {
+          title: "Inactive members",
+          url: "/members/inactive",
+          icon: "mdi-account-off",
+        },
+        {
           title: "Groups",
           url: "/groups",
           icon: "mdi-account-group",
@@ -88,9 +93,8 @@
         },
       ],
       drawer: false,
-      group: null,
+      // group: null,
     }),
-
     watch: {
       group () {
         this.drawer = false
@@ -99,6 +103,16 @@
     computed: {
         mobile() {
             return this.$vuetify.breakpoint.sm;
+        },
+        group: {
+          get() {
+            let currPath = this.$route.path
+            let links = this.links.map(l => l.url)
+            return links.indexOf(currPath)
+          },
+          set (newGroup) {
+            return newGroup
+          }
         }
     },
     methods: {
