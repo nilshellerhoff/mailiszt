@@ -96,7 +96,7 @@ class Mailbox extends Base {
         $sql_query = <<<SQL
 SELECT DISTINCT m.* FROM member m
 INNER JOIN member2group mg ON mg.i_member = m.i_member
-WHERE mg.i_group IN ($groups_list)
+WHERE mg.i_group IN ($groups_list) AND m.b_active = 1
 SQL;
 
         $db = new DB();
@@ -107,7 +107,7 @@ SQL;
         // static function for getting the recipients when supplying a custom condition
         $db = new DB();
         $whereCond = Mailbox::getSqlExpression($condition);
-        $sql_query = "SELECT DISTINCT m.* FROM member m WHERE $whereCond";
+        $sql_query = "SELECT DISTINCT m.* FROM member m WHERE $whereCond AND m.b_active = 1";
         return $db->queryAll($sql_query);
     }
 
