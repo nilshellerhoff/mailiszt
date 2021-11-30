@@ -114,7 +114,7 @@
           <!-- deactivate button -->
           <span v-if="active">
             <v-btn small class="mr-1" color="secondary" @click="switchMemberActive(item.i_member, false)">
-              Disable
+              Deactivate
             </v-btn>
           </span>
           <!-- delete button -->
@@ -123,7 +123,7 @@
               Delete
             </v-btn>
           </span>
-          
+
         </div>
       </template>
 
