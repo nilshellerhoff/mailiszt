@@ -98,17 +98,32 @@
       <!-- edit link -->
       <template v-slot:[`item.actions`]="{ item }">
         <div style="white-space: nowrap">
-          <v-btn small class="mr-1" :to="editUrl + item.i_member"
-            >Edit</v-btn
-          >
-          <v-btn
-            small
-            color="error"
-            @click="
-              deleteMember(item.i_member, item.s_name1 + ' ' + item.s_name2)
-            "
-            >Delete</v-btn
-          >
+
+          <!-- edit button -->
+          <span>
+            <v-btn small class="mr-1" :to="editUrl + item.i_member">
+              Edit
+            </v-btn>
+          </span>
+          <!-- activate button -->
+          <span v-if="!active">
+            <v-btn small class="mr-1" color="secondary" @click="switchMemberActive(item.i_member, true)">
+              Activate
+            </v-btn>
+          </span>
+          <!-- deactivate button -->
+          <span v-if="active">
+            <v-btn small class="mr-1" color="secondary" @click="switchMemberActive(item.i_member, false)">
+              Disable
+            </v-btn>
+          </span>
+          <!-- delete button -->
+          <span v-if="!active">
+            <v-btn small class="mr-1" color="error" @click="deleteMember(item.i_member)">
+              Delete
+            </v-btn>
+          </span>
+          
         </div>
       </template>
 
@@ -203,6 +218,12 @@ export default {
             });
           }
         });
+    },
+    switchMemberActive(i_member, active) {
+      this.$api.put(`/member/${i_member}`, { b_active : Number(Boolean(active)) })
+      .then(() => {
+        this.$root.$emit("reloadData");
+      });
     },
     switchGroupFilter(i_group) {
       if (this.groupsFilter.includes(i_group)) {
