@@ -46,7 +46,7 @@
     </v-row>
 
     <!-- table -->
-    <v-data-table :headers="headers" :items="groups" :search="search">
+    <v-data-table :headers="headers" :items="groups" :search="search" :options="{ itemsPerPage: -1 }">
       <!-- edit link -->
       <template v-slot:[`item.actions`]="{ item }">
         <router-link :to="'/groups/edit/' + item.i_group">

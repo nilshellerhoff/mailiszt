@@ -46,7 +46,7 @@
     </v-row>
 
     <!-- table -->
-    <v-data-table :headers="headers" :items="mailboxes" :search="search">
+    <v-data-table :headers="headers" :items="mailboxes" :search="search" :options="{ itemsPerPage: -1 }">
       <!-- edit link -->
       <template v-slot:[`item.actions`]="{ item }">
         <router-link :to="'/mailboxes/edit/' + item.i_mailbox">

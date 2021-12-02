@@ -78,7 +78,7 @@
     </v-row>
 
     <!-- table -->
-    <v-data-table :headers="headers" :items="filteredMembers">
+    <v-data-table :headers="headers" :items="filteredMembers" :options="{ itemsPerPage: -1 }">
       <!-- name -->
       <template v-slot:[`item.name`]="{ item }">
         {{ item.s_name1 }} {{ item.s_name2 }}
