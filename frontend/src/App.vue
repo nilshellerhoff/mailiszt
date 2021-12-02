@@ -1,7 +1,7 @@
 <template>
   <v-app id="app">
     <NavigationDrawer v-show="$route.name == 'Login' ? false : true">
-      <div style="position: absolute; top: 64px; overflow-y: scroll; width: 100vw">
+      <div style="position: absolute; top: 64px; width: 100vw;">
         <div style="max-width: 1000px; width: 100%; position: relative; margin: 0 auto">
           <router-view />
         </div>

@@ -1,9 +1,9 @@
 <template>
     <div>
-        <v-app-bar absolute
-        color="secondary"
-        dark
-        style="z-index: 10"
+        <v-app-bar fixed
+          color="secondary"
+          dark
+          style="z-index: 10"
         >
         <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
         <v-toolbar-title class="font-weight-bold">{{$route.name}}</v-toolbar-title>
@@ -16,10 +16,12 @@
 
         <v-navigation-drawer
           v-model="drawer"
-          absolute
+          fixed
           temporary
           style="top: 64px; height: calc(100vh - 64px)"
         >
+
+
         <v-list
           nav
         >
