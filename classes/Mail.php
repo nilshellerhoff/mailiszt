@@ -153,76 +153,82 @@ class Mail extends Base {
         // send this mail to all the addresses in mailbox
         $mail = new PHPMailer();
 
-        $mail->isSMTP();                                        
-        $mail->Host       = $mailbox->properties["s_smtpserver"];
-        $mail->SMTPAuth   = true;
-        $mail->Username   = $mailbox->properties["s_username"];
-        $mail->Password   = $mailbox->properties["s_password"];
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port       = $mailbox->properties["n_smtpport"];
+        try {
+            $mail->isSMTP();                                        
+            $mail->Host       = $mailbox->properties["s_smtpserver"];
+            $mail->SMTPAuth   = true;
+            $mail->Username   = $mailbox->properties["s_username"];
+            $mail->Password   = $mailbox->properties["s_password"];
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port       = $mailbox->properties["n_smtpport"];
 
-        // allow the mail body to be empty
-        $mail->AllowEmpty = true;
-        
-        $mail->setFrom($mailbox->properties["s_address"], $mailbox->properties["s_name"]);
+            // allow the mail body to be empty
+            $mail->AllowEmpty = true;
+            
+            $mail->setFrom($mailbox->properties["s_address"], $mailbox->properties["s_name"]);
 
-        $mail->Subject = $this->properties["s_subject"];
+            $mail->Subject = $this->properties["s_subject"];
 
-        if (isset($this->properties["s_bodyhtml"]) && !is_null($this->properties["s_bodyhtml"])) {
-            // mail is html type
-            $mail->isHTML(true);
-            $mail->Body = $this->properties["s_bodyhtml"];
-            $mail->AltBody = $this->properties["s_bodytext"];
-        } else {
-            // mail is only text type
-            $mail->Body = $this->properties["s_bodytext"] ?? '';
-        }
-
-        // add attachments to mail
-        foreach ($this->attachments as $attachment) {
-            $attach_path = ATTACHMENT_PATH . $attachment->properties["s_filename"];
-
-            // if cid is set, handle as embedded image, else normal attachment
-            if (isset($attachment->properties["s_cid"])) {
-                $mail->AddEmbeddedImage(
-                    $attach_path,
-                    $attachment->properties["s_cid"],
-                    $attachment->properties["s_name"]
-                );
+            if (isset($this->properties["s_bodyhtml"]) && !is_null($this->properties["s_bodyhtml"])) {
+                // mail is html type
+                $mail->isHTML(true);
+                $mail->Body = $this->properties["s_bodyhtml"];
+                $mail->AltBody = $this->properties["s_bodytext"];
             } else {
-                $mail->addAttachment($attach_path, $attachment->properties["s_name"]);
+                // mail is only text type
+                $mail->Body = $this->properties["s_bodytext"] ?? '';
             }
-        }
 
-        // set the reply to address
-        if ($mailbox->properties["s_replyto"] == 'sender') {
-            $replyTo = [
-                "address" => $this->properties["s_frommail"],
-                "name" => $this->properties["s_fromname"]
-            ];
-        }
+            // add attachments to mail
+            foreach ($this->attachments as $attachment) {
+                $attach_path = ATTACHMENT_PATH . $attachment->properties["s_filename"];
 
-        if ($mailbox->properties["b_overridereplyto"]) {
-            if (( $this->properties["s_replytomail"] ?? '' ) != '') {
+                // if cid is set, handle as embedded image, else normal attachment
+                if (isset($attachment->properties["s_cid"])) {
+                    $mail->AddEmbeddedImage(
+                        $attach_path,
+                        $attachment->properties["s_cid"],
+                        $attachment->properties["s_name"]
+                    );
+                } else {
+                    $mail->addAttachment($attach_path, $attachment->properties["s_name"]);
+                }
+            }
+
+            // set the reply to address
+            if ($mailbox->properties["s_replyto"] == 'sender') {
                 $replyTo = [
-                    "address" => $this->properties["s_replytomail"],
-                    "name" => $this->properties["s_replytoname"]
+                    "address" => $this->properties["s_frommail"],
+                    "name" => $this->properties["s_fromname"]
                 ];
             }
-        }
 
-        if ($replyTo) {
-            $mail->addReplyTo($replyTo["address"], $replyTo["name"]);
-        }
+            if ($mailbox->properties["b_overridereplyto"]) {
+                if (( $this->properties["s_replytomail"] ?? '' ) != '') {
+                    $replyTo = [
+                        "address" => $this->properties["s_replytomail"],
+                        "name" => $this->properties["s_replytoname"]
+                    ];
+                }
+            }
 
-        // send the mail to all recipients in $mailbox
-        foreach ($mailbox->getRecipients() as $recipient) {
-            $mail->addAddress($recipient["s_email"]);
-            $mail->send();
-            $mail->clearAddresses();
+            if ($replyTo) {
+                $mail->addReplyTo($replyTo["address"], $replyTo["name"]);
+            }
 
-            // mark mail as sent
-            $this->markSentMail($recipient);
+            // send the mail to all recipients in $mailbox
+            foreach ($mailbox->getRecipients() as $recipient) {
+                $mail->addAddress($recipient["s_email"]);
+                $mail->send();
+                $mail->clearAddresses();
+
+                // mark mail as sent
+                $this->markSentMail($recipient);
+
+                Logger::log(printf("Mail %s sent to %s", $this->properties['s_subject'], $recipient["s_email"]));
+            }
+        } catch (Exception $e) {
+            Logger::log(printf("Mail %s could not be sent to %s, error: %s", $this->properties['s_subject'], $recipient["s_email"], $mail->ErrorInfo));
         }
     }
 
