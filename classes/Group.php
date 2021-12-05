@@ -32,6 +32,18 @@ class Group extends Base {
         );
     }
 
+    public function afterDelete() {
+        $db = new DB();
+
+        // delete all members of this group
+        $db->delete(
+            "member2group",
+            [
+                "i_group"   => $this->properties["i_group"]
+            ]
+        );
+    }
+
     public function getMembers() {
         // get all the members of the group
         $db = new DB();
