@@ -164,6 +164,9 @@ class Mail extends Base {
 
             // allow the mail body to be empty
             $mail->AllowEmpty = true;
+
+            // set charset to UTF-8 (this is a workaround for now, ideally we should use the charset from the mail)
+            $mail->CharSet = 'UTF-8';
             
             $mail->setFrom($mailbox->properties["s_address"], $mailbox->properties["s_name"]);
 
