@@ -228,10 +228,10 @@ class Mail extends Base {
                 // mark mail as sent
                 $this->markSentMail($recipient);
 
-                Logger::log(printf("Mail %s sent to %s", $this->properties['s_subject'], $recipient["s_email"]));
+                Logger::log(sprintf("Mail %s sent to %s", $this->properties['s_subject'], $recipient["s_email"]));
             }
         } catch (Exception $e) {
-            Logger::log(printf("Mail %s could not be sent to %s, error: %s", $this->properties['s_subject'], $recipient["s_email"], $mail->ErrorInfo));
+            Logger::log(sprintf("Mail %s could not be sent to %s, error: %s", $this->properties['s_subject'], $recipient["s_email"], $mail->ErrorInfo));
         }
     }
 
