@@ -221,17 +221,28 @@ class Mail extends Base {
 
             // send the mail to all recipients in $mailbox
             foreach ($mailbox->getRecipients() as $recipient) {
-                $mail->addAddress($recipient["s_email"]);
-                $mail->send();
-                $mail->clearAddresses();
+                
+                // don't send mail to the original sender if he is in the recipients list
+                if ($recipient["s_email"] == $this->properties["s_frommail"]) {
+                    continue;
+                }
 
-                // mark mail as sent
-                $this->markSentMail($recipient);
-
-                Logger::log(sprintf("Mail %s sent to %s", $this->properties['s_subject'], $recipient["s_email"]));
+                // else send the mail to the recipient
+                try {
+                    $mail->addAddress($recipient["s_email"]);
+                    $mail->send();
+                    $mail->clearAddresses();
+    
+                    // mark mail as sent
+                    $this->markSentMail($recipient);
+    
+                    Logger::log(sprintf("Mail %s sent to %s", $this->properties['s_subject'], $recipient["s_email"]));    
+                } catch (Exception $e) {
+                    Logger::log(sprintf("Mail %s could not be sent to %s, error: %s", $this->properties['s_subject'], $recipient["s_email"], $mail->ErrorInfo));
+                }
             }
         } catch (Exception $e) {
-            Logger::log(sprintf("Mail %s could not be sent to %s, error: %s", $this->properties['s_subject'], $recipient["s_email"], $mail->ErrorInfo));
+            Logger::log(sprintf("Mail %s could not be sent, error: %s", $this->properties['s_subject'], $mail->ErrorInfo));
         }
     }
 
