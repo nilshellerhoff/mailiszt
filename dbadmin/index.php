@@ -6,6 +6,40 @@
 
 require_once('includes.php');
 
+// check authentication
+$authenticated = false;
+
+// check whether a valid auth token is passed as post parameter and if not show login form
+if (isset($_COOKIE["accessToken"])) {
+    $token = $_COOKIE["accessToken"];
+    $authenticated = User::checkAuthentication($token);
+}
+
+// check if valid user and password are passed in POST, if yes authenticate
+if (!$authenticated) {
+    if (isset($_POST["user"]) && isset($_POST["password"])) {
+        $token = User::authenticate($_POST["user"], $_POST["password"]);
+        if ($token) {
+            setcookie("accessToken", $token, time() + 3600);
+            $authenticated = true;
+        }
+    }
+}
+
+// if still not authenticated, show login form
+if (!$authenticated) {
+    echo<<<HTML
+    <form action="{$_SERVER['REQUEST_URI']}" method="post">
+        <input type="text" name="user" placeholder="Username" />
+        <br>
+        <input type="password" name="password" placeholder="Password" />
+        <br>
+        <input type="submit" value="Login" />
+    </form>
+    HTML;
+    die();
+}
+
 // reset DB
 if (isset($_GET["resetDB"]) && $_GET["resetDB"] == 'true') {
     rename(DB_FILE, DB_FILE . '_bkp_' . date(DATE_FORMAT));

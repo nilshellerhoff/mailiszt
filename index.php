@@ -13,7 +13,7 @@ use Steampixel\Route;
 if (Setting::getValue("enable_dbadmin")) {
     Route::add('/dbadmin', function() {
         include('dbadmin/index.php');
-    }, 'GET');    
+    }, ['GET', 'POST']);    
 }
 
 // include api routes
