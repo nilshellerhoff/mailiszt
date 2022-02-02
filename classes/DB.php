@@ -7,10 +7,51 @@ class DB extends SQLite3 {
         } else {
             // if DB file doesn't exist, create DB, make schema and insert sampledata
             $this->open(DB_FILE);
-            $this->executeFile(BASE_DIR . 'tables.sql');
-            $this->executeFile(BASE_DIR . 'basedata.sql');
-            $this->executeFile(BASE_DIR .'sampledata.sql');
+            $this->executeFile(BASE_DIR . 'sql/tables.sql');
+            $this->executeFile(BASE_DIR . 'sql/basedata.sql');
+            $this->executeFile(BASE_DIR .'sql/sampledata.sql');
         }
+    }
+
+    function upgradeDB() {
+        // check if the DB is the newest available version under the sql/migrations directory
+        // if not apply migrations in order
+        $available_migrations = $this->getMigrations();
+        foreach ($available_migrations as $migration) {
+            $db_version = $this->getDBVersion();
+            if (version_compare($migration, $db_version) > 0) {
+                Logger::log("migrating DB from {$db_version} to {$migration}");
+                $this->executeFile(BASE_DIR . 'sql/migrations/' . $migration . '.sql');
+                $this->insert('db_upgrade', [
+                    "s_version"         => $migration,
+                    "s_version_from"    => $db_version,
+                ]);
+            }
+        }
+    }
+
+    function getMigrations() {
+        // get an array with the available migrations
+        $migration_files = scandir(BASE_DIR . 'sql/migrations/');
+        $migrations = [];
+        foreach ($migration_files as $file) {
+            if ($file != '.' && $file != '..') {
+                $migrations[] = pathinfo($file, PATHINFO_FILENAME);
+            }
+        }
+        usort($migrations, 'version_compare');
+        return $migrations;
+        
+    }
+
+    function getDBVersion() {
+        // get the current DB version
+        try {
+            $db_version = $this->queryScalar("SELECT s_version FROM db_upgrade ORDER BY s_version DESC LIMIT 1");
+        } catch (\Throwable $e) {
+            $db_version = '0';
+        }
+        return $db_version;
     }
 
     function executeFile($filename) {

@@ -40,15 +40,20 @@ if (!$authenticated) {
     die();
 }
 
+$db = new DB();
+
 // reset DB
 if (isset($_GET["resetDB"]) && $_GET["resetDB"] == 'true') {
     rename(DB_FILE, DB_FILE . '_bkp_' . date(DATE_FORMAT));
 }
 
+// upgrade DB
+if (isset($_GET["upgradeDB"]) && $_GET["upgradeDB"] == 'true') {
+    $db->upgradeDB();
+}
+
 $query = $_GET["query"] ?? NULL;
 $results = [];
-
-$db = new DB();
 
 $results = [];
 
@@ -93,7 +98,8 @@ foreach($queries as $q) {
         <form action="" method="get" id="query">
             <textarea id=codearea autofocus onkeydown="pressed(event)" name="query" form="query" rows=20 style="width: 100%"><?= $query ?></textarea>
             <input type="submit" value="Run it!">
-            <a href="dbadmin.php?resetDB=true" onclick="return confirm('reset DB?')" style="float: right">Reset DB</a>
+            <a href="dbadmin?resetDB=true" onclick="return confirm('reset DB?')" style="float: right">Reset DB</a>
+            <a href="dbadmin?upgradeDB=true" onclick="return confirm('upgrade DB?')" style="float: right; margin: 0px 10px">Upgrade DB</a>
         </form>
     </div>
 
