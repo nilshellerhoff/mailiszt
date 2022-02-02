@@ -98,8 +98,8 @@ foreach($queries as $q) {
         <form action="" method="get" id="query">
             <textarea id=codearea autofocus onkeydown="pressed(event)" name="query" form="query" rows=20 style="width: 100%"><?= $query ?></textarea>
             <input type="submit" value="Run it!">
-            <a href="dbadmin?resetDB=true" onclick="return confirm('reset DB?')" style="float: right">Reset DB</a>
-            <a href="dbadmin?upgradeDB=true" onclick="return confirm('upgrade DB?')" style="float: right; margin: 0px 10px">Upgrade DB</a>
+            <a href="/dbadmin?resetDB=true" onclick="return confirm('reset DB?')" style="float: right">Reset DB</a>
+            <a href="/dbadmin?upgradeDB=true" onclick="return confirm('upgrade DB?')" style="float: right; margin: 0px 10px">Upgrade DB</a>
         </form>
     </div>
 
