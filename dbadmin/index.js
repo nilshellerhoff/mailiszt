@@ -1,7 +1,8 @@
 // keycodes with ctrl key
 var keycodes = {
     13: submitform, // ctrl + enter
-    163: comment // ctrl + #
+    163: comment, // ctrl + # (firefox)
+    191: comment, // ctrl + # (chrome)
 } // ctrl + y
 
 function pressed(e) {
