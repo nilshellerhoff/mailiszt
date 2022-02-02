@@ -9,7 +9,7 @@ require_once('includes.php');
 // Routing namespace
 use Steampixel\Route;
 
-// // dbadmin
+// dbadmin
 if (Setting::getValue("enable_dbadmin")) {
     Route::add('/dbadmin', function() {
         include('dbadmin/index.php');
