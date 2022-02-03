@@ -7,6 +7,7 @@
   height: calc(100vh - 370px);
   overflow: auto;
   white-space: nowrap;
+  margin-top: 10px;
 }
 table {
   margin: 5px 0px;
