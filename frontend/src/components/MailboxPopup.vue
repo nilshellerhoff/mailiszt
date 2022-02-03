@@ -75,6 +75,31 @@
             </v-col>
           </v-row>
 
+          <!-- welcome text -->
+          <span class="text-subtitle-1 font-weight-medium">Welcome message</span><br>
+          <v-row no-gutters align="center">
+            <v-col cols=12 sm=7>
+              <v-checkbox
+                v-model="mailbox.b_sendwelcometext"
+                label="send a message to every new member of the list?"
+              ></v-checkbox>
+            </v-col>
+            <v-col cols=0 sm=1></v-col>
+            <v-col cols=12 sm=4>
+              <v-btn @click="$refs.welcomeTextPopup.open()" :disabled="!mailbox.b_sendwelcometext">Edit welcome message</v-btn>
+              <Popup
+                ref="welcomeTextPopup"
+                :title="`Edit welcome message`"
+                :width="800"
+              >
+                <vue-editor v-model="mailbox.s_welcometext"/>
+                <template v-slot:actions>
+                  <v-btn @click="$refs.welcomeTextPopup.close()">Close</v-btn>
+                </template>
+              </Popup>
+            </v-col>
+          </v-row>
+
 
 
         </v-tab-item>
@@ -212,6 +237,7 @@ import DetailsPopup from "@/components/DetailsPopup.vue";
 import BooleanInput from "@/components/BooleanInput.vue";
 import Popup from "@/components/Popup.vue";
 import InfoTooltip from "@/components/InfoTooltip.vue"
+import { VueEditor } from "vue2-editor";
 
 export default {
   name: "MailboxPopup",
@@ -242,6 +268,7 @@ export default {
       ],
       allowedSendersSearchInput: '',
       members: [],
+      editMessage: "<h1>Title</h1>"
     };
   },
   components: {
@@ -249,6 +276,7 @@ export default {
     BooleanInput,
     Popup,
     InfoTooltip,
+    VueEditor,
   },
   methods: {
     openRecipientsPopup() {
