@@ -27,7 +27,7 @@ class Member extends Base {
         // set the groups of user from array with group ids
         $db = new DB();
 
-        $lists = 
+        $old_recipients_list = Mailbox::getRecipientsList();
 
         // delete all existing groups
         $db->execute("DELETE FROM member2group WHERE i_member = ?", [$this->properties["i_member"]]);
@@ -39,6 +39,8 @@ class Member extends Base {
                 VALUES (?, ?, DATETIME('now'))
             ", [$this->properties["i_member"], $group_id]);
         }
+
+        Mailbox::getNewRecipientsList($old_recipients_list);
     }
 
     public function afterDelete() {

@@ -175,6 +175,50 @@ SQL;
     public function getNewRecipients($old_recipients) {
         // return an array with new recipients compared to the old recpients
         $recipients = $this->getRecipients();
-        return array_diff($recipients, $old_recipients);
+
+        // since array_diff does not work with nested arrays, we compare the (unique) member ids
+        $recipient_ids = array_map(fn($x) => $x["i_member"], $recipients);
+        $old_recipient_ids = array_map(fn($x) => $x["i_member"], $old_recipients);
+        $new_ids = array_diff($recipient_ids, $old_recipient_ids);
+
+        // return the objects corresponding to the new ids
+        // for now only return properties, to be inline with other functions
+        // return array_map(fn($x) => $x->properties, Member::getObjects($new_ids));
+        return Member::getObjects($new_ids);
+    }
+
+    public static function getRecipientsList() {
+        // get a list of id => recipients for all mailbox ids
+        // to be used in conjunction with getNewRecipientsList()
+
+        $lists = Mailbox::getAll();
+        $old_recipients_list = [];
+        foreach ($lists as $list) {
+            $old_recipients_list[$list->properties["i_mailbox"]] = $list->getRecipients();
+        }
+
+        return $old_recipients_list;
+    }
+
+    public static function getNewRecipientsList($old_recipients_list, $send_welcome = true) {
+        // for each of the new recipients on each list return i_maibox => new_members
+        foreach ($old_recipients_list as $id => $members) {
+            $list = new Mailbox($id = $id);
+            $new_recipients = $list->getNewRecipients($members);
+
+            // log if a list has new members
+            if (count($new_recipients) > 0) {
+                $str = implode(',', array_map(fn($x) => $x->properties["s_email"], $new_recipients));
+                Logger::log("list {$list->name} has new recipients [{$str}]");
+            }
+
+            if ($send_welcome) {
+                $list->sendWelcomeMessage($new_recipients);
+            }
+        }
+    }
+
+    public function sendWelcomeMessage($new_recipients) {
+        
     }
 }
