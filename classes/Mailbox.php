@@ -3,8 +3,8 @@
 require_once('Base.php');
 
 class Mailbox extends Base {
-    public $table = "mailbox";
-    public $identifier = "i_mailbox";
+    public static $table = "mailbox";
+    public static $identifier = "i_mailbox";
 
     public $exposedInfo = [
         "ADMIN" => [
@@ -170,5 +170,11 @@ SQL;
         }
 
         return $sql;
+    }
+
+    public function getNewRecipients($old_recipients) {
+        // return an array with new recipients compared to the old recpients
+        $recipients = $this->getRecipients();
+        return array_diff($recipients, $old_recipients);
     }
 }

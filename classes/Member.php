@@ -3,8 +3,8 @@
 require_once('Base.php');
 
 class Member extends Base {
-    public $table = "member";
-    public $identifier = "i_member";
+    public static $table = "member";
+    public static $identifier = "i_member";
 
     public $exposedInfo = [
         "READER"    => ["i_member", "s_name1", "s_name2", "s_email", "s_phone", "d_birthdate", "b_active", "d_inserted", "d_updated"],
@@ -26,6 +26,8 @@ class Member extends Base {
     public function setGroups($group_ids) {
         // set the groups of user from array with group ids
         $db = new DB();
+
+        $lists = 
 
         // delete all existing groups
         $db->execute("DELETE FROM member2group WHERE i_member = ?", [$this->properties["i_member"]]);
