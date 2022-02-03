@@ -20,12 +20,17 @@ class DB extends SQLite3 {
         foreach ($available_migrations as $migration) {
             $db_version = $this->getDBVersion();
             if (version_compare($migration, $db_version) > 0) {
-                Logger::log("migrating DB from {$db_version} to {$migration}");
-                $this->executeFile(BASE_DIR . 'sql/migrations/' . $migration . '.sql');
-                $this->insert('db_upgrade', [
-                    "s_version"         => $migration,
-                    "s_version_from"    => $db_version,
-                ]);
+                try {
+                    Logger::log("migrating DB from {$db_version} to {$migration}");
+                    $this->executeFile(BASE_DIR . 'sql/migrations/' . $migration . '.sql');
+                    $this->insert('db_upgrade', [
+                        "s_version"         => $migration,
+                        "s_version_from"    => $db_version,
+                    ]);
+                    Setting::setValue('version_number', $migration);
+                } catch (\Throwable $e) {
+                    Logger::log("could not migrate from {$db_version} to {$migration}. Error: {$e->getMessage()}");
+                }
             }
         }
     }
