@@ -11,6 +11,9 @@
       <v-card-text class="pa-4">
         <slot></slot>
       </v-card-text>
+      <v-card-actions>
+        <slot name="actions"></slot>
+      </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
@@ -28,6 +31,9 @@ export default {
   methods: {
     open() {
       this.dialog = true
+    },
+    close() {
+      this.dialog = false
     },
   }
 }
