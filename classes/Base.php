@@ -21,7 +21,11 @@ class Base {
         // get all objects of this type from the DB and return as list
         $db = new DB();
         $ids = $db->queryColumn("SELECT " . static::$identifier . " FROM " . static::$table);
+        return static::getObjects($ids);
+    }
 
+    public static function getObjects($ids) {
+        // get an array of objects based on an array of ids
         $objects = [];
         foreach ($ids as $id) {
             $objects[] = new static($id = $id);
