@@ -16,6 +16,13 @@ if (Setting::getValue("enable_dbadmin")) {
     }, ['GET', 'POST']);    
 }
 
+// debugging
+if (file_exists('test.php')) {
+    Route::add('/test', function() {
+        include('test.php');
+    }, ['GET', 'POST']);
+}
+
 // include api routes
 include('api/routes.php');
 
