@@ -207,16 +207,23 @@ class Mail extends Base {
                     ]
                 ];
             } else if ($mailbox->properties["s_replyto"] == 'sender+mailinglist') {
+                // if both are set, add the mailbox
                 $replyTos = [
-                    [
-                        "address" => $this->properties["s_frommail"],
-                        "name" => $this->properties["s_fromname"]
-                    ],
                     [
                         "address" => $mailbox->properties["s_address"],
                         "name" => $mailbox->properties["s_name"]
                     ],
                 ];
+
+                // now check if the sender is a recipient anyway, if he isn't, add the sender as an additional reply to
+                $recipients_emails = array_map(fn($x) => $x["s_email"], $mailbox->getRecipients());
+                $sender_is_recipient = in_array($this->properties["s_frommail"], $recipients_emails);
+                if (!$sender_is_recipient) {
+                    $replyTos[] = [
+                        "address" => $this->properties["s_frommail"],
+                        "name" => $this->properties["s_fromname"]
+                    ];
+                }
             }
 
             // if overridereplyto is true and a custom replyto mail is set, use that instead
