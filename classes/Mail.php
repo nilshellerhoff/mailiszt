@@ -200,23 +200,41 @@ class Mail extends Base {
 
             // set the reply to address
             if ($mailbox->properties["s_replyto"] == 'sender') {
-                $replyTo = [
-                    "address" => $this->properties["s_frommail"],
-                    "name" => $this->properties["s_fromname"]
+                $replyTos = [
+                    [
+                        "address" => $this->properties["s_frommail"],
+                        "name" => $this->properties["s_fromname"]
+                    ]
+                ];
+            } else if ($mailbox->properties["s_replyto"] == 'sender+mailinglist') {
+                $replyTos = [
+                    [
+                        "address" => $this->properties["s_frommail"],
+                        "name" => $this->properties["s_fromname"]
+                    ],
+                    [
+                        "address" => $mailbox->properties["s_address"],
+                        "name" => $mailbox->properties["s_name"]
+                    ],
                 ];
             }
 
+            // if overridereplyto is true and a custom replyto mail is set, use that instead
             if ($mailbox->properties["b_overridereplyto"]) {
                 if (( $this->properties["s_replytomail"] ?? '' ) != '') {
-                    $replyTo = [
-                        "address" => $this->properties["s_replytomail"],
-                        "name" => $this->properties["s_replytoname"]
+                    $replyTos = [
+                        [
+                            "address" => $this->properties["s_replytomail"],
+                            "name" => $this->properties["s_replytoname"]
+                        ]
                     ];
                 }
             }
 
-            if ($replyTo) {
-                $mail->addReplyTo($replyTo["address"], $replyTo["name"]);
+            if ($replyTos) {
+                foreach ($replyTos as $replyTo) {
+                    $mail->addReplyTo($replyTo["address"], $replyTo["name"]);
+                }
             }
 
             // send the mail to all recipients in $mailbox

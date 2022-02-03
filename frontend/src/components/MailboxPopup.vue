@@ -233,6 +233,7 @@ export default {
       replyToItems: [
         { text : 'Sender', value : 'sender' },
         { text : 'Mailinglist', value : 'mailinglist' },
+        { text : 'Sender + Mailinglist', value : 'sender+mailinglist' },
       ],
       allowedSendersItems: [
         { text : 'Everybody', value : 'everybody' },
