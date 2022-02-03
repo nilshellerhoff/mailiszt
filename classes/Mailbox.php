@@ -24,7 +24,9 @@ class Mailbox extends Base {
             "s_allowedsenders",
             "j_allowedsenderspeople",
             "d_inserted", 
-            "d_updated"
+            "d_updated",
+            "b_sendwelcometext",
+            "s_welcometext"
         ],
     ];
 
