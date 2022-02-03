@@ -1,5 +1,10 @@
 <?php
 
+// if config file does not exist, use the sample file
+if (!file_exists('config.php')) {
+    copy('config.php.sample', 'config.php');
+}
+
 require_once('config.php');
 require_once('functions.php');
 
