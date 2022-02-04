@@ -33,6 +33,8 @@ Run the frontend development server
 npm run serve
 ```
 
+The default user is `admin` with password `admin` (change this in the Settings!).
+
 ## Installing
 
 Build the frontend
@@ -54,9 +56,9 @@ or if you only want to forward certain mailboxes
 
 ## Usage
 
-- Members (/members): add members with their email-address 
-- Groups (/groups): create groups and add your members to them
-- Mailboxes (/mailboxes): add at least one mailbox in order to build a list. You only need the IMAP and SMTP credentials, so virtually any email-service can be used!
+- Members (`/members`): add members with their email-address 
+- Groups (`/groups`): create groups and add your members to them
+- Mailboxes (`/mailboxes`): add at least one mailbox in order to build a list. You only need the IMAP and SMTP credentials, so virtually any email-service can be used!
   - customize who is allowed to send mails to the list: 
     - "Everybody": every mail is accepted and forwarded to the list
     - "Registered members": only mails coming from email addresses of members registered under <domainname>/members are accepted, regardless of which groups they belong to
@@ -72,8 +74,7 @@ or if you only want to forward certain mailboxes
     - simple selector: select which groups receive emails sent to the list address
     - logic selector: build a logic condition tree where you can include or exclude members based on their group memberships
     - use the "Show recipients" button to check whether you got the group selection correctly!
-- Mails (/mails): a list of all the mails processed by Mailiszt. You can view the mails (albeit without attachments for now) and see in detail, to which mail addresses they were forwarded.  
-   
+- Mails (`/mails`): a list of all the mails processed by Mailiszt. You can view the mails (albeit without attachments for now) and see in detail, to which mail addresses they were forwarded.   
 
 ## What is missing
 Lots of stuff, including:
