@@ -195,6 +195,11 @@
               </div>
             </v-chip-group>
           </Popup>
+
+          <v-checkbox
+            label="include inactive members?"
+            v-model="mailbox.b_includeinactive"
+          ></v-checkbox>
         </v-tab-item>
       </v-tabs-items>
     </div>

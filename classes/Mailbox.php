@@ -24,7 +24,8 @@ class Mailbox extends Base {
             "s_allowedsenders",
             "j_allowedsenderspeople",
             "d_inserted", 
-            "d_updated"
+            "d_updated",
+            "b_includeinactive"
         ],
     ];
 
@@ -79,35 +80,42 @@ class Mailbox extends Base {
     public function getRecipients() {
         // get the recipient list for this address
         if ($this->properties["s_groupsmethod"] == 'logic') {
-            return Mailbox::getRecipientsCondition(
-                json_decode($this->properties["j_groupslogic"], true)
-            );
+            return $this->getRecipientsCondition();
         } else {
-            return Mailbox::getRecipientsSimple(
-                json_decode($this->properties["j_groups"])
-            );
+            return $this->getRecipientsSimple();
         }
     }
 
-    public static function getRecipientsSimple($groups) {
+    public function getRecipientsSimple() {
         // get the recipients for the mailbox based on a simple list of group IDs
         // get a list of group IDs, make sure we are dealing with ints
+        $groups = json_decode($this->properties["j_groups"], true);
         $groups_list = implode(',', array_map('intval', $groups));
+
+        // based on whether to include inactive members have an additional condition
+        $active_condition = $this->properties["b_includeinactive"] ? '' : 'AND m.b_active = 1';
         $sql_query = <<<SQL
 SELECT DISTINCT m.* FROM member m
 INNER JOIN member2group mg ON mg.i_member = m.i_member
-WHERE mg.i_group IN ($groups_list) AND m.b_active = 1
+WHERE mg.i_group IN ($groups_list)
+$active_condition
 SQL;
 
         $db = new DB();
         return $db->queryAll($sql_query);
     }
 
-    public static function getRecipientsCondition($condition) {
-        // static function for getting the recipients when supplying a custom condition
-        $db = new DB();
+    public function getRecipientsCondition() {
+        // function for getting the recipients when supplying a custom condition
+        $condition = json_decode($this->properties["j_groupslogic"], true);
+
+        // based on whether to include inactive members have an additional condition
+        $active_condition = $this->properties["b_includeinactive"] ? '' : 'AND m.b_active = 1';
+
         $whereCond = Mailbox::getSqlExpression($condition);
-        $sql_query = "SELECT DISTINCT m.* FROM member m WHERE $whereCond AND m.b_active = 1";
+        $sql_query = "SELECT DISTINCT m.* FROM member m WHERE $whereCond $active_condition";
+
+        $db = new DB();
         return $db->queryAll($sql_query);
     }
 
