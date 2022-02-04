@@ -198,45 +198,12 @@ class Mail extends Base {
                 }
             }
 
-            // set the reply to address
-            if ($mailbox->properties["s_replyto"] == 'sender') {
-                $replyTos = [
-                    [
-                        "address" => $this->properties["s_frommail"],
-                        "name" => $this->properties["s_fromname"]
-                    ]
-                ];
-            } else if ($mailbox->properties["s_replyto"] == 'sender+mailinglist') {
-                // if both are set, add the mailbox
-                $replyTos = [
-                    [
-                        "address" => $mailbox->properties["s_address"],
-                        "name" => $mailbox->properties["s_name"]
-                    ],
-                ];
-
-                // now check if the sender is a recipient anyway, if he isn't, add the sender as an additional reply to
-                $recipients_emails = array_map(fn($x) => $x["s_email"], $mailbox->getRecipients());
-                $sender_is_recipient = in_array($this->properties["s_frommail"], $recipients_emails);
-                if (!$sender_is_recipient) {
-                    $replyTos[] = [
-                        "address" => $this->properties["s_frommail"],
-                        "name" => $this->properties["s_fromname"]
-                    ];
-                }
-            }
-
-            // if overridereplyto is true and a custom replyto mail is set, use that instead
-            if ($mailbox->properties["b_overridereplyto"]) {
-                if (( $this->properties["s_replytomail"] ?? '' ) != '') {
-                    $replyTos = [
-                        [
-                            "address" => $this->properties["s_replytomail"],
-                            "name" => $this->properties["s_replytoname"]
-                        ]
-                    ];
-                }
-            }
+            $replyTos = $mailbox->getReplyToAddresses(
+                $this->properties["s_frommail"],
+                $this->properties["s_fromname"],
+                $this->properties["s_replytomail"],
+                $this->properties["s_replytoname"],
+            );
 
             if ($replyTos) {
                 foreach ($replyTos as $replyTo) {

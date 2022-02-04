@@ -177,4 +177,50 @@ SQL;
 
         return $sql;
     }
+
+    public function getReplyToAddresses($from_mail, $from_name, $replyto_mail, $replyto_name) {
+        // get an array with the reply to addresses and names based on the mailbox setting
+
+        if ($this->properties["s_replyto"] == 'sender') {
+            // if 'sender' add only the sender as replyto
+            $replyTos = [
+                [
+                    "address" => $from_mail,
+                    "name" => $from_name
+                ]
+            ];
+        } else if ($this->properties["s_replyto"] == 'sender+mailinglist') {
+            // if both are set, add the mailbox
+            $replyTos = [
+                [
+                    "address" => $this->properties["s_address"],
+                    "name" => $this->properties["s_name"]
+                ],
+            ];
+
+            // now check if the sender is a recipient anyway, if he isn't, add the sender as an additional reply to
+            $recipients_emails = array_map(fn($x) => $x["s_email"], $this->getRecipients());
+            $sender_is_recipient = in_array($from_mail, $recipients_emails);
+            if (!$sender_is_recipient) {
+                $replyTos[] = [
+                    "address" => $from_mail,
+                    "name" => $from_name
+                ];
+            }
+        }
+
+        // if overridereplyto is true and a custom replyto mail is set, use that instead
+        if ($this->properties["b_overridereplyto"]) {
+            if (( $replyto_mail ?? '' ) != '') {
+                $replyTos = [
+                    [
+                        "address" => $replyto_mail,
+                        "name" => $replyto_name
+                    ]
+                ];
+            }
+        }
+
+        return $replyTos;        
+    }
 }
