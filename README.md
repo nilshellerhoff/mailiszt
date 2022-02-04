@@ -66,7 +66,7 @@ or if you only want to forward certain mailboxes
     - "Sender": the Reply-To header is set to the original sender of the email.
     - "Malinglist": no Reply-To header is set. This means that when recipients click "reply", they will reply to the entire list
     - "Sender + Malinglist": the Reply-To header is set to the original sender and the email-address of the list. If the original sender is member of the list already, only the email-address of the list is added, so that the original senders does not get replies twice
-  - Server: pretty self explanatory, enter your IMAP and SMTP details and your credentials here. 
+  - Server: pretty self explanatory, enter your IMAP and SMTP details and credentials here. 
     - :warning: Only SSL is supported for IMAP and only STARTTLS is supported for SMTP right now. This will be changed soon
   - Groups
     - simple selector: select which groups receive emails sent to the list address
