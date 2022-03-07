@@ -116,31 +116,40 @@ Route::add('/api/mailbox/([0-9]*)/recipients', function($i_mailbox) {
 
 // actions for forwarding mails
 Route::add('/api/mailbox/forward', function() {
-    $db = new DB();
-    $mailbox_ids = $db->queryColumn("SELECT i_mailbox FROM mailbox");
+    if (!Setting::getValue('enable_email_fetching')) {
+        Logger::log("Email fetching is disabled", 'DEBUG');
+        return;
+    } else {
+        $db = new DB();
+        $mailbox_ids = $db->queryColumn("SELECT i_mailbox FROM mailbox");
 
-    $mail_cnt = 0;
-    foreach ($mailbox_ids as $id) {
-        $mailbox = new Mailbox($id = $id);
+        $mail_cnt = 0;
+        foreach ($mailbox_ids as $id) {
+            $mailbox = new Mailbox($id = $id);
+            $mails = $mailbox->fetchMails();
+            foreach ($mails as $mail) {
+                $mail->save();
+                $mail->forwardMail($mailbox);
+                $mail_cnt++;
+            }
+        }
+        Logger::log("Checked all mailboxes, found $mail_cnt mails to forward", 'DEBUG');
+    }
+});
+
+Route::add('/api/mailbox/([0-9]*)/forward', function($i_mailbox) {
+    if (!Setting::getValue('enable_email_fetching')) {
+        Logger::log("Email fetching is disabled", 'DEBUG');
+    } else {
+        $mailbox = new Mailbox($id = $i_mailbox);
         $mails = $mailbox->fetchMails();
+
+        $mail_cnt = 0;
         foreach ($mails as $mail) {
             $mail->save();
             $mail->forwardMail($mailbox);
             $mail_cnt++;
         }
+        Logger::log("Checked mailbox $i_mailbox, found $mail_cnt mails to forward", 'DEBUG');
     }
-    Logger::log("Checked all mailboxes, found $mail_cnt mails to forward", 'DEBUG');
-});
-
-Route::add('/api/mailbox/([0-9]*)/forward', function($i_mailbox) {
-    $mailbox = new Mailbox($id = $i_mailbox);
-    $mails = $mailbox->fetchMails();
-
-    $mail_cnt = 0;
-    foreach ($mails as $mail) {
-        $mail->save();
-        $mail->forwardMail($mailbox);
-        $mail_cnt++;
-    }
-    Logger::log("Checked mailbox $i_mailbox, found $mail_cnt mails to forward", 'DEBUG');
 });
