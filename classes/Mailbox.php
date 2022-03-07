@@ -20,12 +20,12 @@ class Mailbox extends Base {
             "j_groups",
             "j_groupslogic",
             "s_replyto",
-            "b_overridereplyto",
+            "s_replytooverride",
             "s_allowedsenders",
             "j_allowedsenderspeople",
             "d_inserted", 
             "d_updated",
-            "b_includeinactive"
+            "b_includeinactive",
         ],
     ];
 
