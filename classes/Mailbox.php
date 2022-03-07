@@ -178,49 +178,86 @@ SQL;
         return $sql;
     }
 
+    public function getReplyToAddressesNoReplyTo($sender_mail, $sender_name) {
+        // return the reply-to address in the case that no reply-to header is given
+
+        $sender_address = ["address" => $sender_mail, "name" => $sender_name];
+        $list_address = ["address" => $this->properties["s_address"], "name" => $this->properties["s_name"]];
+
+        switch ($this->properties["s_replyto"]) {
+            case "sender":
+                $replyTos = [$sender_address];
+                break;
+            case "mailinglist":
+                $replyTos = [$list_address];
+                break;
+            case "sender+mailinglist":
+                $replyTos = [$sender_address, $list_address];
+                break;
+            default:
+                $replyTos = [$sender_address, $list_address];
+                break;
+            }
+
+        return $replyTos;
+    }
+
     public function getReplyToAddresses($from_mail, $from_name, $replyto_mail, $replyto_name) {
         // get an array with the reply to addresses and names based on the mailbox setting
 
-        if ($this->properties["s_replyto"] == 'sender') {
-            // if 'sender' add only the sender as replyto
-            $replyTos = [
-                [
-                    "address" => $from_mail,
-                    "name" => $from_name
-                ]
-            ];
-        } else if ($this->properties["s_replyto"] == 'sender+mailinglist') {
-            // if both are set, add the mailbox
-            $replyTos = [
-                [
-                    "address" => $this->properties["s_address"],
-                    "name" => $this->properties["s_name"]
-                ],
-            ];
+        // put the relevant addresses in an array so we dont need to handle that later
+        $replyto_address = ["address" => $replyto_mail, "name" => $replyto_name];
 
-            // now check if the sender is a recipient anyway, if he isn't, add the sender as an additional reply to
-            $recipients_emails = array_map(fn($x) => $x["s_email"], $this->getRecipients());
-            $sender_is_recipient = in_array($from_mail, $recipients_emails);
-            if (!$sender_is_recipient) {
-                $replyTos[] = [
-                    "address" => $from_mail,
-                    "name" => $from_name
-                ];
+        // check if a reply to address is given
+        $reply_to_is_set = ( trim($replyto_mail) ?? '' ) != '';
+
+        if ( $reply_to_is_set ) {
+            // if a reply to address is given, base on s_replytooverride setting
+            switch ($this->properties["s_replytooverride"]) {
+                case "default":
+                    // use the default reply-to address
+                    $replyTos = $this->getReplyToAddressesNoReplyTo($from_mail, $from_name);
+                    break;
+                case "add":
+                    // use the default reply-to address and add the given reply-to-header
+                    $replyTos = $this->getReplyToAddressesNoReplyTo($from_mail, $from_name);
+                    $replyTos[] = $replyto_address;
+                    break;
+                case "replacesender":
+                    // use the default reply-to address but with the given address as sender
+                    $replyTos = $this->getReplyToAddressesNoReplyTo($replyto_mail, $replyto_name);
+                    break;
+                case "replace":
+                    // only use the given reply-to address
+                    $replyTos = [$replyto_address];
+                    break;
             }
+        } else {
+            // if not just use the default
+            $replyTos = $this->getReplyToAddressesNoReplyTo($from_mail, $from_name);
         }
 
-        // if overridereplyto is true and a custom replyto mail is set, use that instead
-        if ($this->properties["b_overridereplyto"]) {
-            if (( $replyto_mail ?? '' ) != '') {
-                $replyTos = [
-                    [
-                        "address" => $replyto_mail,
-                        "name" => $replyto_name
-                    ]
-                ];
+        // now we check for duplicates in the array
+        foreach ( $replyTos as $index1 => $value1 ) {
+            foreach ( $replyTos as $index2 => $value2 ) {
+                // we check if the address is present somewhere later in the array
+                if ( $index1 < $index2 && $value1["address"] == $value2["address"] ) {
+                    unset( $replyTos[$index2]);
+                }
             }
         }
-
+        
+        // now we check whether any of the addresses are in the list already
+        // if yes we remove them, otherwise people would get emails twice
+        $recipients_emails = array_map(fn($x) => $x["s_email"], $this->getRecipients());
+        foreach ( $replyTos as $index => $value ) {
+            foreach ( $recipients_emails as $recaddress ) {
+                if ( $value["address"] == $recaddress ) {
+                    unset( $replyTos[$index]);
+                }
+            }
+        }
+        
         return $replyTos;        
     }
 }
