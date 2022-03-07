@@ -9,8 +9,10 @@ RewriteRule index.php index.php [L]
 
 # rewrite api routes
 RewriteRule ^(.*)api(.*)$ index.php [L]
-# # rewrite dbadmin
+# rewrite dbadmin
 RewriteRule ^(.*)dbadmin(.*)$ index.php [L]
+# reqrite test debug route
+RewriteRule ^(.*)test(.*)$ index.php [L]
  
 # rewrite css & js files for frontend
 RewriteRule ^(.*)(js|css)\/(.*)$ frontend/dist/$2/$3 [L]
