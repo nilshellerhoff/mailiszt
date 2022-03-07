@@ -1,2 +1,2 @@
 ALTER TABLE mailbox
-ADD s_replytooverride TEXT;
+ADD s_replytooverride TEXT DEFAULT 'replacesender';
