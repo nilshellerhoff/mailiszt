@@ -68,10 +68,15 @@
             </v-col>
             <v-col cols=0 sm=1></v-col>
             <v-col cols=12 sm=6>
-              <v-checkbox
+              <!-- <v-checkbox
                 v-model="mailbox.b_overridereplyto"
                 label="allow reply to header to be overridden?"
-              ></v-checkbox>
+              ></v-checkbox> -->
+              <v-select
+                v-model="mailbox.s_replytooverride"
+                :items="replyToOverrideItems"
+                label="If a custom reply-to header is set"
+              ></v-select>
             </v-col>
           </v-row>
 
@@ -239,6 +244,12 @@ export default {
         { text : 'Sender', value : 'sender' },
         { text : 'Mailinglist', value : 'mailinglist' },
         { text : 'Sender + Mailinglist', value : 'sender+mailinglist' },
+      ],
+      replyToOverrideItems: [
+        { text : 'use default', value : 'default' },
+        { text : 'add reply-to address to list of recipients', value : 'add' },
+        { text : 'replace sender in list with the reply-to address', value : 'replacesender' },
+        { text : 'only respond to reply-to address', value : 'replace' },
       ],
       allowedSendersItems: [
         { text : 'Everybody', value : 'everybody' },
