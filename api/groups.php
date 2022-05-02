@@ -53,7 +53,9 @@ Route::add('/api/group/([0-9]*)', function($i_group) {
         return makeResponse('invalid authentication', 403);
     } else {
         $group = new Group($i_group);
-        $group->updateProperties(getPutData());
+        $put = getPutData();
+        unset($put['members']);
+        $group->updateProperties($put);
         $group->save();
     }
 }, 'PUT');
