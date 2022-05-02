@@ -104,16 +104,22 @@ class Base {
         return true;
     }
 
-    public function apiGetInfo($role) {
+    public function apiGetInfo($role, $fields = null) {
         // get the info appropriate to the user role
+        // $fields is a list of fields which should be returned. If empty, all will be returned
+
+        $desired_fields = $fields ? $fields : $this->exposedInfo[$role];
+        // fields actually returned are desired fields, which are exposed
+        $return_fields = array_intersect($desired_fields, $this->exposedInfo[$role]);
+
         $properties = array_intersect_key(
             $this->properties,
-            array_flip($this->exposedInfo[$role])
+            array_flip($return_fields)
         );
-        return $this->apiGetAddInfo($properties);
+        return $this->apiGetAddInfo($properties, $fields);
     }
 
-    public function apiGetAddInfo($properties) {
+    public function apiGetAddInfo($properties, $fields) {
         // empty function, which can be overwritten by subclasses
         // this can be used to add additional information to the api response and is called by apiGetInfo()
         return $properties;

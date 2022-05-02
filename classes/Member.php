@@ -48,8 +48,15 @@ class Member extends Base {
         );
     }
 
-    public function apiGetAddInfo($member) {
-        $member["groups"] = $this->getGroups();
+    public function apiGetAddInfo($member, $fields) {
+        $add_fields = ["groups"];
+
+        $desired_fields = $fields ? $fields : $add_fields;
+        $return_fields = array_intersect($desired_fields, $add_fields);
+
+        if (in_array("groups", $return_fields)) {
+            $member["groups"] = $this->getGroups();
+        }
         return $member;
     }
 }

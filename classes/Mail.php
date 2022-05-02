@@ -261,8 +261,16 @@ class Mail extends Base {
         );
     }
 
-    public function apiGetAddInfo($mail) {
-        $mail["recipients"] = $this->getRecipients();
+    public function apiGetAddInfo($mail, $fields) {
+        $add_fields = ["recipients"];
+
+        $desired_fields = $fields ? $fields : $add_fields;
+        $return_fields = array_intersect($desired_fields, $add_fields);
+
+        if (in_array("recipients", $return_fields)) {
+            $mail["recipients"] = $this->getRecipients();
+        }
+
         return $mail;
     }
 }
