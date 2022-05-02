@@ -70,4 +70,16 @@ class Group extends Base {
             ]);
         }
     }
+
+    public function apiGetAddInfo($group, $fields) {
+        $add_fields = ["members"];
+
+        $desired_fields = $fields ? $fields : $add_fields;
+        $return_fields = array_intersect($desired_fields, $add_fields);
+
+        if (in_array("members", $return_fields)) {
+            $group["members"] = $this->getMembers();
+        }
+        return $group;
+    }
 }
