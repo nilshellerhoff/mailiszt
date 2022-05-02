@@ -8,8 +8,8 @@ use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
 class Mail extends Base {
-    public $table = "mail";
-    public $identifier = "i_mail";
+    public static $table = "mail";
+    public static $identifier = "i_mail";
 
     public $attachments = [];
     public $saved;

@@ -14,8 +14,25 @@ class Base {
         "ADMIN"     => []
     ];
     
-    public $table = ""; // table name where class data is stored
-    public $identifier = ""; // identifier in $table
+    public static $table = ""; // table name where class data is stored
+    public static $identifier = ""; // identifier in $table
+
+    public static function getAll() {
+        // get all objects of this type from the DB and return as list
+        $db = new DB();
+        $ids = $db->queryColumn("SELECT " . static::$identifier . " FROM " . static::$table);
+        return static::getObjects($ids);
+    }
+
+    public static function getObjects($ids) {
+        // get an array of objects based on an array of ids
+        $objects = [];
+        foreach ($ids as $id) {
+            $objects[] = new static($id = $id);
+        }
+
+        return $objects;
+    }
 
     public function __construct($id, $obj = NULL, $prop = NULL) {
         if (is_null($id) && is_null($obj) && is_null($prop)) {
@@ -28,7 +45,7 @@ class Base {
         // load data from DB, passed object or properties
         $db = new DB();
         if (!is_null($id)) {
-            $this->properties = $db->queryRow("SELECT * FROM $this->table WHERE $this->identifier = ?", [$id]);
+            $this->properties = $db->queryRow("SELECT * FROM " . static::$table . " WHERE " . static::$identifier . " = ?", [$id]);
         } else if (!is_null($obj)) {
             $this->object = $obj;
             $this->populateFromObject(); // this method will be class specific
@@ -61,15 +78,15 @@ class Base {
         }
 
         // if identifier is set, update record, otherwise create new
-        if (isset($this->properties[$this->identifier])) {
+        if (isset($this->properties[static::$identifier])) {
             $db->update(
-                $this->table,
+                static::$table,
                 $this->properties,
-                [$this->identifier => $this->properties[$this->identifier]]
+                [static::$identifier => $this->properties[static::$identifier]]
             );
         } else {
-            $this->properties[$this->identifier] = $db->insert(
-                $this->table,
+            $this->properties[static::$identifier] = $db->insert(
+                static::$table,
                 $this->properties
             );
         }
@@ -84,8 +101,8 @@ class Base {
         // delete the entry from DB
         $db = new DB();
         $db->delete(
-            $this->table,
-            [$this->identifier => $this->properties[$this->identifier]]
+            static::$table,
+            [static::$identifier => $this->properties[static::$identifier]]
         );
 
         $this->afterDelete();

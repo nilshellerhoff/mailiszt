@@ -3,8 +3,8 @@
 require_once('Base.php');
 
 class User extends Base {
-    public $table = "user";
-    public $identifier = "i_user";
+    public static $table = "user";
+    public static $identifier = "i_user";
 
     public $exposedInfo = [
         "READER"    => [],

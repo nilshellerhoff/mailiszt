@@ -3,8 +3,8 @@
 require_once('Base.php');
 
 class Mailbox extends Base {
-    public $table = "mailbox";
-    public $identifier = "i_mailbox";
+    public static $table = "mailbox";
+    public static $identifier = "i_mailbox";
 
     public $exposedInfo = [
         "ADMIN" => [
