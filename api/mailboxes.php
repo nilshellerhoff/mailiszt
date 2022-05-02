@@ -9,14 +9,10 @@ Route::add('/api/mailbox', function() {
     if (!$auth) {
         return makeResponse('invalid authentication', 403);
     } else {
-        $db = new DB();
-        $mailbox_ids = $db->queryColumn("SELECT i_mailbox FROM mailbox");
-        $mailboxes = [];
-        foreach ($mailbox_ids as $id) {
-            $mailbox = new Mailbox($id = $id);
-            $mailboxes[] = $mailbox->apiGetInfo("ADMIN");
-        }
-        return makeResponse($mailboxes);
+        $fields = array_filter(explode(",", $_GET['fields']));
+        $mailboxes = Mailbox::getAll();
+        $apiInfo = array_map(fn($m) => $m->apiGetInfo($auth["s_role"], $fields), $mailboxes);
+        return makeResponse($apiInfo);
     }
 }, 'GET');
 
@@ -40,8 +36,9 @@ Route::add('/api/mailbox/([0-9]*)', function($i_mailbox) {
     if (!$auth) {
         return makeResponse('invalid authentication', 403);
     } else {
+        $fields = array_filter(explode(",", $_GET['fields']));
         $mailbox = new Mailbox((int)$i_mailbox);
-        return makeResponse($mailbox->apiGetInfo("ADMIN"));
+        return makeResponse($mailbox->apiGetInfo("ADMIN", $fields));
     }
 }, 'GET');
 

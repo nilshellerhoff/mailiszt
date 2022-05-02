@@ -10,14 +10,9 @@ Route::add('/api/group', function() {
         return makeResponse('invalid authentication', 403);
     } else {
         $fields = array_filter(explode(",", $_GET['fields']));
-        $db = new DB();
-        $group_ids = $db->queryColumn("SELECT i_group FROM _group");
-        $groups = [];
-        foreach ($group_ids as $id) {
-            $group = new Group($id = $id);
-            $groups[] = $group->apiGetInfo($auth["s_role"], $fields);
-        }
-        return makeResponse($groups);
+        $groups = Group::getAll();
+        $apiInfo = array_map(fn($g) => $g->apiGetInfo($auth["s_role"], $fields), $groups);
+        return makeResponse($apiInfo);
     }
 }, 'GET');
 

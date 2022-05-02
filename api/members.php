@@ -9,14 +9,10 @@ Route::add('/api/member', function() {
     if (!$auth) {
         return makeResponse('invalid authentication', 403);
     } else {
-        $db = new DB();
-        $member_ids = $db->queryColumn("SELECT i_member FROM member");
-        $members = [];
-        foreach ($member_ids as $id) {
-            $member = new Member($id = $id);
-            $members[] = $member->apiGetInfo("ADMIN");
-        }
-        return makeResponse($members);
+        $fields = array_filter(explode(",", $_GET['fields']));
+        $members = Member::getAll();
+        $apiInfo = array_map(fn($m) => $m->apiGetInfo($auth["s_role"], $fields), $members);
+        return makeResponse($apiInfo);
     }
 }, 'GET');
 
@@ -40,8 +36,9 @@ Route::add('/api/member/([0-9]*)', function($i_member) {
     if (!$auth) {
         return makeResponse('invalid authentication', 403);
     } else {
+        $fields = array_filter(explode(",", $_GET['fields']));
         $member = new Member((int)$i_member);
-        return makeResponse($member->apiGetInfo("ADMIN"));
+        return makeResponse($member->apiGetInfo("ADMIN", $fields));
     }
 }, 'GET');
 
