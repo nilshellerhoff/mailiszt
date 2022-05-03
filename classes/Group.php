@@ -51,7 +51,7 @@ class Group extends Base {
             SELECT m.*
             FROM member m
             INNER JOIN member2group mg ON mg.i_member = m.i_member
-            WHERE mg.i_group = ?
+            WHERE mg.i_group = ? and m.b_active = 1
         ", [$this->properties["i_group"]]);
     }
 
