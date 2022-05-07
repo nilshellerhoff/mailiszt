@@ -75,7 +75,7 @@ export default {
   }),
   methods: {
     getMails() {
-      this.$api.get("/mail")
+      this.$api.get("/mail?fields=i_mail,s_tomail,s_subject,recipients,d_sent")
         .then((response) => {this.mails = response.data;});
     },
     getDate(isodate) {
