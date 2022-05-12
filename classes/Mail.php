@@ -262,13 +262,16 @@ class Mail extends Base {
     }
 
     public function apiGetAddInfo($mail, $fields) {
-        $add_fields = ["recipients"];
+        $add_fields = ["recipients", "num_recipients"];
 
         $desired_fields = $fields ? $fields : $add_fields;
         $return_fields = array_intersect($desired_fields, $add_fields);
 
         if (in_array("recipients", $return_fields)) {
             $mail["recipients"] = $this->getRecipients();
+        }
+        if (in_array("num_recipients", $return_fields)) {
+            $mail["num_recipients"] = count($this->getRecipients());
         }
 
         return $mail;
