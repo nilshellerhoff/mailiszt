@@ -43,11 +43,6 @@
         {{ getDate(item.d_sent) }}
       </template>
 
-      <!-- num_recipients -->
-      <template v-slot:[`item.num_recipients`]="{ item }">
-        {{ item.recipients.length }}
-      </template>
-
       <!-- details button -->
       <template v-slot:[`item.actions`]="{ item }">
         <v-btn :to="'/mails/' + item.i_mail">View</v-btn>
@@ -75,7 +70,7 @@ export default {
   }),
   methods: {
     getMails() {
-      this.$api.get("/mail?fields=i_mail,s_tomail,s_subject,recipients,d_sent")
+      this.$api.get("/mail?fields=i_mail,s_tomail,s_subject,num_recipients,d_sent")
         .then((response) => {this.mails = response.data;});
     },
     getDate(isodate) {
