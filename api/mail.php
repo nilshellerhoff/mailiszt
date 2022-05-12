@@ -23,7 +23,7 @@ Route::add('/api/mail/([0-9]*)', function($i_mail) {
     } else {
         $fields = array_filter(explode(",", $_GET['fields']));
         $mail = new Mail($i_mail);
-        return makeResponse($mail->apiGetInfo("ADMIN"), $fields);
+        return makeResponse($mail->apiGetInfo("ADMIN", $fields));
     }
 }, 'GET');
 
