@@ -72,7 +72,6 @@ export default {
     },
   },
   mounted() {
-    this.getStats();
     this.$root.$on("reloadData", () => {
       this.getStats();
     });

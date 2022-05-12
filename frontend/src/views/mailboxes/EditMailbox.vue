@@ -82,8 +82,6 @@ export default {
     },
   },
   mounted() {
-    this.getMailbox();
-    this.getGroupsAvail();
     this.$root.$on('reloadData', () => {
       this.getMailbox()
       this.getGroupsAvail()

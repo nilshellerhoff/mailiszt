@@ -254,8 +254,6 @@ export default {
     }
   },
   mounted() {
-    this.getMembers();
-    this.getGroups();
     this.$root.$on("reloadData", () => {
       this.getMembers();
       this.getGroups();

@@ -143,7 +143,6 @@ export default {
     }
   },
   mounted() {
-    this.getGroups();
     this.$root.$on("reloadData", () => {
       this.getGroups();
     });

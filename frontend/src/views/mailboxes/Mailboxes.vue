@@ -98,7 +98,6 @@ export default {
     },
   },
   mounted() {
-    this.getMailboxes();
     this.$root.$on("reloadData", () => {
       this.getMailboxes();
     });

@@ -29,7 +29,6 @@ export default {
     },
   },
   mounted() {
-    this.getMail();
     this.$root.$on('reloadData', () => {
       this.getMail()
     })
