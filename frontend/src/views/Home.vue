@@ -58,16 +58,16 @@ export default {
   methods: {
     getStats() {
       this.$api
-        .get(`/member/`)
+        .get(`/member/?fields=i_member`)
         .then((response) => (this.members = response.data));
       this.$api
-        .get(`/group/`)
+        .get(`/group/?fields=i_group`)
         .then((response) => (this.groups = response.data));
       this.$api
-        .get(`/mailbox/`)
+        .get(`/mailbox/?fields=i_mailbox`)
         .then((response) => (this.lists = response.data));
       this.$api
-        .get(`/mail/`)
+        .get(`/mail/?fields=i_mail`)
         .then((response) => (this.mails = response.data));
     },
   },
