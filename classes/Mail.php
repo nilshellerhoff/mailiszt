@@ -261,7 +261,7 @@ class Mail extends Base {
         );
     }
 
-    public function apiGetAddInfo($mail, $fields) {
+    public function apiGetAddInfo($role, $mail, $fields) {
         $add_fields = ["recipients", "num_recipients"];
 
         $desired_fields = $fields ? $fields : $add_fields;

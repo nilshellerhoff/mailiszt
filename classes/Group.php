@@ -71,7 +71,7 @@ class Group extends Base {
         }
     }
 
-    public function apiGetAddInfo($group, $fields) {
+    public function apiGetAddInfo($role, $group, $fields) {
         $add_fields = ["members"];
 
         $desired_fields = $fields ? $fields : $add_fields;
