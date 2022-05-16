@@ -77,7 +77,7 @@ export default {
           (mail.s_tomail || "") + " " +
           (mail.s_toname || "") + " " +
           (mail.s_subject || "");
-        let search = this.search.toLowerCase() || "";
+        let search = (this.search || "").toLowerCase();
         return filterFields.toLowerCase().includes(search);
       });
     },
