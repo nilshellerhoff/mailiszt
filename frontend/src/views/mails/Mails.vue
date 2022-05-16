@@ -11,13 +11,13 @@
           autocomplete="false"
         ></v-text-field>
       </v-col>
-      <v-col cols=auto class="py-2 pl-2">
+      <v-col cols="auto" class="py-2 pl-2">
         <!-- search button (only on xs) -->
         <v-btn
           class="mx-1 d-sm-none pa-2 pa-sm-4"
           :color="mobileSearchVisible ? 'grey lighten-2' : 'grey lighten-4'"
           @click="mobileSearchVisible = !mobileSearchVisible"
-        ><v-icon>mdi-magnify</v-icon>search
+          ><v-icon>mdi-magnify</v-icon>search
         </v-btn>
       </v-col>
     </v-row>
@@ -37,7 +37,7 @@
     </v-row>
 
     <!-- table -->
-    <v-data-table :headers="headers" :items="mails" :search="search">
+    <v-data-table :headers="headers" :items="filteredMails">
       <!-- sent date -->
       <template v-slot:[`item.date`]="{ item }">
         {{ getDate(item.d_sent) }}
@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import { formatDistance, parseISO } from 'date-fns'
+import { formatDistance, parseISO } from "date-fns";
 
 export default {
   name: "Home",
@@ -63,20 +63,36 @@ export default {
       { text: "List", value: "s_tomail" },
       { text: "Sent", value: "date" },
       { text: "Subject", value: "s_subject" },
-      { text: "Recipients", value: "num_recipients"},
-      { text: "", value: "actions", sortable: false, align: "right"}
+      { text: "Recipients", value: "num_recipients" },
+      { text: "", value: "actions", sortable: false, align: "right" },
     ],
     mobileSearchVisible: false,
   }),
+  computed: {
+    filteredMails: function () {
+      return this.mails.filter((mail) => {
+        let filterFields =
+          (mail.s_frommail || "") + " " +
+          (mail.s_fromname || "") + " " +
+          (mail.s_tomail || "") + " " +
+          (mail.s_toname || "") + " " +
+          (mail.s_subject || "");
+        let search = this.search.toLowerCase() || "";
+        return filterFields.toLowerCase().includes(search);
+      });
+    },
+  },
   methods: {
     getMails() {
-      this.$api.get("/mail?fields=i_mail,s_tomail,s_subject,num_recipients,d_sent")
-        .then((response) => {this.mails = response.data;});
+      this.$api
+        .get("/mail?fields=i_mail,s_tomail,s_toname,s_frommail,s_fromname,s_subject,num_recipients,d_sent")
+        .then((response) => {
+          this.mails = response.data;
+        });
     },
     getDate(isodate) {
-      return formatDistance(parseISO(isodate), new Date(), { addSuffix: true })
-
-    }
+      return formatDistance(parseISO(isodate), new Date(), { addSuffix: true });
+    },
   },
   mounted() {
     this.$root.$on("reloadData", () => {
