@@ -263,7 +263,7 @@ class Mail extends Base {
 
     public function getAttachments() {
         $db = new DB();
-        $attachment_ids = $db->queryRow("SELECT i_attachment FROM attachment WHERE i_mail = ?", [$this->properties["i_mail"]]);
+        $attachment_ids = $db->queryColumn("SELECT i_attachment FROM attachment WHERE i_mail = ?", [$this->properties["i_mail"]]);
         return Attachment::getObjects($attachment_ids);
     }
 
