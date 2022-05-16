@@ -1,6 +1,8 @@
 <?php
 
-class Attachment {
+require_once('Base.php');
+
+class Attachment extends Base {
     public $properties;
     public static $validationrules = [];
 
@@ -64,7 +66,7 @@ class Attachment {
         return true;
     }
 
-    private function populateFromObject() {
+    protected function populateFromObject() {
         $this->properties = [
             "s_contenttype" => $this->attachment->getAttributes()["content_type"],
             "s_cid"         => $this->attachment->getAttributes()["id"],
