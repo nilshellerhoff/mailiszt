@@ -48,7 +48,7 @@ class Member extends Base {
         );
     }
 
-    public function apiGetAddInfo($member, $fields) {
+    public function apiGetAddInfo($role, $member, $fields) {
         $add_fields = ["groups"];
 
         $desired_fields = $fields ? $fields : $add_fields;

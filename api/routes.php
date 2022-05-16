@@ -57,3 +57,4 @@ include('mailboxes.php');
 include('user.php');
 include('mail.php');
 include('settings.php');
+include('attachments.php');

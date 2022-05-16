@@ -1,8 +1,24 @@
 <?php
 
-class Attachment {
+require_once('Base.php');
+
+class Attachment extends Base {
     public $properties;
     public static $validationrules = [];
+
+    public $exposedInfo = [
+        "ADMIN" => [
+            "i_attachment",
+            "i_mail",
+            "s_filename",
+            "s_name",
+            "s_contenttype",
+            "s_cid",
+            "n_size",
+            "n_index",
+            "d_inserted"
+        ]
+    ];
 
     function __construct($i_attachment, $attachment = NULL, $properties = NULL) {
         if (is_null($i_attachment) && is_null($attachment) && is_null($properties)) {
@@ -64,7 +80,7 @@ class Attachment {
         return true;
     }
 
-    private function populateFromObject() {
+    protected function populateFromObject() {
         $this->properties = [
             "s_contenttype" => $this->attachment->getAttributes()["content_type"],
             "s_cid"         => $this->attachment->getAttributes()["id"],

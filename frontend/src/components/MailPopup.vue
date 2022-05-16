@@ -18,6 +18,20 @@
       <v-divider class="ma-4"></v-divider>
       <!-- Mail Body -->
       <iframe class="mailbody" :srcdoc="getBodyForDisplay()"></iframe>
+
+      <template v-if="mail.n_attachments > 0">
+        <v-divider class="ma-4"></v-divider>
+        <!-- Attachments -->
+        <v-row>
+          <span v-for="attachment in mail.attachments" :key="attachment.i_attachment" class="ma-2">
+              <v-icon>mdi-paperclip</v-icon>
+              <a :href="apiUrl + '/attachment/' + attachment.s_filename" class="ma-2 body-2" download>
+                {{ attachment.s_name }} ({{ getFileSize(attachment.n_size) }})
+              </a>
+          </span>
+        </v-row>
+      </template>
+
       <v-divider class="ma-4"></v-divider>
       <!-- Recipients -->
       <v-row>
@@ -88,7 +102,16 @@ export default {
   components: {
     DetailsPopup,
   },
+  computed: {
+    apiUrl: () => process.env.VUE_APP_BASE_URL,
+  },
   methods: {
+    getFileSize(bytes) {
+      if (bytes < 1024) return bytes + " Bytes";
+      if (bytes < 1024*1024) return (bytes / 1024).toFixed(1) + " KB";
+      if (bytes < 1024*1024*1024) return (bytes / 1024 / 1024).toFixed(1) + " MB";
+      return (bytes / 1024 / 1024 / 1024).toFixed(1) + " GB";
+    },  
     getBodyForDisplay() {
       return this.mail.s_bodyhtml || this.mail.s_bodytext;
     },

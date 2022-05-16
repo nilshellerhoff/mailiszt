@@ -261,8 +261,14 @@ class Mail extends Base {
         );
     }
 
-    public function apiGetAddInfo($mail, $fields) {
-        $add_fields = ["recipients", "num_recipients"];
+    public function getAttachments() {
+        $db = new DB();
+        $attachment_ids = $db->queryColumn("SELECT i_attachment FROM attachment WHERE i_mail = ?", [$this->properties["i_mail"]]);
+        return Attachment::getObjects($attachment_ids);
+    }
+
+    public function apiGetAddInfo($role, $mail, $fields) {
+        $add_fields = ["recipients", "num_recipients", "attachments"];
 
         $desired_fields = $fields ? $fields : $add_fields;
         $return_fields = array_intersect($desired_fields, $add_fields);
@@ -272,6 +278,11 @@ class Mail extends Base {
         }
         if (in_array("num_recipients", $return_fields)) {
             $mail["num_recipients"] = count($this->getRecipients());
+        }
+
+        if (in_array("attachments", $return_fields)) {
+            $attachments = $this->getAttachments();
+            $mail["attachments"] = array_map(fn($a) => $a->apiGetInfo($role),  $attachments);
         }
 
         return $mail;

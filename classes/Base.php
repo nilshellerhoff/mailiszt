@@ -133,10 +133,10 @@ class Base {
             $this->properties,
             array_flip($return_fields)
         );
-        return $this->apiGetAddInfo($properties, $fields);
+        return $this->apiGetAddInfo($role, $properties, $fields);
     }
 
-    public function apiGetAddInfo($properties, $fields) {
+    public function apiGetAddInfo($role, $properties, $fields) {
         // empty function, which can be overwritten by subclasses
         // this can be used to add additional information to the api response and is called by apiGetInfo()
         return $properties;
