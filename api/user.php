@@ -16,31 +16,22 @@ Route::add('/api/users/current/login', function() {
 }, 'PUT');
 
 Route::add('/api/users/current/logout', function() {
-    $auth = checkAuthToken();
-    if (!$auth) {
-        return makeResponse('invalid authentication', 403);
-    } else {
+    return authenticatedAction(function($auth) {
         User::deleteToken($auth["s_token"]);
-    }
+    });
 }, 'PUT');
 
 Route::add('/api/users/current', function() {
     // return info about the current user
-    $auth = checkAuthToken();
-    if (!$auth) {
-        return makeResponse('invalid authentication', 403);
-    } else {
+    return authenticatedAction(function($auth) {
         $userid = $auth["i_user"];
         $user = new User($userid);
         return makeResponse($user->apiGetInfo($auth["s_role"])); 
-    }
+    });
 }, 'PUT');
 
 Route::add('/api/users/current/password', function() {
-    $auth = checkAuthToken();
-    if (!$auth) {
-        return makeResponse('invalid authentication', 403);
-    } else {
+    return authenticatedAction(function($auth) {
         $put_data = getPutData();
 
         $oldPass =  $put_data["oldPassword"];
@@ -63,7 +54,7 @@ Route::add('/api/users/current/password', function() {
 
         // return "password changed to '$newPass1'";
         return makeResponse("password updated", 200);
-    }
+    });
 }, 'PUT');
 
 // Route::add('/api/users/([0-9]*)/password', function($userid) {

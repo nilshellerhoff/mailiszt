@@ -5,22 +5,16 @@ include('includes.php');
 use Steampixel\Route;
 
 Route::add('/api/mailbox', function() {
-    $auth = checkAuthToken();
-    if (!$auth) {
-        return makeResponse('invalid authentication', 403);
-    } else {
+    return authenticatedAction(function($auth) {
         $fields = array_filter(explode(",", $_GET['fields']));
         $mailboxes = Mailbox::getAll();
         $apiInfo = array_map(fn($m) => $m->apiGetInfo($auth["s_role"], $fields), $mailboxes);
         return makeResponse($apiInfo);
-    }
+    });
 }, 'GET');
 
 Route::add('/api/mailbox/add', function() {
-    $auth = checkAuthToken();
-    if (!$auth) {
-        return makeResponse('invalid authentication', 403);
-    } else {
+    return authenticatedAction(function($auth) {
         $mailbox = new Mailbox(
             $id = null,
             $obj = null,
@@ -28,87 +22,66 @@ Route::add('/api/mailbox/add', function() {
         );
         $mailbox->save();
         return makeResponse($mailbox->apiGetInfo("ADMIN"));
-    }
+    });
 }, 'PUT');
 
 Route::add('/api/mailbox/([0-9]*)', function($i_mailbox) {
-    $auth = checkAuthToken();
-    if (!$auth) {
-        return makeResponse('invalid authentication', 403);
-    } else {
+    return authenticatedAction(function($auth, $i_mailbox) {
         $fields = array_filter(explode(",", $_GET['fields']));
         $mailbox = new Mailbox((int)$i_mailbox);
         return makeResponse($mailbox->apiGetInfo("ADMIN", $fields));
-    }
+    }, $i_mailbox);
 }, 'GET');
 
 Route::add('/api/mailbox/([0-9]*)', function($i_mailbox) {
-    $auth = checkAuthToken();
-    if (!$auth) {
-        return makeResponse('invalid authentication', 403);
-    } else {
+    return authenticatedAction(function($auth, $i_mailbox) {
         $mailbox = new Mailbox($i_mailbox);
         $mailbox->updateProperties(getPutData());
         $mailbox->save();
-    }
+    }, $i_mailbox);
 }, 'PUT');
 
 Route::add('/api/mailbox/([0-9]*)', function($i_mailbox) {
-    $auth = checkAuthToken();
-    if (!$auth) {
-        return makeResponse('invalid authentication', 403);
-    } else {
+    return authenticatedAction(function($auth, $i_mailbox) {
         $mailbox = new Mailbox($i_mailbox);
         $mailbox->delete();
-    }
+    }, $i_mailbox);
 }, 'DELETE');
 
 // groups management
 Route::add('/api/mailbox/([0-9]*)/groups', function($i_mailbox) {
-    $auth = checkAuthToken();
-    if (!$auth) {
-        return makeResponse('invalid authentication', 403);
-    } else {
+    return authenticatedAction(function($auth, $i_mailbox) {
         $mailbox = new Mailbox($i_mailbox);
         return makeResponse($mailbox->getGroups());
-    }
+    }, $i_mailbox);
 }, 'GET');
 
 Route::add('/api/mailbox/([0-9]*)/groups', function($i_mailbox) {
-    $auth = checkAuthToken();
-    if (!$auth) {
-        return makeResponse('invalid authentication', 403);
-    } else {
+    return authenticatedAction(function($auth, $i_mailbox) {
         $mailbox = new Mailbox($i_mailbox);
         $mailbox->setGroups(getPutData());
         $mailbox->save();
-    }
+    }, $i_mailbox);
 }, 'PUT');
 
 // getting recipients of mailbox
 Route::add('/api/mailbox/([0-9]*)/recipients', function($i_mailbox) {
-    $auth = checkAuthToken();
-    if (!$auth) {
-        return makeResponse('invalid authentication', 403);
-    } else {
+    return authenticatedAction(function($auth, $i_mailbox) {
         $mailbox = new Mailbox($i_mailbox);
         return makeResponse($mailbox->getRecipients());
-    }
+    }, $i_mailbox);
 }, 'GET');
 
 // getting recipients of mailbox with custom groups
 Route::add('/api/mailbox/([0-9]*)/recipients', function($i_mailbox) {
-    $auth = checkAuthToken();
-    if (!$auth) {
-        return makeResponse('invalid authentication', 403);
-    } else {
+    return authenticatedAction(function($auth, $i_mailbox) {
         $mailbox = new Mailbox(
             $id = null,
             $obj = null,
             $properties = getPutData()
         );
         return makeResponse($mailbox->getRecipients());
-    }
+    }, $i_mailbox);
 }, 'PUT');
 
 // actions for forwarding mails
