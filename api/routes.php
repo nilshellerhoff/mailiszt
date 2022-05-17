@@ -50,6 +50,16 @@ function checkAuthToken() {
     return false;
 }
 
+function authenticatedAction($callback, ...$args) {
+    // return the output of the callback if the user is authenticated
+    $auth = checkAuthToken();
+    if ($auth) {
+        return $callback($auth, ...$args);
+    } else {
+        return makeResponse(["message" => "invalid authentication"], 403);
+    }
+}
+
 // include api definitions
 include('members.php');
 include('groups.php');
