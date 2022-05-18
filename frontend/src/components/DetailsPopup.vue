@@ -1,4 +1,4 @@
-<template>
+2<template>
   <v-row justify="center" no-gutters>
     <v-dialog
       v-model="dialog"
@@ -7,7 +7,7 @@
       :fullscreen="$vuetify.breakpoint.xsOnly"
     >
       <v-card>
-        <v-toolbar dark color="secondary">
+        <v-toolbar dark color="secondary" class="fixed-bar">
           <v-btn icon dark @click="$router.push(closeUrl)">
             <v-icon>mdi-close</v-icon>
           </v-btn>
@@ -40,6 +40,15 @@
     </v-dialog>
   </v-row>
 </template>
+
+<style scoped>
+.fixed-bar {
+  top: 0;
+  position: sticky;
+  position: -webkit-sticky; /* for Safari */
+  z-index: 2;
+}
+</style>
 
 <script>
 export default {
