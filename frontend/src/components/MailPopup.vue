@@ -16,12 +16,9 @@
         </tr>
       </table>
       <v-divider class="ma-4"></v-divider>
-      <!-- Mail Body -->
-      <iframe class="mailbody" :srcdoc="getBodyForDisplay()"></iframe>
 
+      <!-- Attachments -->
       <template v-if="mail.n_attachments > 0">
-        <v-divider class="ma-4"></v-divider>
-        <!-- Attachments -->
         <v-row>
           <span v-for="attachment in mail.attachments" :key="attachment.i_attachment" class="ma-2">
               <v-icon>mdi-paperclip</v-icon>
@@ -30,7 +27,12 @@
               </a>
           </span>
         </v-row>
+        <v-divider class="ma-4"></v-divider>
       </template>
+
+
+      <!-- Mail Body -->
+      <iframe :height="mailIframeHeight" @load="mailIframeHeight = getMailIframeHeight()" ref="mailIframe" class="mailbody" :srcdoc="getBodyForDisplay()"></iframe>
 
       <v-divider class="ma-4"></v-divider>
       <!-- Recipients -->
@@ -82,8 +84,8 @@ table td {
   } */
 iframe.mailbody {
   width: 100%;
-  height: 100%;
-  min-height: 300px;
+  /* height: 100%; */
+  /* min-height: 300px; */
   border-style: none;
 }
 </style>
@@ -97,6 +99,7 @@ export default {
   data: function () {
     return {
       recipientsSearch: "",
+      mailIframeHeight: 0,
     };
   },
   components: {
@@ -115,6 +118,11 @@ export default {
     getBodyForDisplay() {
       return this.mail.s_bodyhtml || this.mail.s_bodytext;
     },
+    getMailIframeHeight: function () {
+      console.log(this.$refs.mailIframe.contentDocument.body.scrollHeight);
+      return this.$refs.mailIframe.contentWindow.document.body.scrollHeight + 20 + "px";
+    },
+
   },
 };
 </script>
