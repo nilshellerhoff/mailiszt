@@ -116,7 +116,7 @@ export default {
       return (bytes / 1024 / 1024 / 1024).toFixed(1) + " GB";
     },  
     getBodyForDisplay() {
-      return this.mail.s_bodyhtml || this.mail.s_bodytext;
+      return this.mail.s_bodyhtml || this.mail.s_bodytext.replace('\n', '<br>');
     },
     getMailIframeHeight: function () {
       console.log(this.$refs.mailIframe.contentDocument.body.scrollHeight);
