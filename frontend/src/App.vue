@@ -80,7 +80,7 @@ export default {
           if (response.data) {
             this.accessToken = response.data;
             this.$api.defaults.headers["Authorization"] = response.data;
-            this.$cookies.set("accessToken", response.data);
+            this.$cookies.set("accessToken", response.data, null, null, null, null, "None");
             return true;
           } else {
             return false;
@@ -91,7 +91,7 @@ export default {
       // delete the accessToken from storage and cookie
       this.accessToken = null;
       this.$api.defaults.headers["Authorization"] = null;
-      this.$cookies.set("accessToken", "");
+      this.$cookies.set("accessToken", "", null, null, null, null, "None");
       this.$router.push({ name: "Login" })
     },
     logout() {
