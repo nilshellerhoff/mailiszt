@@ -18,9 +18,9 @@
       <v-divider class="ma-4"></v-divider>
 
       <!-- Attachments -->
-      <template v-if="mail.n_attachments > 0">
+      <template v-if="(mail.attachments || []).filter(a => !a.dontShow).length > 0">
         <v-row>
-          <span v-for="attachment in mail.attachments" :key="attachment.i_attachment" class="ma-2">
+          <span v-for="attachment in mail.attachments.filter(a => !a.dontShow)" :key="attachment.i_attachment" class="ma-2">
               <v-icon>mdi-paperclip</v-icon>
               <a :href="apiUrl + '/attachment/' + attachment.s_filename" class="ma-2 body-2" download>
                 {{ attachment.s_name }} ({{ getFileSize(attachment.n_size) }})
@@ -133,6 +133,7 @@ export default {
     getAttachmentUrlFromCid(cid) {
       try {
         let attachment = this.mail.attachments.find((a) => a.s_cid === cid);
+        // attachment.dontShow = true;
         return this.apiUrl + '/attachment/' + attachment.s_filename;
       } catch (e) {
         return '';
