@@ -116,11 +116,31 @@ export default {
       return (bytes / 1024 / 1024 / 1024).toFixed(1) + " GB";
     },  
     getBodyForDisplay() {
-      return this.mail.s_bodyhtml || this.mail.s_bodytext.replaceAll('\n', '<br>');
+      // if there is no html body return the text body, but with newlines replaced with <br>
+      if (!this.mail.s_bodyhtml) return (this.mail.s_bodytext || "").replaceAll('\n', '<br>');
+
+      // otherwise return the html body but replace image sources with the api url
+      let parser = new DOMParser();
+      let htmlBodyDom = parser.parseFromString(this.mail.s_bodyhtml, "text/html");
+
+      // select all images and replace the src with the api url
+      htmlBodyDom.querySelectorAll('img[src^="cid"').forEach((img) => {
+        img.src = this.getAttachmentUrlFromCid(img.getAttribute('src').replace('cid:', ''));
+      });
+
+      return '<!DOCTYPE html>' + htmlBodyDom.documentElement.outerHTML;
+    },
+    getAttachmentUrlFromCid(cid) {
+      try {
+        let attachment = this.mail.attachments.find((a) => a.s_cid === cid);
+        return this.apiUrl + '/attachment/' + attachment.s_filename;
+      } catch (e) {
+        return '';
+      }
     },
     getMailIframeHeight: function () {
       console.log(this.$refs.mailIframe.contentDocument.body.scrollHeight);
-      return this.$refs.mailIframe.contentWindow.document.body.scrollHeight + 20 + "px";
+      return this.$refs.mailIframe.contentWindow.document.body.scrollHeight + 40 + "px";
     },
 
   },
