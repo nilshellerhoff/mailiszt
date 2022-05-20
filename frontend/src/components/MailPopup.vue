@@ -140,7 +140,6 @@ export default {
       }
     },
     getMailIframeHeight: function () {
-      console.log(this.$refs.mailIframe.contentDocument.body.scrollHeight);
       return this.$refs.mailIframe.contentWindow.document.body.scrollHeight + 40 + "px";
     },
 
