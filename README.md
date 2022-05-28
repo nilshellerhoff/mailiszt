@@ -97,3 +97,4 @@ or if you only want to forward certain mailboxes
   - [ ] delete logs after a certain time (maybe based on loglevel?)
 - [ ] multi user functionality with customizable access levels
 - [ ] allow member self-registration
+- [ ] for every api action, add a human readable response and show this response in the frontend
