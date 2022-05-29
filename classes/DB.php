@@ -3,13 +3,22 @@
 class DB extends SQLite3 {
     function __construct() {
         if (file_exists(DB_FILE)) {
-            $this->open(DB_FILE);
+            try {
+                $this->open(DB_FILE);
+            } catch (Exception $e) {
+                Logger::error("Could not open DB file: " . $e->getMessage());
+            }
         } else {
             // if DB file doesn't exist, create DB, make schema and insert sampledata
-            $this->open(DB_FILE);
-            $this->executeFile(BASE_DIR . 'sql/tables.sql');
-            $this->executeFile(BASE_DIR . 'sql/basedata.sql');
-            $this->executeFile(BASE_DIR .'sql/sampledata.sql');
+            try {
+                $this->open(DB_FILE);
+                $this->executeFile(BASE_DIR . 'sql/tables.sql');
+                $this->executeFile(BASE_DIR . 'sql/basedata.sql');
+                $this->executeFile(BASE_DIR .'sql/sampledata.sql');
+                $this->upgradeDB();
+            } catch (Exception $e) {
+                Logger::error("Could not create DB file: " . $e->getMessage());
+            }
         }
     }
 
