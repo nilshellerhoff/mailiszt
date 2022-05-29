@@ -88,4 +88,14 @@ class Attachment extends Base {
             "n_size"        => $this->attachment->getAttributes()["size"],
         ];
     }
+
+    public function getUrl() {
+        // get the url relative to the api root
+        return "/attachment/" . $this->properties["i_attachment"] . "/" . $this->properties["s_name"];
+    }
+
+    public function apiGetAddInfo($role, $properties, $fields) {
+        $properties["url"] = $this->getUrl();
+        return $properties;
+    }
 }

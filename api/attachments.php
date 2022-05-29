@@ -4,12 +4,18 @@ include('includes.php');
 
 use Steampixel\Route;
 
-Route::add('/api/attachment/([0-9a-f_]*)', function($attachment_file) {
-    return authenticatedAction(function($auth, $attachment_file) {
-        $db = new DB();
-        $data = $db->queryRow("SELECT * FROM attachment WHERE s_filename = ?", [$attachment_file]);
-        header('Content-type: ' . $data['s_contenttype']);
-        header('Content-Disposition: inline; filename="' . $data['s_name'] . '"');
-        return readfile(ATTACHMENT_PATH . $attachment_file);
-    }, $attachment_file);
+Route::add('/api/attachment/([0-9]*)(.*)', function($i_attachment, $name) {
+    return authenticatedAction(function($auth, $i_attachment, $name) {
+        $attachment = new Attachment($i_attachment);
+        
+        // if the name is not the attachment name, redirect
+        if ($name != $attachment->properties['s_name'] && $name != '/' . $attachment->properties['s_name']) {
+            header('Location: ' . $attachment->getUrl());
+            return;
+        }
+
+        header('Content-type: ' . $attachment->properties['s_contenttype']);
+        header('Content-Disposition: inline;');
+        return readfile(ATTACHMENT_PATH . $attachment->properties['s_filename']);
+    }, $i_attachment, $name);
 }, 'GET');

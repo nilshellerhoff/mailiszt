@@ -22,7 +22,7 @@
         <v-row>
           <span v-for="attachment in mail.attachments.filter(a => !a.dontShow)" :key="attachment.i_attachment" class="ma-2">
               <v-icon>mdi-paperclip</v-icon>
-              <a :href="apiUrl + '/attachment/' + attachment.s_filename" class="ma-2 body-2" download>
+              <a :href="apiUrl + attachment.url" class="ma-2 body-2" target="_blank">
                 {{ attachment.s_name }} ({{ getFileSize(attachment.n_size) }})
               </a>
           </span>
@@ -139,7 +139,7 @@ export default {
       try {
         let attachment = this.mail.attachments.find((a) => a.s_cid === cid);
         // attachment.dontShow = true;
-        return this.apiUrl + '/attachment/' + attachment.s_filename;
+        return this.apiUrl + attachment.url;
       } catch (e) {
         return '';
       }
