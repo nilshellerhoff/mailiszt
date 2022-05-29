@@ -86,42 +86,48 @@
         <!-- server configuration -->
         <v-tab-item>
           <v-row no-gutters>
-            <v-col cols="8" class="pr-2">
+            <v-col cols="6" class="pr-2">
               <v-text-field
                 prepend-icon="mdi-email-receive"
                 label="IMAP server"
                 v-model="mailbox.s_imapserver"
               ></v-text-field>
             </v-col>
-            <v-col cols="4">
+            <v-col cols="3" class="pr-2">
+              <v-select
+                v-model="mailbox.s_imapencryption"
+                :items="imapEncryptionItems"
+                label="Encryption"
+              ></v-select>
+            </v-col>
+            <v-col cols="3">
               <v-text-field
                 prepend-icon=""
                 label="IMAP port"
                 v-model="mailbox.n_imapport"
-              >
-                <template v-slot:append-outer>
-                  <InfoTooltip>Only SSL is supported (usually 993)</InfoTooltip>
-                </template>
-              </v-text-field>
+              ></v-text-field>
             </v-col>
           </v-row>
           <v-row no-gutters align="center">
-            <v-col cols=8 class="pr-2">
+            <v-col cols=6 class="pr-2">
               <v-text-field
                 prepend-icon="mdi-email-send"
                 label="SMTP server"
                 v-model="mailbox.s_smtpserver"
               ></v-text-field>
             </v-col>
-            <v-col cols=4>
+            <v-col cols="3" class="pr-2">
+              <v-select
+                v-model="mailbox.s_smtpencryption"
+                :items="smtpEncryptionItems"
+                label="Encryption"
+              ></v-select>
+            </v-col>
+            <v-col cols="3">
               <v-text-field
                 label="SMTP port"
                 v-model="mailbox.n_smtpport"
-              >
-                <template v-slot:append-outer>
-                  <InfoTooltip>Only STARTTLS is supported (usually 587)</InfoTooltip>
-                </template>
-              </v-text-field>
+              ></v-text-field>
             </v-col>
           </v-row>
           <v-row no-gutters>
@@ -221,7 +227,6 @@ a {
 import DetailsPopup from "@/components/DetailsPopup.vue";
 import BooleanInput from "@/components/BooleanInput.vue";
 import Popup from "@/components/Popup.vue";
-import InfoTooltip from "@/components/InfoTooltip.vue"
 
 export default {
   name: "MailboxPopup",
@@ -257,6 +262,16 @@ export default {
         { text : 'Members of the list', value : 'members' },
         { text : 'Specific people', value : 'specific' },
       ],
+      imapEncryptionItems: [
+        { text : 'None', value : 'none' },
+        { text : 'SSL', value : 'ssl' },
+        { text : 'TLS', value : 'tls' },
+      ],
+      smtpEncryptionItems: [
+        { text : 'None', value : 'none' },
+        { text : 'SSL', value : 'ssl' },
+        { text : 'TLS', value : 'tls' },
+      ],
       allowedSendersSearchInput: '',
       members: [],
     };
@@ -265,7 +280,6 @@ export default {
     DetailsPopup,
     BooleanInput,
     Popup,
-    InfoTooltip,
   },
   methods: {
     openRecipientsPopup() {

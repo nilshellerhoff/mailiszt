@@ -26,6 +26,8 @@ class Mailbox extends Base {
             "d_inserted", 
             "d_updated",
             "b_includeinactive",
+            "s_imapencryption",
+            "s_smtpencryption",
         ],
     ];
 
@@ -35,8 +37,38 @@ class Mailbox extends Base {
         "s_imapserver"  => '/^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9](?:\.[a-zA-Z]{2,})+$/',
         "n_imapport"    => '/[0-9]*/',
         "s_smtpserver"  => '/^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9](?:\.[a-zA-Z]{2,})+$/',
-        "n_smtpport"    => '/[0-9]*/'
+        "n_smtpport"    => '/[0-9]*/',
+        "s_imapencryption" => '/^(none|ssl|tls)$/',
+        "s_smtpencryption" => '/^(none|ssl|tls)$/',
     ];
+
+    public function getSmtpEncryption() {
+        // get the correct smtp encryption keyword for php-mailer
+        switch ($this->properties['s_smtpencryption']) {
+            case 'none':
+                return '';
+            case 'ssl':
+                return 'ssl';
+            case 'tls':
+                return 'tls';
+            default:
+                Logger::error("s_smtpencryption $this->properties['s_smtpencryption'] is not a valid value");
+        }
+    }
+
+    public function getImapEncryption() {
+        // get the correct imap encryption keyword for php-imap
+        switch ($this->properties['s_imapencryption']) {
+            case 'none':
+                return false;
+            case 'ssl':
+                return 'ssl';
+            case 'tls':
+                return 'tls';
+            default:
+                Logger::error("s_imapencryption $this->properties['s_imapencryption'] is not a valid value");
+        }
+    }
 
     public function fetchMails() {
         // connect to the mailbox
@@ -49,7 +81,7 @@ class Mailbox extends Base {
         $client = $cm->make([
             'host'          => $this->properties["s_imapserver"],
             'port'          => $this->properties["n_imapport"],
-            'encryption'    => 'ssl',
+            'encryption'    => $this->getImapEncryption(),
             'validate_cert' => true,
             'username'      => $this->properties["s_username"],
             'password'      => $this->properties["s_password"],

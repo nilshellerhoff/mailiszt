@@ -159,7 +159,7 @@ class Mail extends Base {
             $mail->SMTPAuth   = true;
             $mail->Username   = $mailbox->properties["s_username"];
             $mail->Password   = $mailbox->properties["s_password"];
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->SMTPSecure = $mailbox->getSmtpEncryption();
             $mail->Port       = $mailbox->properties["n_smtpport"];
 
             // allow the mail body to be empty
