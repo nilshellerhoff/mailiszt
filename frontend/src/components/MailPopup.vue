@@ -128,7 +128,12 @@ export default {
         img.src = this.getAttachmentUrlFromCid(img.getAttribute('src').replace('cid:', ''));
       });
 
-      return '<!DOCTYPE html>' + htmlBodyDom.documentElement.outerHTML;
+      // insert a base tag into the header so that links open in the parent
+      let baseTag = htmlBodyDom.createElement('base');
+      baseTag.target = '_blank';
+      htmlBodyDom.head.appendChild(baseTag);
+
+      return new XMLSerializer().serializeToString(htmlBodyDom);
     },
     getAttachmentUrlFromCid(cid) {
       try {
