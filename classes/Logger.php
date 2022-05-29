@@ -17,4 +17,20 @@ class Logger {
             ]
         );
     }
+
+    public static function debug($message) {
+        self::log($message, 'DEBUG');
+    }
+
+    public static function info($message) {
+        self::log($message, 'INFO');
+    }
+
+    public static function warning($message) {
+        self::log($message, 'WARNING');
+    }
+
+    public static function error($message) {
+        self::log($message, 'ERROR');
+    }
 }
