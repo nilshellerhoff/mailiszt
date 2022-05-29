@@ -133,6 +133,9 @@ class Base {
             $this->properties,
             array_flip($return_fields)
         );
+
+        $properties['validation_rules'] = static::$validationrules;
+
         return $this->apiGetAddInfo($role, $properties, $fields);
     }
 

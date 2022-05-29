@@ -31,11 +31,31 @@ class Mailbox extends Base {
 
     public $properties;
     public static $validationrules = [
-        "s_address"     => '/^[^\s@]+@[^\s@]+$/',
-        "s_imapserver"  => '/^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9](?:\.[a-zA-Z]{2,})+$/',
-        "n_imapport"    => '/[0-9]*/',
-        "s_smtpserver"  => '/^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9](?:\.[a-zA-Z]{2,})+$/',
-        "n_smtpport"    => '/[0-9]*/'
+        "s_address"     => [
+            'required'  => true,
+            'regex'     => '^[^\s@]+@[^\s@]+$',
+            'message'   => 'Please insert a valid email address',
+        ],
+        "s_imapserver"  => [
+            'required'  => true,
+            'regex'     => '^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9](?:\.[a-zA-Z]{2,})+$',
+            'message'   => 'Please insert a valid domain name',
+        ],
+        "n_imapport"    => [
+            'required'  => true,
+            'regex'     => '^[0-9]*$',
+            'message'   => 'Please insert a valid port number',
+        ],
+        "s_smtpserver"  => [
+            'required'  => true,
+            'regex'     => '^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9](?:\.[a-zA-Z]{2,})+$',
+            'message'   => 'Please insert a valid domain name',
+        ],
+        "n_smtpport"    => [
+            'required'  => true,
+            'regex'     => '^[0-9]*$',
+            'message'   => 'Please insert a valid port number',
+        ],
     ];
 
     public function fetchMails() {

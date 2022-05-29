@@ -91,6 +91,7 @@
                 prepend-icon="mdi-email-receive"
                 label="IMAP server"
                 v-model="mailbox.s_imapserver"
+                :rules="getValidationRules('s_imapserver')"
               ></v-text-field>
             </v-col>
             <v-col cols="4">
@@ -98,6 +99,7 @@
                 prepend-icon=""
                 label="IMAP port"
                 v-model="mailbox.n_imapport"
+                :rules="[mailbox.validation_rules.n_imapport.regex ? value => RegExp(mailbox.validation_rules.n_imapport.regex).test(value) || mailbox.validation_rules.n_imapport.message : () => true]"
               >
                 <template v-slot:append-outer>
                   <InfoTooltip>Only SSL is supported (usually 993)</InfoTooltip>
@@ -268,6 +270,30 @@ export default {
     InfoTooltip,
   },
   methods: {
+    getValidationRules(property) {
+
+      // while (typeof this.mailbox.validation_rules === 'undefined') {
+      //   window.setTimeout(() => {
+      //   }, 100);
+      // }
+      // let isRequired = this.mailbox.validation_rules[property].required || false;
+      // let regexExpression = new RegExp(this.mailbox.validation_rules[property].regex) || null;
+      // let message = this.mailbox.validation_rules[property].message || null;
+      
+      let isRequired = Boolean(property);
+      let regexExpression = /^[0-9]*$/
+      let message = 'Only numbers allowed'
+
+      return [
+        isRequired ? value => !!value || message : () => true,
+        regexExpression ? value => regexExpression.test(value) || message : () => true,
+      ];
+
+      // return {
+      //   required: isRequired ? value => !!value || message : () => true,
+      //   regex: regexExpression ? value => regexExpression.test(value) || message : () => true,
+      // }
+    },
     openRecipientsPopup() {
       this.mailbox.j_groups = JSON.stringify(this.groups.groups);
       this.mailbox.j_groupslogic = JSON.stringify(this.groupsLogic);
