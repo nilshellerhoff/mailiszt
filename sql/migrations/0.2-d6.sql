@@ -1,0 +1,2 @@
+ALTER TABLE mailbox
+ADD i_moderator INT NOT NULL DEFAULT 0;
