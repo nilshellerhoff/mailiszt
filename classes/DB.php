@@ -99,12 +99,53 @@ class DB extends SQLite3 {
         return;
     }
 
-    public function queryRow($query, $parameters = []) {
-        // execute query and return one row
+    /**
+     * Build a query using parameters given
+     * 
+     * @param $query SQL query with parameters as :param
+     * @param $parameters either array of values to be replaced or associative array of parameters with column_name => value
+     * 
+     * @return SQLite3Stmt SQL query with parameters replaced
+     */
+    public function getQuery(string $query, array $parameters = []) {
         $stmt = $this->prepare($query);
-        for ($i = 0; $i < count($parameters); $i++) {
-            $stmt->bindValue($i+1, $parameters[$i]);
+
+        // if parameters is an associative array, replace the :param with the value
+        if (count(array_filter(array_keys($parameters), 'is_string')) > 0) {
+            foreach ($parameters as $key => $value) {
+                $stmt->bindValue(':' . $key, $value);
+            }
+        } else {
+            // if parameters is an array, go by index
+            for ($i = 0; $i < count($parameters); $i++) {
+                $stmt->bindValue($i+1, $parameters[$i]);
+            }
         }
+
+        return $stmt;
+    }
+
+    /**
+     * Build a where clause from a flat array of conditions. 
+     * 
+     * @param $wheres where keys are column names and values are values
+     * @param $operator string the operator to use for the where clause (either 'AND' or 'OR') defaults to 'AND'
+     * 
+     * @return string SQL where clause
+     */
+    public function buildWhere(array $wheres, string $operator = 'AND') {
+        $whereClause = "";
+        foreach ($wheres as $column => $value) {
+            if ($whereClause != "") {
+                $whereClause .= " $operator ";
+            }
+            $whereClause .= $column . " = :" . $column;
+        }
+        return $whereClause;        
+    }
+
+    public function queryRow($query, $parameters = []) {
+        $stmt = $this->getQuery($query, $parameters);
 
         // filter numeric columns
         $results = array_filter($stmt->execute()->fetchArray(), function(&$key) {
@@ -122,11 +163,7 @@ class DB extends SQLite3 {
     }
 
     public function queryAll($query, $parameters = []) {
-        // execute query and return all rows
-        $stmt = $this->prepare($query);
-        for ($i = 0; $i < count($parameters); $i++) {
-            $stmt->bindValue($i+1, $parameters[$i]);
-        }
+        $stmt = $this->getQuery($query, $parameters);
         $result = $stmt->execute();
 
         // loop through rows and return only with non-numeric index (otherwise double columns)
@@ -141,10 +178,7 @@ class DB extends SQLite3 {
 
     public function queryScalar($query, $parameters = []) {
         // execute query and return a scalar (first row, first column)
-        $stmt = $this->prepare($query);
-        for ($i = 0; $i < count($parameters); $i++) {
-            $stmt->bindValue($i+1, $parameters[$i]);
-        }
+        $stmt = $this->getQuery($query, $parameters);
 
         $result = $stmt->execute()->fetchArray();
         if ($result) {
