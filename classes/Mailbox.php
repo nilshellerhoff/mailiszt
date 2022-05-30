@@ -109,8 +109,55 @@ class Mailbox extends Base {
         return $mails;
     }
 
+    /**
+     * Get the allowed senders for this mailbox as member objects
+     * 
+     * @throws ValueError if s_allowedsenders is not a recognized value
+     * @return array[Member] if allowed senders are found, empty array if no allowed senders are found, -1 if everybody is allowed
+     */
+    public function getAllowedSenders() {
+        // if everybody is allowed, return true
+        if ($this->properties['s_allowedsenders'] == 'everybody') {
+            return -1;
+        } else {
+            switch ($this->properties['s_allowedsenders']) {
+                case 'registered':
+                    // only members registered in Mailiszt are allowed to address the list
+                    return Member::getAll();
+                case 'members':
+                    // only members of the list allowed, return the recipients list
+                    $allowed_ids = array_map(fn($m) => $m->properties['i_member'], $this->getRecipientsObjects());
+                    return Member::getObjects($allowed_ids);
+                case 'specific':
+                    // specific people only allowed
+                    $allowed_ids = json_decode($this->properties["j_allowedsenderspeople"]);
+                    return Member::getObjects($allowed_ids);
+                default:
+                    // sender option not recognized, return throw error
+                    Logger::error("s_allowedsenders $this->properties['s_allowedsenders'] for Mailbox $this->properties['i_mailbox'] is not a valid value");
+                    throw new ValueError("s_allowedsenders $this->properties['s_allowedsenders'] for Mailbox $this->properties['i_mailbox'] is not a valid value");
+            }
+        }
+    }
+
+    /**
+     * Get the recipients of this mailbox as member objects
+     * This method should be replaced in future, when transitioning to object based models
+     * 
+     * @return array[Member]
+     */
+    public function getRecipientsObjects() {
+        $recipients = $this->getRecipients();
+        $recipients_ids = array_map(fn($m) => $m['i_member'], $recipients);
+        return Member::getObjects($recipients_ids);
+    }
+
+    /**
+     * Get the recipients of this mailbox as member as array (with keys i_member...)
+     * 
+     * @return array
+     */
     public function getRecipients() {
-        // get the recipient list for this address
         if ($this->properties["s_groupsmethod"] == 'logic') {
             return $this->getRecipientsCondition();
         } else {

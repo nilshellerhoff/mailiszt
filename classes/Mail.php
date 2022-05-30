@@ -110,36 +110,13 @@ class Mail extends Base {
         }
 
         // is the sender allowed to write to this mailinglist?
-        if ($mailbox->properties['s_allowedsenders'] == 'everybody') {
+        $allowed_members = $mailbox->getAllowedSenders();
+        if ($allowed_members === -1) {
             // everybody is allowed, continue
-            Logger::log("forwarding mail \"{$this->properties['s_subject']}\" because allowed senders is '{$mailbox->properties['s_allowedsenders']}'");
+            Logger::log("forwarding mail \"{$this->properties['s_subject']}\" because allowed senders is 'everybody'");
         } else {
             // not everybody is allowed, populate an array of allowed mails
-            $allowed_mails = [];
-
-            switch ($mailbox->properties['s_allowedsenders']) {
-                case 'registered':
-                    // only members registered in Mailiszt are allowed to address the list
-                    $db = new DB();
-                    $allowed_mails = $db->queryColumn('SELECT s_email FROM member');
-                    break;
-                case 'members':
-                    // members allowed, check if sender is in recipients list
-                    $allowed_mails = array_map(
-                        function ($m) { return $m["s_email"]; },
-                        $mailbox->getRecipients()
-                    );
-                    break;
-                case 'specific':
-                    // specific people only allowed
-                    $allowed_ids = json_decode($mailbox->properties["j_allowedsenderspeople"]);
-                    $allowed_mails = [];
-                    foreach($allowed_ids as $id) {
-                        $member = new Member($id);
-                        $allowed_mails[] = $member->properties["s_email"];
-                    }
-                    break;
-                }
+            $allowed_mails = array_map(fn($m) => $m->properties["s_email"], $allowed_members);
 
             // check whether sender is in allowed mails
             if ( in_array($this->properties["s_frommail"], $allowed_mails) ) {
