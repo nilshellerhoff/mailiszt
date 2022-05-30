@@ -28,6 +28,7 @@ class Mailbox extends Base {
             "b_includeinactive",
             "s_imapencryption",
             "s_smtpencryption",
+            "i_moderator",
         ],
     ];
 

@@ -80,9 +80,20 @@
             </v-col>
           </v-row>
 
-
+          <!-- moderator -->
+          <v-row no-gutters>
+            <v-select
+              v-model="mailbox.i_moderator"
+              label="Moderator"
+              :items="members"
+              :item-text="el => el.s_name1 + ' ' + el.s_name2"
+              item-value="i_member"
+            ></v-select>
+          </v-row>
 
         </v-tab-item>
+
+
         <!-- server configuration -->
         <v-tab-item>
           <v-row no-gutters>
