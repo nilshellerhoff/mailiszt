@@ -158,8 +158,11 @@ class DB extends SQLite3 {
     public function queryColumn($query, $parameters = []) {
         // execute query and return one column
         $values = $this->queryAll($query, $parameters);
-        $key_first = array_keys($values[0])[0];
-        return array_column($values, $key_first);
+        if (count($values) > 0) {
+            return array_column($values, key($values[0]));
+        } else {
+            return [];
+        }
     }
 
     public function queryAll($query, $parameters = []) {
