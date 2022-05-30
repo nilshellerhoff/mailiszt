@@ -34,6 +34,22 @@ class Base {
         return $objects;
     }
 
+    /**
+     * @param array|string $filter either array of filter rules with key as column name and value as value or SQL WHERE clause
+     * 
+     * @return $this[] array of objects which match the filter conditions
+     */
+    public static function getObjectsFilter(array $filter) {
+        $db = new DB();
+        if (!is_string($filter)) {
+            $filterString = $db->buildWhere($filter, "AND");
+        } else {
+            $filterString = $filter;
+        }
+        $ids = $db->queryColumn("SELECT " . static::$identifier . " FROM " . static::$table . " WHERE " . $filterString, $filter);
+        return static::getObjects($ids);
+    }
+
     public function __construct($id, $obj = NULL, $prop = NULL) {
         if (is_null($id) && is_null($obj) && is_null($prop)) {
             throw new Exception(get_class($this) . ' must be instantiated with data');
