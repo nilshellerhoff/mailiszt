@@ -2,6 +2,11 @@
 
 require_once('Base.php');
 
+// php-mailer
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+
 class Mailbox extends Base {
     public static $table = "mailbox";
     public static $identifier = "i_mailbox";
@@ -68,6 +73,48 @@ class Mailbox extends Base {
                 return 'tls';
             default:
                 Logger::error("s_imapencryption $this->properties['s_imapencryption'] is not a valid value");
+        }
+    }
+
+    /** Send a mail from this mailbox
+     * @param string $tomail recipient email
+     * @param string $toname recipient name
+     * @param string $subject The subject
+     * @param string $body The body
+     */
+    public function sendMail(string $tomail, string $toname, string $subject, string $body) {
+        $mail = new PHPMailer();
+
+        try {
+            $mail->isSMTP();                                        
+            $mail->Host       = $this->properties["s_smtpserver"];
+            $mail->SMTPAuth   = true;
+            $mail->Username   = $this->properties["s_username"];
+            $mail->Password   = $this->properties["s_password"];
+            $mail->SMTPSecure = $this->getSmtpEncryption();
+            $mail->Port       = $this->properties["n_smtpport"];
+
+            // allow the mail body to be empty
+            $mail->AllowEmpty = true;
+
+            $mail->CharSet = 'UTF-8';
+            
+            $mail->setFrom($this->properties["s_address"], $this->properties["s_name"]);
+
+            $mail->Subject = $subject;
+            // for now we only support text bodies here
+            $mail->Body = $body ?? '';
+
+            try {
+                $mail->addAddress($tomail, $toname);
+                $mail->send();
+    
+                Logger::info("Rejection mail sent to $toname <$tomail>");
+            } catch (Exception $e) {
+                Logger::info("Rejection mail sent to $toname <$tomail>, error:" . $mail->ErrorInfo);
+            }
+        } catch (Exception $e) {
+            Logger::error("Error sending rejection mail to $toname <$tomail>", $e->getMessage());
         }
     }
 

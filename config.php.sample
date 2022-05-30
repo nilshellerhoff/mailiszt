@@ -31,3 +31,6 @@ define('AUTH_TOKEN_LIFETIME', 3600);
 
 // date format used in PHP for DB operations
 define('DATE_FORMAT', "Y-m-d H:i:s");
+
+// rejection mail text
+define('REJECTION_MAIL_TEXT', "Hello {{sender}},\n\nUnfortunately you are not allowed to send mails to {{mailinglist}}. If you have questions, contact the moderator at {{moderator}}.\n\nBest regards,\nMailiszt");
