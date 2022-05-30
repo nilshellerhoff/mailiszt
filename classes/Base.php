@@ -35,9 +35,9 @@ class Base {
     }
 
     /**
+     * Return objects which match one or more filter criteria
      * @param array|string $filter either array of filter rules with key as column name and value as value or SQL WHERE clause
-     * 
-     * @return $this[] array of objects which match the filter conditions
+     * @return static[] array of objects which match the filter conditions
      */
     public static function getObjectsFilter(array $filter) {
         $db = new DB();
