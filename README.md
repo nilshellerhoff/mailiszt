@@ -82,8 +82,6 @@ or if you only want to forward certain mailboxes
   - [ ] define validation rules serverside
   - [ ] serve validationrules through api
   - [ ] use validationrules clientside
-- [ ] send a rejection email if somebody is not allowed to write to mailinglist
-  - [ ] define moderator email/member for list
 - [ ] login for members (not only users)
 - [ ] allow to compose mails from the interface
   - [ ] allow to define a mail which is to be sent to every new member of a list/group
@@ -98,3 +96,8 @@ or if you only want to forward certain mailboxes
 - [ ] multi user functionality with customizable access levels
 - [ ] allow member self-registration
 - [ ] for every api action, add a human readable response and show this response in the frontend
+  
+## ToDos done
+  
+- [x] send a rejection email if somebody is not allowed to write to mailinglist
+  - [x] define moderator email/member for list
