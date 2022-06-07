@@ -96,6 +96,14 @@ or if you only want to forward certain mailboxes
 - [ ] multi user functionality with customizable access levels
 - [ ] allow member self-registration
 - [ ] for every api action, add a human readable response and show this response in the frontend
+- [ ] not only send mail once
+  - [ ] but check if it has been sent and no mailer-daemon came back
+    - [ ] parsing for Mailer-Daemon and Postmaster mails
+  - [ ] if not, resend it x times
+  - [ ] keep track of supposed and actual receivers of the mail (in the `mail` table?)
+- [ ] change X-Mailer header to Mailiszt (maybe reduced SPAM detection)
+  - [ ] change other headers if necessary
+- [ ] introduce Utilities class for functions that are used in multiple places
   
 ## ToDos done
   
