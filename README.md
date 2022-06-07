@@ -101,11 +101,8 @@ or if you only want to forward certain mailboxes
     - [ ] parsing for Mailer-Daemon and Postmaster mails
   - [ ] if not, resend it x times
   - [ ] keep track of supposed and actual receivers of the mail (in the `mail` table?)
-- [ ] change X-Mailer header to Mailiszt (maybe reduced SPAM detection)
+- [x] change X-Mailer header to Mailiszt (maybe reduced SPAM detection)
   - [ ] change other headers if necessary
 - [ ] introduce Utilities class for functions that are used in multiple places
-  
-## ToDos done
-  
 - [x] send a rejection email if somebody is not allowed to write to mailinglist
   - [x] define moderator email/member for list

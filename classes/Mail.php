@@ -34,6 +34,7 @@ class Mail extends Base {
             "d_forwarded",
             "d_inserted",
             "d_update",
+            "b_isbounce",
         ]
     ];
 
@@ -229,6 +230,47 @@ class Mail extends Base {
         }
     }
 
+    /** Parse the mail for signs that it is a bounce mail
+     * @return Boolean|Array Returns false if the mail is not a bounce mail, otherwise returns an array with the following keys:
+     * - bounce_email: the email address which sent the bounce
+     * - bounce_subject: the subject of the bounce mail
+     * - bounce_body: the body of the bounce mail
+     * - original_subject: the subject of the bounced mail
+     * - original_recipient: the recipient of the bounced mail
+     */
+    public function parseBounce() {
+        // we check if the sending address is either postmaster or mailer-daemon, if yes it is a bounce mail
+        if (preg_match('/(postmaster|mailer-daemon)@.*/', $this->properties["s_frommail"])) { 
+
+            // get the original subject of the mail
+            if (preg_match('/Rejected: (.*)/', $this->properties["s_subject"], $matches)) {
+                $original_subject = $matches[1];
+            } else if (preg_match('/Subject:\s*([^\n]*)/', $this->properties["s_bodytext"], $matches)) {
+                $original_subject = $matches[1];
+            } else {
+                $original_subject = NULL;
+            }
+
+            // get the original sender of the mail
+            if (preg_match('/The following address failed:\s*([^\s@]+@[^\s@:]+)/', $this->properties["s_bodytext"], $matches)) {
+                $original_recipient = $matches[1];
+            } else if (preg_match('/To:\s*([^\s@]+@[^\s@]+)/', $this->properties["s_bodytext"], $matches)) {
+                $original_recipient = $matches[1];
+            } else {
+                $original_recipient = NULL;
+            }
+                    
+            return [
+                "bounce_email" => $this->properties["s_frommail"],
+                "bounce_subject" => $this->properties["s_subject"],
+                "bounce_body" => $this->properties["s_bodytext"],
+                "original_subject" => trim($original_subject),
+                "original_recipient" => trim($original_recipient),
+            ];
+        }
+        return false;
+    }
+
     private function markSentMail($recipient) {
         // insert a row into the mail2member table for each time a mail has been sent to a recipient
         $db = new DB();
@@ -241,6 +283,32 @@ class Mail extends Base {
                 "s_email" => $recipient["s_email"]
             ]
         );
+    }
+
+   /** Find and mark a mail as bounced in the mail2member table
+    * @param String $address the email address which triggered the bounce
+    * @param String $subject the subject of the mail which triggered the bounce
+    * @return Int|Boolean if successfull, id of the entry in mail2member, false otherwise
+    */
+    public static function markSentMailBounced(string $address, string $subject) {
+        // if either address or subject are not set, return false
+        if (!isset($address) || !isset($subject)) {
+            return false;
+        }
+
+        // we search for the mail in the mail2member table based on the sender address and the subject
+        $db = new DB();
+        try {
+            $mail2memberID = $db->queryScalar(
+                "SELECT i_mail2member FROM mail2member mm INNER JOIN mail m on m.i_mail = mm.i_mail WHERE mm.s_email = :email AND m.s_subject = :subject",
+                ["email" => $address, "subject" => $subject]
+            );
+            $db->update("mail2member", ["b_bounced" => true], ["i_mail2member" => $mail2memberID]);
+
+            return $mail2memberID;
+        } catch (Exception $e) {
+            return false;
+        }
     }
 
     public function getRecipients() {
