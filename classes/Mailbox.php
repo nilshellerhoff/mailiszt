@@ -152,9 +152,19 @@ class Mailbox extends Base {
 
         $mails = [];
         foreach ($messages as $message) {
-            $mails[] = new Mail($i_mail = NULL, $message = $message);
+            $mail = new Mail($i_mail = NULL, $message = $message);
+
             // set i_mailbox parameter
-            $mails[count($mails) - 1]->properties["i_mailbox"] = $this->properties["i_mailbox"];
+            $mail->properties["i_mailbox"] = $this->properties["i_mailbox"];
+
+            // check if the mail is a bounce notification
+            $bounce = $mail->parseBounce();
+            if ($bounce) {
+                $mail->properties["b_isbounce"] = true;
+                Mail::markSentMailBounced($bounce["original_recipient"], $bounce["original_subject"]);
+            }
+
+            $mails[] = $mail;
         }
 
         return $mails;

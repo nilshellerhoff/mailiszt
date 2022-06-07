@@ -60,8 +60,9 @@
           :key="r.i_mail2member"
         >
           <router-link :to="`/members/edit/${r.i_member}`">
-            <v-chip>
-              {{ r.s_email || "(no email)" }}
+            <v-chip
+              :color="r.b_bounced ? 'error' : 'light-grey'"
+            >{{ r.s_email || "(no email)" }}
             </v-chip>
           </router-link>
         </div>
