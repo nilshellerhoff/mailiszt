@@ -34,3 +34,6 @@ define('DATE_FORMAT', "Y-m-d H:i:s");
 
 // rejection mail text
 define('REJECTION_MAIL_TEXT', "Hello {{sender}},\n\nUnfortunately you are not allowed to send mails to {{mailinglist}}. If you have questions, contact the moderator at {{moderator}}.\n\nBest regards,\nMailiszt");
+
+// X-Mailer-Header value (' ' for none, '' for PHPMailer default)
+define('X_MAILER_HEADER', 'Mailiszt');

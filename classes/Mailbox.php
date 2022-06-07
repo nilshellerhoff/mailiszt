@@ -94,6 +94,9 @@ class Mailbox extends Base {
             $mail->SMTPSecure = $this->getSmtpEncryption();
             $mail->Port       = $this->properties["n_smtpport"];
 
+            // set the X-Mailer header field
+            $mail->XMailer = X_MAILER_HEADER;
+
             // allow the mail body to be empty
             $mail->AllowEmpty = true;
 

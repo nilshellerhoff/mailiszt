@@ -150,6 +150,9 @@ class Mail extends Base {
             $mail->SMTPSecure = $mailbox->getSmtpEncryption();
             $mail->Port       = $mailbox->properties["n_smtpport"];
 
+            // set the X-Mailer header field
+            $mail->XMailer = X_MAILER_HEADER;
+
             // allow the mail body to be empty
             $mail->AllowEmpty = true;
 
