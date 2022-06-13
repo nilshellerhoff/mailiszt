@@ -9,6 +9,10 @@ Route::add('/api/users/current/login', function() {
     // sleep one second to prevent brute forcing -> this is bad, later implement a real rate limiter
     sleep(1);
     if ($token) {
+        setcookie('auth', $token, $options = [
+            'expires' => time() + AUTH_TOKEN_LIFETIME,
+            'path' => '/',
+        ]);
         return makeResponse($token);
     } else {
         return makeResponse('invalid authentication', 403);

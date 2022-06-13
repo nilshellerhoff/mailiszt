@@ -33,16 +33,23 @@ function checkAuthToken() {
     // return the role of querying user using the supplied token (returns empty if invalid or no token)
     // right now there is only "ADMIN" or no auth
 
+    $token = NULL;
+
     // try to get the auth token through authorization header (is probably destroyed by apache)
     // else get it through cookie (should work on http)
     $headers = getallheaders();
-    if (array_key_exists('Authorization', $headers)) {
+    if (array_key_exists('Authorization', $headers) && $headers['Authorization'] != '') {
         $token = $headers['Authorization'];
-    } else {
+        $auth = User::checkAuthentication($token);
+    } if (!$auth && isset($_COOKIE['accessToken']) && $_COOKIE['accessToken'] != '') {
         $token = $_COOKIE['accessToken'];
+        $auth = User::checkAuthentication($token);
+    } if (!$auth && isset($_COOKIE['auth']) && $_COOKIE['auth'] != '') {
+        $token = $_COOKIE['auth'];
+        $auth = User::checkAuthentication($token);
     }
-    
-    $auth = User::checkAuthentication($token);
+
+    // $auth = User::checkAuthentication($token);
     if ($auth) {
         $auth["s_role"] = 'ADMIN';
         return $auth;

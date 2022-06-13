@@ -46,28 +46,40 @@ export default {
     }
   }),
   methods: {
-    readCookie() {
-      const accessToken = this.$cookies.get("accessToken");
-      if (accessToken) {
-        this.accessToken = accessToken;
-        this.$api.defaults.headers["Authorization"] = accessToken;
-        this.$root.$emit('reloadData')
-      }
-    },
     loggedIn() {
-      this.readCookie();
-      return this.accessToken != null;
+      // logged in is true if accessToken or the auth cookie is set
+      let isLoggedIn = false;
+
+      if (this.$cookies.get("auth") || this.accessToken) {
+        isLoggedIn = true;
+
+        // reload data (just in case)
+        this.$root.$emit('reloadData');
+      } else {
+        // if we're not on the login page, redirect to login
+        this.loginRedirect();
+      }
+
+      return isLoggedIn;
+    },
+    loginRedirect() {
+      if (this.$route.path !== "/login") this.$router.push("/login")
     },
     getUserInfo() {
       if (this.loggedIn()) {
         // populate the userinfo object
-        // if we get a 403 delete the local login data and redirect to login page
-        this.$api.put("users/current/", { accessToken: this.accessToken })
-        .then(response => {
-          this.userInfo = response.data
-        })
-        .catch(() => { this.logoutLocal() })
-      } else { this.logoutLocal() }
+        // if we, we have been logged out by the server -> logout client side as well
+        this.$api
+          .put("users/current/")
+          .then((response) => {
+            this.userInfo = response.data;
+          })
+          .catch(() => {
+            this.logoutLocal();
+          });
+      } else {
+        this.logoutLocal();
+      }
     },
 
     // generic functions for login managment
@@ -75,12 +87,13 @@ export default {
       // request a login at the server and store the accessToken as cookie and global var
       return this.$api
         .put("users/current/login", { username: username, password: password })
-        .catch((response) => {return Promise.reject(response.status)})
+        .catch((response) => {
+          return Promise.reject(response.status);
+        })
         .then((response) => {
           if (response.data) {
             this.accessToken = response.data;
             this.$api.defaults.headers["Authorization"] = response.data;
-            this.$cookies.set("accessToken", response.data, null, null, null, null, "None");
             return true;
           } else {
             return false;
@@ -91,17 +104,14 @@ export default {
       // delete the accessToken from storage and cookie
       this.accessToken = null;
       this.$api.defaults.headers["Authorization"] = null;
-      this.$cookies.set("accessToken", "", null, null, null, null, "None");
-      this.$router.push({ name: "Login" })
+      this.loginRedirect()
     },
     logout() {
-      // delete the accessToken from storage and cookie
-      return this.$api
-        .put("users/current/logout", { accessToken: this.accessToken })
-        .then(() => {
-          this.logoutLocal()
-          return true
-        });
+      // request logout at the server, then logout locally
+      return this.$api.put("users/current/logout").then(() => {
+        this.logoutLocal();
+        return true;
+      });
     },
   },
   created() {
