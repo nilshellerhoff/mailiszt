@@ -57,7 +57,7 @@ export default {
         this.$root.$emit('reloadData');
       } else {
         // if we're not on the login page, redirect to login
-        this.loginRedirect();
+        this.logoutLocal();
       }
 
       return isLoggedIn;
@@ -93,6 +93,7 @@ export default {
         .then((response) => {
           if (response.data) {
             this.accessToken = response.data;
+            this.$cookies.set("auth", response.data);
             this.$api.defaults.headers["Authorization"] = response.data;
             return true;
           } else {
@@ -103,6 +104,7 @@ export default {
     logoutLocal() {
       // delete the accessToken from storage and cookie
       this.accessToken = null;
+      this.$cookies.set("auth", "");
       this.$api.defaults.headers["Authorization"] = null;
       this.loginRedirect()
     },
