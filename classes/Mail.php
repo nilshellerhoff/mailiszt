@@ -133,7 +133,7 @@ class Mail extends Base {
                     $this->properties["s_frommail"],
                     $this->properties["s_fromname"],
                     "RE: " . $this->properties["s_subject"],
-                    Mail::formatTemplate(REJECTION_MAIL_TEXT, $format_parameters),
+                    Util::formatTemplate(REJECTION_MAIL_TEXT, $format_parameters),
                 );
                 return false;
             }
@@ -345,17 +345,5 @@ class Mail extends Base {
         }
 
         return $mail;
-    }
-
-    /** Format a used for mail template
-     * @param $template string template to format where {{field}} is replaced by the value of the field
-     * @param $fields array fields to replace in the template
-     * @return string formatted template
-     */
-    public static function formatTemplate($template, $fields) {
-        foreach ($fields as $key => $value) {
-            $template = str_replace("{{{$key}}}", $value, $template);
-        }
-        return $template;
     }
 }
