@@ -103,9 +103,9 @@ or if you only want to forward certain mailboxes
   - [ ] keep track of supposed and actual receivers of the mail (in the `mail` table?)
 - [x] change X-Mailer header to Mailiszt (maybe reduced SPAM detection)
   - [ ] change other headers if necessary
-- [ ] introduce Utilities class for functions that are used in multiple places
+- [x] introduce Utilities class for functions that are used in multiple places
 - [x] send a rejection email if somebody is not allowed to write to mailinglist
   - [x] define moderator email/member for list
-- [ ] modify subject and body of email
-  - [ ] additional tab in mailbox
-  - [ ] use placeholders for variables
+- [x] modify subject and body of email
+  - [x] additional tab in mailbox
+  - [x] use placeholders for variables
