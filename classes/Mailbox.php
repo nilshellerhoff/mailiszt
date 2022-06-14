@@ -34,7 +34,10 @@ class Mailbox extends Base {
             "s_imapencryption",
             "s_smtpencryption",
             "i_moderator",
-        ],
+            "s_templatesubject",
+            "s_templatefrom",
+            "s_templatebody",
+        ]
     ];
 
     public $properties;
@@ -119,6 +122,74 @@ class Mailbox extends Base {
         } catch (Exception $e) {
             Logger::error("Error sending rejection mail to $toname <$tomail>", $e->getMessage());
         }
+    }
+
+    /** Get the fields for templating
+     * @param Mail $mail the message for which the fields should be returned
+     * @return string[] associative array where the fields for templating are set
+     */
+    public function getFieldsForTemplate($mail) {
+        $moderator = new Member($this->properties["i_moderator"]);
+
+        // get the mail-specific fields
+        $mail_fields = $mail->getFieldsForTemplate();
+
+        // get the mailbox-specific fields
+        $mailbox_fields = [
+            "listaddress" => $this->properties["s_address"],
+            "listname" => $this->properties["s_name"],
+            "moderatorname" => "{$moderator->properties['s_name1']} {$moderator->properties['s_name2']}",
+            "moderatoraddress" => $moderator->properties['s_email'],
+        ];
+
+        return array_merge($mail_fields, $mailbox_fields);
+    }
+
+    /** Format the subject of a message using the settings for this mailbox
+     * @param Mail $mail the message for which the from-header has to be generated
+     * @return string the formatted subject
+     */
+    public function formatSubject($mail) {
+        $template = $this->properties["s_templatesubject"];
+
+        // strip all newline tags from the template
+        $template = str_replace("\n", "", $template);
+
+        $fields = $this->getFieldsForTemplate($mail);
+        return Util::formatTemplate(trim($template), $fields);
+    }
+
+    /** Format the from header of a message using the settings for this mailbox
+     * @param Mail $mail the message for which the from-header has to be generated
+     * @return string the formatted from-header
+     */
+    public function formatFrom($mail) {
+        $template = $this->properties["s_templatefrom"];
+
+        // strip all newline tags from the template
+        $template = str_replace("\n", "", $template);
+
+        $fields = $this->getFieldsForTemplate($mail);
+        return Util::formatTemplate(trim($template), $fields);
+    }
+
+    /** Format the body of a message using the settings for this mailbox
+     * @param Mail $mail the message for which the from-header has to be generated
+     * @param boolean $html if true, the html body is returned, otherwise the plain text body
+     * @return string the formatted body
+     */
+    public function formatBody($mail, $html = false) {
+        $template = $this->properties["s_templatebody"];
+
+        $fields = $this->getFieldsForTemplate($mail);
+
+        // if html, convert newline tags to <br> and replace bodytext by html body
+        if ($html) {
+            $template = str_replace("\n", "<br>", $template);
+            $fields["body"] = $mail->properties["s_bodyhtml"];
+        }
+
+        return Util::formatTemplate(trim($template), $fields);
     }
 
     public function fetchMails() {

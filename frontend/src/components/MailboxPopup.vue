@@ -8,6 +8,7 @@
     <!-- tabs list -->
     <v-tabs v-model="currentTab">
       <v-tab>general</v-tab>
+      <v-tab>templates</v-tab>
       <v-tab>server</v-tab>
       <v-tab>groups</v-tab>
     </v-tabs>
@@ -93,6 +94,42 @@
 
         </v-tab-item>
 
+
+        <!-- message templates -->
+        <v-tab-item>
+          <v-row no-gutters>
+            <v-text-field
+              prepend-icon="mdi-label"
+              label="Subject header"
+              v-model="mailbox.s_templatesubject"
+            ></v-text-field>
+          </v-row>
+          <v-row no-gutters>
+            <v-text-field
+              prepend-icon="mdi-account"
+              label="From name header"
+              v-model="mailbox.s_templatefrom"
+            ></v-text-field>
+          </v-row>
+          <v-row no-gutters>
+            <v-textarea
+              prepend-icon="mdi-text-long"
+              label="Email body"
+              v-model="mailbox.s_templatebody"
+            ></v-textarea>
+          </v-row>
+
+          The following variables are available:<br>
+          <code v-pre>{{subject}}</code> subject of the message<br>
+          <code v-pre>{{body}}</code> body of the message<br>
+          <code v-pre>{{frommail}}</code> email address of the original sender<br>
+          <code v-pre>{{fromname}}</code> name of the original sender (if given)<br>
+          <code v-pre>{{listaddress}}</code> email address of the mailinglist<br>
+          <code v-pre>{{listname}}</code> name of the mailinglist<br>
+          <code v-pre>{{moderatorname}}</code> name of the moderator<br>
+          <code v-pre>{{moderatoraddress}}</code> email address of the moderator<br>
+          
+        </v-tab-item>
 
         <!-- server configuration -->
         <v-tab-item>

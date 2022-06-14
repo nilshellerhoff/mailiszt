@@ -160,18 +160,19 @@ class Mail extends Base {
             // set charset to UTF-8 (this is a workaround for now, ideally we should use the charset from the mail)
             $mail->CharSet = 'UTF-8';
             
-            $mail->setFrom($mailbox->properties["s_address"], $mailbox->properties["s_name"]);
+            $fromname = $mailbox->formatFrom($this);
+            $mail->setFrom($mailbox->properties["s_address"], $fromname);
 
-            $mail->Subject = $this->properties["s_subject"];
+            $mail->Subject = $mailbox->formatSubject($this);
 
-            if (isset($this->properties["s_bodyhtml"]) && !is_null($this->properties["s_bodyhtml"])) {
+            if ($this->isHTML()) {
                 // mail is html type
                 $mail->isHTML(true);
-                $mail->Body = $this->properties["s_bodyhtml"];
-                $mail->AltBody = $this->properties["s_bodytext"];
+                $mail->Body = $mailbox->formatBody($this, true);
+                $mail->AltBody = $mailbox->formatBody($this, false);
             } else {
                 // mail is only text type
-                $mail->Body = $this->properties["s_bodytext"] ?? '';
+                $mail->Body = $mailbox->formatBody($this, false) ?? '';
             }
 
             // add attachments to mail
@@ -309,6 +310,26 @@ class Mail extends Base {
         } catch (Exception $e) {
             return false;
         }
+    }
+
+    /** Check if this mail is an HTML mail
+     * @return Boolean true if HTML mail, false otherwise
+     */
+    public function isHTML() {
+        return (isset($this->properties["s_bodyhtml"]) && !is_null($this->properties["s_bodyhtml"]));
+    }
+
+    /** Get the mail-specific fields for templating
+     * @return string[] associative array where the fields for templating are set
+     */
+    public function getFieldsForTemplate() {
+        $fields = [
+            "subject" => $this->properties["s_subject"],
+            "body" => $this->properties["s_bodytext"],
+            "frommail" => $this->properties["s_frommail"],
+            "fromname" => $this->properties["s_fromname"],
+        ];
+        return $fields;
     }
 
     public function getRecipients() {
