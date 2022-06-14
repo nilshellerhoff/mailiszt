@@ -61,7 +61,7 @@ or if you only want to forward certain mailboxes
 - Mailboxes (`/mailboxes`): add at least one mailbox in order to build a list. You only need the IMAP and SMTP credentials, so virtually any email-service can be used!
   - customize who is allowed to send mails to the list: 
     - "Everybody": every mail is accepted and forwarded to the list
-    - "Registered members": only mails coming from email addresses of members registered under <domainname>/members are accepted, regardless of which groups they belong to
+    - "Registered members": only mails coming from email addresses of members registered in the Members page are accepted, regardless of which groups they belong to
     - "Members of the list": only mails coming from email addresses belonging to members who are recipients of the list emails are accepted
     - "Specific people": you can customize which members are allowed to send emails to the group
   - customize reply to address:
