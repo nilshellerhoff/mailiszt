@@ -29,7 +29,7 @@
           v-model="group"
           active-class="blue--text text--accent-4"
           >
-            <router-link v-for="link in links" :key="link.url" :to=link.url>
+            <router-link v-for="link in links" :key="link.url" :to="link.url">
               <v-list-item link>
                   <v-list-item-icon>
                     <v-icon>{{ link.icon }}</v-icon>
