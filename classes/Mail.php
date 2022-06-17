@@ -52,7 +52,7 @@ class Mail extends Base {
         $this->properties["s_bodytext"]     = $this->object->getTextBody();
         $this->properties["s_bodyhtml"]     = $this->object->getHtmlBody();
         $this->properties["s_messageid"]    = isset($attributes["message_id"]) ? $attributes["message_id"]->toString() : null;
-        $this->properties["d_sent"]         = $attributes["date"]->toString();
+        $this->properties["d_sent"]         = $attributes["date"]->toDate()->utc()->format(DATE_FORMAT);
         $this->properties["s_internalid"]   = $this->calculateHash();
 
         // check if mail is already present in DB
@@ -91,6 +91,12 @@ class Mail extends Base {
         }
 
         // move mail to folder or delete mail from INBOX
+        $this->processedAction();
+    }
+
+    /** Perform the processed action on the mail defined in MAIL_PROCESSED_ACTION
+     */
+    public function processedAction() {
         if (MAIL_PROCESSED_ACTION == "move") {
             $this->object->move($folder_path = MAIL_PROCESSED_FOLDER);
         } else if (MAIL_PROCESSED_ACTION == "delete") {

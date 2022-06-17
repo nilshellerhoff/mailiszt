@@ -225,6 +225,12 @@ class Mailbox extends Base {
         foreach ($messages as $message) {
             $mail = new Mail($i_mail = NULL, $message = $message);
 
+            // if the mail was sent before the mailbox was created, move it to the processed folder without any other actions
+            if ($mail->properties["d_sent"] > $this->properties["d_inserted"]) {
+                $mail->processedAction();
+                continue;
+            }
+
             // set i_mailbox parameter
             $mail->properties["i_mailbox"] = $this->properties["i_mailbox"];
 
