@@ -118,6 +118,22 @@
               v-model="mailbox.s_templatebody"
             ></v-textarea>
           </v-row>
+          <v-row no-gutters>
+            <v-checkbox
+              prepend-icon="mdi-cancel"
+              label="Send rejection notices to people not allowed to address this mailbox?"
+              v-model="mailbox.b_sendrejectionnotices"
+            ></v-checkbox>
+          </v-row>
+          <v-row no-gutters>
+            <v-textarea
+              :disabled="!mailbox.b_sendrejectionnotices"
+              prepend-icon="mdi-text-remove"
+              label="Rejection notice template"
+              v-model="mailbox.s_templaterejectionnotice"
+            ></v-textarea>
+          </v-row>
+
 
           The following variables are available:<br>
           <code v-pre>{{subject}}</code> subject of the message<br>

@@ -37,6 +37,8 @@ class Mailbox extends Base {
             "s_templatesubject",
             "s_templatefrom",
             "s_templatebody",
+            "b_sendrejectionnotices",
+            "s_templaterejectionnotice",
         ]
     ];
 
@@ -115,13 +117,40 @@ class Mailbox extends Base {
                 $mail->addAddress($tomail, $toname);
                 $mail->send();
     
-                Logger::info("Rejection mail sent to $toname <$tomail>");
+                Logger::debug("Mail sent to $toname <$tomail>");
             } catch (Exception $e) {
-                Logger::info("Rejection mail sent to $toname <$tomail>, error:" . $mail->ErrorInfo);
+                Logger::debug("Mail sent to $toname <$tomail>, error:" . $mail->ErrorInfo);
             }
         } catch (Exception $e) {
-            Logger::error("Error sending rejection mail to $toname <$tomail>", $e->getMessage());
+            Logger::error("Error sending mail to $toname <$tomail>", $e->getMessage());
         }
+    }
+
+    /** Send a rejection mail if enabled in mailbox settings
+     * @param Mail $mail what mail should we respond to
+     * @param string $tomail optional, email-address of the recipient. If not given, frommail from the mail is taken
+     * @param string $toname optional, name of the recipient. If not given, fromname from the mail is taken
+     * @param string $subject optional, if not given the subject of the mail prefixed by "RE: " is taken
+     */
+    public function sendRejectionNotice(Mail $mail, string $tomail = NULL, string $toname = NULL, string $subject = NULL) {
+        // if rejectionnotices are disabled for this mailbox do nothing
+        if (!$this->properties["b_sendrejectionnotices"]) {
+            Logger::info("Not sending rejection notice because rejection notices are disabled on ". $this->properties["s_address"]);
+            return;
+        }
+
+        $template = $this->properties["s_templaterejectionnotice"];
+
+        $fields = $this->getFieldsForTemplate($mail);
+        
+        $mail_tomail = $tomail ?? $mail->properties["s_frommail"];
+        $mail_toname = $toname ?? $mail->properties["s_fromname"];
+        $mail_subject = $subject ?? "RE: " . $mail->properties["s_subject"];
+        $mail_body = Util::formatTemplate(trim($template), $fields);
+
+        Logger::info("Sending rejection notice to $mail_tomail");
+
+        $this->sendMail($mail_tomail, $mail_toname, $mail_subject, $mail_body);
     }
 
     /** Get the fields for templating

@@ -130,17 +130,7 @@ class Mail extends Base {
                 Logger::log("forwarding mail \"{$this->properties['s_subject']}\" because allowed senders is '{$mailbox->properties['s_allowedsenders']}' and '{$this->properties['s_frommail']}' is in " . json_encode($allowed_mails));
             } else {
                 Logger::log("not forwarding mail \"{$this->properties['s_subject']}\" because allowed senders is '{$mailbox->properties['s_allowedsenders']}' and '{$this->properties['s_frommail']}' is not in " . json_encode($allowed_mails));
-                $format_parameters = [
-                    "sender" => $this->properties["s_frommail"],
-                    "mailinglist" => $mailbox->properties["s_address"],
-                    "moderator" => (new Member($mailbox->properties["i_moderator"]))->properties["s_email"]
-                ];
-                $mailbox->sendMail(
-                    $this->properties["s_frommail"],
-                    $this->properties["s_fromname"],
-                    "RE: " . $this->properties["s_subject"],
-                    Util::formatTemplate(REJECTION_MAIL_TEXT, $format_parameters),
-                );
+                $mailbox->sendRejectionNotice($this);
                 return false;
             }
         }
