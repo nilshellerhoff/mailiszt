@@ -226,7 +226,7 @@ class Mailbox extends Base {
             $mail = new Mail($i_mail = NULL, $message = $message);
 
             // if the mail was sent before the mailbox was created, move it to the processed folder without any other actions
-            if ($mail->properties["d_sent"] > $this->properties["d_inserted"]) {
+            if ($mail->properties["d_sent"] < $this->properties["d_inserted"]) {
                 $mail->processedAction();
                 continue;
             }
