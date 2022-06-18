@@ -109,3 +109,6 @@ or if you only want to forward certain mailboxes
 - [x] modify subject and body of email
   - [x] additional tab in mailbox
   - [x] use placeholders for variables
+- [ ] when adding member, mailbox... use the default values stored in DB
+  - [ ] method for reading default values from DB (maybe through sqlite_master)
+  - [ ] add API endpoint for object defaults
