@@ -87,9 +87,9 @@ or if you only want to forward certain mailboxes
   - [ ] allow to define a mail which is to be sent to every new member of a list/group
 - [ ] member registration confirmation
   - [ ] when registering members, send them email with confirmation link
-- [ ] handle bounces correctly 
-  - [ ] parse bounce messages, and dont make them show up in the interface
-  - [ ] connect bounce messages to original mail and show that the mail could not be delivered to certain members
+- [x] handle bounces correctly 
+  - [x] parse bounce messages, and dont make them show up in the interface
+  - [x] connect bounce messages to original mail and show that the mail could not be delivered to certain members
 - [ ] logging
   - [ ] frontend access to logs
   - [ ] delete logs after a certain time (maybe based on loglevel?)
