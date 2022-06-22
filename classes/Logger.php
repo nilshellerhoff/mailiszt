@@ -1,6 +1,13 @@
 <?php
 
-class Logger {
+class Logger extends Base {
+    public static $table = "log";
+    public static $identifier = "i_log";
+
+    public $exposedInfo = [
+        "ADMIN"     => ["i_log", "s_level", "s_message", "d_inserted", "d_updated"],
+    ];
+
     public static function log($message, $level = 'INFO') {
         $db = new DB();
 

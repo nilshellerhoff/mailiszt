@@ -93,6 +93,10 @@
           url: "/settings",
           icon: "mdi-cog",
         },
+        { title: "Logs",
+          url: "/logs",
+          icon: "mdi-alert"
+        }
       ],
       drawer: false,
       // group: null,

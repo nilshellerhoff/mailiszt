@@ -75,3 +75,4 @@ include('user.php');
 include('mail.php');
 include('settings.php');
 include('attachments.php');
+include('logs.php');
