@@ -41,9 +41,13 @@ class Base {
      */
     public static function getObjectsFilter(array $filter) {
         $db = new DB();
-        $filterString = $db->buildWhere($filter, "AND");
-        $ids = $db->queryColumn("SELECT " . static::$identifier . " FROM " . static::$table . " WHERE " . $filterString, $filter);
-        return static::getObjects($ids);
+        if ($filter) {
+            $filterString = $db->buildWhere($filter, "AND");
+            $ids = $db->queryColumn("SELECT " . static::$identifier . " FROM " . static::$table . " WHERE " . $filterString, $filter);
+            return static::getObjects($ids);    
+        } else {
+            return static::getAll();
+        }
     }
 
     public function __construct($id, $obj = NULL, $prop = NULL) {
