@@ -36,16 +36,12 @@ class Base {
 
     /**
      * Return objects which match one or more filter criteria
-     * @param array|string $filter either array of filter rules with key as column name and value as value or SQL WHERE clause
+     * @param array $filter associative array of filter rules as column => value
      * @return static[] array of objects which match the filter conditions
      */
     public static function getObjectsFilter(array $filter) {
         $db = new DB();
-        if (!is_string($filter)) {
-            $filterString = $db->buildWhere($filter, "AND");
-        } else {
-            $filterString = $filter;
-        }
+        $filterString = $db->buildWhere($filter, "AND");
         $ids = $db->queryColumn("SELECT " . static::$identifier . " FROM " . static::$table . " WHERE " . $filterString, $filter);
         return static::getObjects($ids);
     }

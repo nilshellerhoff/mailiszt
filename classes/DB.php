@@ -139,7 +139,8 @@ class DB extends SQLite3 {
             if ($whereClause != "") {
                 $whereClause .= " $operator ";
             }
-            $whereClause .= $column . " = :" . $column;
+            $column_escaped = SQlite3::escapeString($column);
+            $whereClause .= $column_escaped . " = :" . $column_escaped;
         }
         return $whereClause;        
     }
