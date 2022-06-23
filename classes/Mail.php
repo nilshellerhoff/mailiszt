@@ -323,7 +323,7 @@ class Mail extends Base {
             "subject" => $this->properties["s_subject"],
             "body" => $this->properties["s_bodytext"],
             "frommail" => $this->properties["s_frommail"],
-            "fromname" => $this->properties["s_fromname"],
+            "fromname" => $this->getFromName(),
         ];
         return $fields;
     }
