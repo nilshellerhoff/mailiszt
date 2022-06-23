@@ -59,4 +59,13 @@ class Member extends Base {
         }
         return $member;
     }
+
+    /**
+     * Get the full name of a member
+     * 
+     * @return String the full name
+     */
+    public function getFullName() {
+        return $this->properties["s_name1"] . " " . $this->properties["s_name2"];
+    }
 }

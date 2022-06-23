@@ -343,6 +343,32 @@ class Mail extends Base {
         return Attachment::getObjects($attachment_ids);
     }
 
+    /**
+     * Get the from name of a mail. Firstly tries to find the mail in the members table, otherwise looks, whether a from-header is set.
+     * 
+     * @param Boolean $usemail If true, the function will return the from-email-address, if no other name is found. (default false)
+     * 
+     * @return String the from name
+     */
+    public function getFromName($usemail = false) {
+        // try to find a member with this email in DB
+        $members = Member::getObjectsFilter(["s_email" => $this->properties["s_frommail"]]);
+        if (count($members) > 0) {
+            return $members[0]->getFullName();
+        }
+        
+        // see if fromname is set
+        if (($this->properties["s_fromname"] ?? '') != '') {
+            return $this->properties["s_fromname"];
+        }
+
+        if ($usemail) {
+            return $this->properties["s_frommail"];
+        }
+
+        return "";
+    }
+
     public function apiGetAddInfo($role, $mail, $fields) {
         $add_fields = ["recipients", "num_recipients", "attachments"];
 
