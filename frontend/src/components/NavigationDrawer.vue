@@ -29,16 +29,42 @@
           v-model="group"
           active-class="blue--text text--accent-4"
           >
-            <router-link v-for="link in links" :key="link.url" :to=link.url>
-              <v-list-item link>
-                  <v-list-item-icon>
-                    <v-icon>{{ link.icon }}</v-icon>
-                  </v-list-item-icon>
-                  <v-list-item-content>
-                    <v-list-item-title>{{link.title}}</v-list-item-title>
-                  </v-list-item-content>
-              </v-list-item>
-            </router-link>
+            <span v-for="link in links" :key="link.title">
+
+              <!-- if we have no sublinks -->
+              <template v-if="!link.sublinks">
+                <router-link :to="link.url">
+                  <v-list-item link>
+                      <v-list-item-icon>
+                        <v-icon>{{ link.icon }}</v-icon>
+                      </v-list-item-icon>
+                      <v-list-item-content>
+                        <v-list-item-title>{{link.title}}</v-list-item-title>
+                      </v-list-item-content>
+                  </v-list-item>
+                </router-link>
+              </template>
+
+              <!-- if we have sublinks -->
+              <template v-if="link.sublinks">
+                <v-list-group :prepend-icon="link.icon">
+
+                  <template v-slot:activator>
+                    <v-list-item-content>
+                      <v-list-item-title>{{link.title}}</v-list-item-title>
+                    </v-list-item-content>
+                  </template>
+
+                  <v-list-item v-for="sublink in link.sublinks" :key="sublink">
+                    <v-list-item-content>
+                      <v-list-item-title>{{sublink.title}}</v-list-item-title>
+                    </v-list-item-content>
+                  </v-list-item>
+                  
+                </v-list-group>
+              </template>
+
+            </span>
           </v-list-item-group>
   
         </v-list>
@@ -122,10 +148,22 @@
         }
     },
     methods: {
+      loadData() {
+        this.$api.get(`mailbox?fields=s_name`)
+        .then(result => {
+          // console.log(this.links.filter(m => m.title == "Mailboxes")[0]);
+          this.links.filter(m => m.title == "Mails")[0].sublinks = result.data.map(r => ({title: r.s_name}))
+        })
+      },
       logout() {
         this.$root.$refs.App.logout()
         this.$router.push('/login')
       }
-    }
+    },
+    mounted() {
+      this.$root.$on("reloadData", () => {
+        this.loadData();
+      });
+    },
   }
 </script>
