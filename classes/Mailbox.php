@@ -21,6 +21,7 @@ class Mailbox extends Base {
             "s_smtpserver",
             "n_smtpport",
             "s_username",
+            "s_password",
             "s_groupsmethod",
             "j_groups",
             "j_groupslogic",
