@@ -213,6 +213,13 @@
               ></v-text-field>
             </v-col>
           </v-row>
+          <v-row no-gutters>
+            <v-checkbox
+              prepend-icon=""
+              label="Only consider messages sent to the address of the mailbox? This is useful if setting up aliases or a catch-all address which point to a single mailbox but belong to different lists."
+              v-model="mailbox.b_consideronlytolistaddress"
+            ></v-checkbox>
+          </v-row>
         </v-tab-item>
 
         <!-- group/user configuration -->

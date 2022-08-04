@@ -39,6 +39,7 @@ class Mailbox extends Base {
             "s_templatebody",
             "b_sendrejectionnotices",
             "s_templaterejectionnotice",
+            "b_consideronlytolistaddress",
         ]
     ];
 
@@ -248,7 +249,13 @@ class Mailbox extends Base {
         // open INBOX and return all mails
         $folder = $client->getFolder(IMAP_PENDING_FOLDER);
         
-        $messages = $folder->messages()->all()->get();
+        // check if we should only check mails which were sent to the list address, if yes only fetch those
+        if ($this->properties["b_consideronlytolistaddress"]) {
+            $messages = $folder->messages()->to($this->properties["s_address"])->get();
+        // else get all the mails from the folder
+        } else {
+            $messages = $folder->messages()->all()->get();
+        }
 
         $mails = [];
         foreach ($messages as $message) {
