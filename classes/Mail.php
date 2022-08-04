@@ -97,10 +97,12 @@ class Mail extends Base {
     /** Perform the processed action on the mail defined in MAIL_PROCESSED_ACTION
      */
     public function processedAction() {
-        if (MAIL_PROCESSED_ACTION == "move") {
-            $this->object->move($folder_path = MAIL_PROCESSED_FOLDER);
-        } else if (MAIL_PROCESSED_ACTION == "delete") {
-            $this->object->delete($expunge = true);
+        if (isset($this->object)) {
+            if (MAIL_PROCESSED_ACTION == "move") {
+                $this->object->move($folder_path = MAIL_PROCESSED_FOLDER);
+            } else if (MAIL_PROCESSED_ACTION == "delete") {
+                $this->object->delete($expunge = true);
+            }
         }
     }
 
