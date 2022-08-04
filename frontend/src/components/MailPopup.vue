@@ -134,7 +134,7 @@ export default {
       baseTag.target = '_blank';
       htmlBodyDom.head.appendChild(baseTag);
 
-      return new XMLSerializer().serializeToString(htmlBodyDom);
+      return htmlBodyDom.documentElement.outerHTML;
     },
     getAttachmentUrlFromCid(cid) {
       try {
