@@ -65,7 +65,7 @@ class Mailbox extends Base {
             case 'tls':
                 return 'tls';
             default:
-                Logger::error("s_smtpencryption $this->properties['s_smtpencryption'] is not a valid value");
+                Logger::error("s_smtpencryption $this->properties['s_smtpencryption'] is not a valid value", 'MAILBOX_INVALID_SMTPENCRYPTION');
         }
     }
 
@@ -79,7 +79,7 @@ class Mailbox extends Base {
             case 'tls':
                 return 'tls';
             default:
-                Logger::error("s_imapencryption $this->properties['s_imapencryption'] is not a valid value");
+                Logger::error("s_imapencryption $this->properties['s_imapencryption'] is not a valid value", 'MAILBOX_INVALID_IMAPENCRYPTION');
         }
     }
 
@@ -119,12 +119,12 @@ class Mailbox extends Base {
                 $mail->addAddress($tomail, $toname);
                 $mail->send();
     
-                Logger::debug("Mail sent to $toname <$tomail>");
+                Logger::debug("Mail sent to $toname <$tomail>", 'MAILBOX_MAIL_SENT');
             } catch (Exception $e) {
-                Logger::debug("Mail sent to $toname <$tomail>, error:" . $mail->ErrorInfo);
+                Logger::warning("Mail sent to $toname <$tomail>, error:" . $mail->ErrorInfo, 'MAILBOX_MAIL_SEND_ERROR');
             }
         } catch (Exception $e) {
-            Logger::error("Error sending mail to $toname <$tomail>", $e->getMessage());
+            Logger::warning("Error sending mail to $toname <$tomail>", $e->getMessage(), 'MAILBOX_MAIL_SEND_ERROR');
         }
     }
 
@@ -137,7 +137,7 @@ class Mailbox extends Base {
     public function sendRejectionNotice(Mail $mail, string $tomail = NULL, string $toname = NULL, string $subject = NULL) {
         // if rejectionnotices are disabled for this mailbox do nothing
         if (!$this->properties["b_sendrejectionnotices"]) {
-            Logger::info("Not sending rejection notice because rejection notices are disabled on ". $this->properties["s_address"]);
+            Logger::info("Not sending rejection notice because rejection notices are disabled on ". $this->properties["s_address"], 'MAILBOX_REJECTION_NOTICE_DISABLED');
             return;
         }
 
@@ -150,7 +150,7 @@ class Mailbox extends Base {
         $mail_subject = $subject ?? "RE: " . $mail->properties["s_subject"];
         $mail_body = Util::formatTemplate(trim($template), $fields);
 
-        Logger::info("Sending rejection notice to $mail_tomail");
+        Logger::info("Sending rejection notice to $mail_tomail", 'MAILBOX_SEND_REJECTION_NOTICE');
 
         $this->sendMail($mail_tomail, $mail_toname, $mail_subject, $mail_body);
     }
@@ -309,7 +309,7 @@ class Mailbox extends Base {
                     return Member::getObjects($allowed_ids);
                 default:
                     // sender option not recognized, return throw error
-                    Logger::error("s_allowedsenders $this->properties['s_allowedsenders'] for Mailbox $this->properties['i_mailbox'] is not a valid value");
+                    Logger::error("s_allowedsenders $this->properties['s_allowedsenders'] for Mailbox $this->properties['i_mailbox'] is not a valid value", 'MAILBOX_ALLOWED_SENDERS_INVALID');
                     throw new ValueError("s_allowedsenders $this->properties['s_allowedsenders'] for Mailbox $this->properties['i_mailbox'] is not a valid value");
             }
         }

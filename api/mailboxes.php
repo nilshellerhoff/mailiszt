@@ -87,7 +87,7 @@ Route::add('/api/mailbox/([0-9]*)/recipients', function($i_mailbox) {
 // actions for forwarding mails
 Route::add('/api/mailbox/forward', function() {
     if (!Setting::getValue('enable_email_fetching')) {
-        Logger::log("Email fetching is disabled", 'INFO');
+        Logger::info("Email fetching is disabled", 'EMAIL_FETCHING_DISABLED');
         return;
     } else {
         $mailboxes = Mailbox::getAll();
@@ -103,22 +103,22 @@ Route::add('/api/mailbox/forward', function() {
                         $mail->forwardMail($mailbox);
                         $mail_cnt++;        
                     } catch (\Throwable $e) {
-                        Logger::log("could not forward mail i_mail = {$mail->properties['i_mail']}. Error: {$e->getMessage()}", "WARNING");
+                        Logger::warning("could not forward mail i_mail = {$mail->properties['i_mail']}. Error: {$e->getMessage()}", "MAIL_FORWARDING_FAILED");
                     }
                 }
                 $mailbox_cnt++;
             } catch (\Throwable $e) {
-                Logger::log("could not check mailbox i_mailbox = {$mailbox->properties['i_mailbox']}. Error: {$e->getMessage()}", "WARNING");
+                Logger::warning("could not check mailbox i_mailbox = {$mailbox->properties['i_mailbox']}. Error: {$e->getMessage()}", "MAILBOX_CHECK_FAILED");
             }
         }
 
-        Logger::log("Checked {$mailbox_cnt} mailboxes, found $mail_cnt mails to forward", 'DEBUG');
+        Logger::debug("Checked {$mailbox_cnt} mailboxes, found $mail_cnt mails to forward", 'MAILBOX_CHECK_SUCCESS');
     }
 });
 
 Route::add('/api/mailbox/([0-9]*)/forward', function($i_mailbox) {
     if (!Setting::getValue('enable_email_fetching')) {
-        Logger::log("Email fetching is disabled", 'INFO');
+        Logger::info("Email fetching is disabled", 'EMAIL_FETCHING_DISABLED');
     } else {
         $mail_cnt = 0;
         $mailbox = new Mailbox($id = $i_mailbox);
@@ -131,13 +131,13 @@ Route::add('/api/mailbox/([0-9]*)/forward', function($i_mailbox) {
                     $mail->forwardMail($mailbox);
                     $mail_cnt++;        
                 } catch (\Throwable $e) {
-                    Logger::log("could not forward mail i_mail = {$mail->properties['i_mail']}. Error: {$e->getMessage()}", "WARNING");
+                    Logger::warning("could not forward mail i_mail = {$mail->properties['i_mail']}. Error: {$e->getMessage()}", "MAIL_FORWARDING_FAILED");
                 }
             }
-            Logger::log("Checked mailbox i_mailbox = {$mailbox->properties['i_mailbox']}, found $mail_cnt mails to forward", 'DEBUG');
+            Logger::debug("Checked mailbox i_mailbox = {$mailbox->properties['i_mailbox']}, found $mail_cnt mails to forward", 'MAILBOX_CHECK_SUCCESS');
 
         } catch (\Throwable $e) {
-            Logger::log("could not check mailbox i_mailbox = {$mailbox->properties['i_mailbox']}. Error: {$e->getMessage()}", "WARNING");
+            Logger::warning("could not check mailbox i_mailbox = {$mailbox->properties['i_mailbox']}. Error: {$e->getMessage()}", "MAILBOX_CHECK_FAILED");
         }
     }
 });

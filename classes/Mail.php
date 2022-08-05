@@ -122,16 +122,20 @@ class Mail extends Base {
         $allowed_members = $mailbox->getAllowedSenders();
         if ($allowed_members === -1) {
             // everybody is allowed, continue
-            Logger::log("forwarding mail \"{$this->properties['s_subject']}\" because allowed senders is 'everybody'");
+            Logger::info("forwarding mail \"{$this->properties['s_subject']}\" because allowed senders is 'everybody'", 'MAIL_FORWARDING_ALLOWED_SENDERS');
         } else {
             // not everybody is allowed, populate an array of allowed mails
             $allowed_mails = array_map(fn($m) => $m->properties["s_email"], $allowed_members);
 
             // check whether sender is in allowed mails
             if ( in_array($this->properties["s_frommail"], $allowed_mails) ) {
-                Logger::log("forwarding mail \"{$this->properties['s_subject']}\" because allowed senders is '{$mailbox->properties['s_allowedsenders']}' and '{$this->properties['s_frommail']}' is in " . json_encode($allowed_mails));
+                Logger::info(
+                    "forwarding mail \"{$this->properties['s_subject']}\" because allowed senders is '{$mailbox->properties['s_allowedsenders']}' and '{$this->properties['s_frommail']}' is in " . json_encode($allowed_mails),
+                    'MAIL_FORWARDING_ALLOWED_SENDERS');
             } else {
-                Logger::log("not forwarding mail \"{$this->properties['s_subject']}\" because allowed senders is '{$mailbox->properties['s_allowedsenders']}' and '{$this->properties['s_frommail']}' is not in " . json_encode($allowed_mails));
+                Logger::info(
+                    "not forwarding mail \"{$this->properties['s_subject']}\" because allowed senders is '{$mailbox->properties['s_allowedsenders']}' and '{$this->properties['s_frommail']}' is not in " . json_encode($allowed_mails),
+                    'MAIL_FORWARDING_ALLOWED_SENDERS');
                 $mailbox->sendRejectionNotice($this);
                 return false;
             }
@@ -219,13 +223,13 @@ class Mail extends Base {
                     // mark mail as sent
                     $this->markSentMail($recipient);
     
-                    Logger::log(sprintf("Mail %s sent to %s", $this->properties['s_subject'], $recipient["s_email"]));    
+                    Logger::info(sprintf("Mail %s sent to %s", $this->properties['s_subject'], $recipient["s_email"]), 'MAIL_SENT'); 
                 } catch (Exception $e) {
-                    Logger::log(sprintf("Mail %s could not be sent to %s, error: %s", $this->properties['s_subject'], $recipient["s_email"], $mail->ErrorInfo));
+                    Logger::warning(sprintf("Mail %s could not be sent to %s, error: %s", $this->properties['s_subject'], $recipient["s_email"], $mail->ErrorInfo), 'MAIL_SEND_ERROR');
                 }
             }
         } catch (Exception $e) {
-            Logger::log(sprintf("Mail %s could not be sent, error: %s", $this->properties['s_subject'], $mail->ErrorInfo));
+            Logger::warning(sprintf("Mail %s could not be sent, error: %s", $this->properties['s_subject'], $mail->ErrorInfo), 'MAIL_SEND_ERROR');
         }
     }
 

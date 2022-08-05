@@ -6,7 +6,7 @@ class DB extends SQLite3 {
             try {
                 $this->open(DB_FILE);
             } catch (Exception $e) {
-                Logger::error("Could not open DB file: " . $e->getMessage());
+                Logger::error("Could not open DB file: " . $e->getMessage(), 'DB_OPEN_FAILED');
             }
         } else {
             // if DB file doesn't exist, create DB, make schema and insert sampledata
@@ -17,7 +17,7 @@ class DB extends SQLite3 {
                 $this->executeFile(BASE_DIR .'sql/sampledata.sql');
                 $this->upgradeDB();
             } catch (Exception $e) {
-                Logger::error("Could not create DB file: " . $e->getMessage());
+                Logger::error("Could not create DB file: " . $e->getMessage(), 'DB_CREATE_FAILED');
             }
         }
     }
@@ -30,15 +30,16 @@ class DB extends SQLite3 {
             $db_version = $this->getDBVersion();
             if (version_compare($migration, $db_version) > 0) {
                 try {
-                    Logger::log("migrating DB from {$db_version} to {$migration}");
+                    Logger::info("migrating DB from {$db_version} to {$migration}", 'DB_MIGRATION_START');
                     $this->executeFile(BASE_DIR . 'sql/migrations/' . $migration . '.sql');
                     $this->insert('db_upgrade', [
                         "s_version"         => $migration,
                         "s_version_from"    => $db_version,
                     ]);
                     Setting::setValue('version_number', $migration);
+                    Logger::info("migrated DB from {$db_version} to {$migration}", 'DB_MIGRATION_DONE');
                 } catch (\Throwable $e) {
-                    Logger::log("could not migrate from {$db_version} to {$migration}. Error: {$e->getMessage()}");
+                    Logger::error("could not migrate from {$db_version} to {$migration}. Error: {$e->getMessage()}", 'DB_MIGRATION_FAILED');
                 }
             }
         }

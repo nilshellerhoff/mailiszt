@@ -26,19 +26,19 @@ class Logger extends Base {
         );
     }
 
-    public static function debug($message) {
-        self::log($message, 'DEBUG');
+    public static function debug($message, $eventtype = '') {
+        self::log($message, 'DEBUG', $eventtype);
     }
 
-    public static function info($message) {
-        self::log($message, 'INFO');
+    public static function info($message, $eventtype = '') {
+        self::log($message, 'INFO', $eventtype);
     }
 
-    public static function warning($message) {
-        self::log($message, 'WARNING');
+    public static function warning($message, $eventtype = '') {
+        self::log($message, 'WARNING', $eventtype);
     }
 
-    public static function error($message) {
-        self::log($message, 'ERROR');
+    public static function error($message, $eventtype = '') {
+        self::log($message, 'ERROR', $eventtype);
     }
 }
