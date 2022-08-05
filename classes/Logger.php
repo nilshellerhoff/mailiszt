@@ -8,7 +8,7 @@ class Logger extends Base {
         "ADMIN"     => ["i_log", "s_level", "s_eventtype", "s_message", "d_inserted", "d_updated"],
     ];
 
-    public static function log($message, $eventtype = '', $level = 'INFO') {
+    public static function log($message, $level = 'INFO', $eventtype = '') {
         $db = new DB();
 
         // if we are logging a debug message and DEBUG is not enabled do nothing
