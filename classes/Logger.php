@@ -5,10 +5,10 @@ class Logger extends Base {
     public static $identifier = "i_log";
 
     public $exposedInfo = [
-        "ADMIN"     => ["i_log", "s_level", "s_message", "d_inserted", "d_updated"],
+        "ADMIN"     => ["i_log", "s_level", "s_eventtype", "s_message", "d_inserted", "d_updated"],
     ];
 
-    public static function log($message, $level = 'INFO') {
+    public static function log($message, $eventtype = '', $level = 'INFO') {
         $db = new DB();
 
         // if we are logging a debug message and DEBUG is not enabled do nothing
@@ -20,6 +20,7 @@ class Logger extends Base {
             'log',
             [
                 's_level' => $level,
+                's_eventtype' => $eventtype,
                 's_message' => $message
             ]
         );
