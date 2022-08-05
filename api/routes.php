@@ -67,6 +67,22 @@ function authenticatedAction($callback, ...$args) {
     }
 }
 
+/** Get the fields for templating
+ * @param string[] $get the list of GET-parameter values
+ * @return string[] array with the name of the fields
+ */
+function getFieldsForApi(array $get) {
+    // if no fields are specified, return empty
+    if (!isset($get['fields']) || $get['fields'] == '') {
+        return [];
+    }
+
+    // else separate the fields parameter on commas and return the array
+    $fields = explode(',', $get['fields']);
+    $fields = array_map(fn($field) => trim($field), $fields);
+    return $fields;
+}
+
 // include api definitions
 include('members.php');
 include('groups.php');

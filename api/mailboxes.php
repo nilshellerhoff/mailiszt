@@ -6,7 +6,7 @@ use Steampixel\Route;
 
 Route::add('/api/mailbox', function() {
     return authenticatedAction(function($auth) {
-        $fields = array_filter(explode(",", $_GET['fields']));
+        $fields = getFieldsForApi($_GET);
         $mailboxes = Mailbox::getAll();
         $apiInfo = array_map(fn($m) => $m->apiGetInfo($auth["s_role"], $fields), $mailboxes);
         return makeResponse($apiInfo);
@@ -27,7 +27,7 @@ Route::add('/api/mailbox/add', function() {
 
 Route::add('/api/mailbox/([0-9]*)', function($i_mailbox) {
     return authenticatedAction(function($auth, $i_mailbox) {
-        $fields = array_filter(explode(",", $_GET['fields']));
+        $fields = getFieldsForApi($_GET);
         $mailbox = new Mailbox((int)$i_mailbox);
         return makeResponse($mailbox->apiGetInfo("ADMIN", $fields));
     }, $i_mailbox);

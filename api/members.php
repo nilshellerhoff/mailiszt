@@ -6,7 +6,7 @@ use Steampixel\Route;
 
 Route::add('/api/member', function() {
     return authenticatedAction(function($auth) {
-        $fields = array_filter(explode(",", $_GET['fields']));
+        $fields = getFieldsForApi($_GET);
         $members = Member::getAll();
         $apiInfo = array_map(fn($m) => $m->apiGetInfo($auth["s_role"], $fields), $members);
         return makeResponse($apiInfo);
@@ -27,7 +27,7 @@ Route::add('/api/member/add', function() {
 
 Route::add('/api/member/([0-9]*)', function($i_member) {
     return authenticatedAction(function($auth, $i_member) {
-        $fields = array_filter(explode(",", $_GET['fields']));
+        $fields = getFieldsForApi($_GET);
         $member = new Member((int)$i_member);
         return makeResponse($member->apiGetInfo("ADMIN", $fields));
     }, $i_member);
