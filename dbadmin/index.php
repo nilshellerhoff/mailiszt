@@ -8,10 +8,11 @@ require_once('includes.php');
 
 // check authentication
 $authenticated = false;
+$failedLogin = false;
 
 // check whether a valid auth token is passed as post parameter and if not show login form
-if (isset($_COOKIE["accessToken"])) {
-    $token = $_COOKIE["accessToken"];
+if (isset($_COOKIE["auth"])) {
+    $token = $_COOKIE["auth"];
     $authenticated = User::checkAuthentication($token);
 }
 
@@ -20,8 +21,10 @@ if (!$authenticated) {
     if (isset($_POST["user"]) && isset($_POST["password"])) {
         $token = User::authenticate($_POST["user"], $_POST["password"]);
         if ($token) {
-            setcookie("accessToken", $token, time() + 3600);
+            setcookie("auth", $token, ["expires" => time() + 60 * 60, "path" => "/", "samesite" => "Lax"]);
             $authenticated = true;
+        } else {
+            $failedLogin = true;
         }
     }
 }
@@ -37,6 +40,11 @@ if (!$authenticated) {
         <input type="submit" value="Login" />
     </form>
     HTML;
+
+    if ($failedLogin) {
+        echo "<p style='color: red;'>Login failed</p>";
+    }
+    
     die();
 }
 
