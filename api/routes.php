@@ -41,16 +41,16 @@ function checkAuthToken() {
     if (array_key_exists('Authorization', $headers) && $headers['Authorization'] != '') {
         $token = $headers['Authorization'];
         $auth = User::checkAuthentication($token);
-    } if (!$auth && isset($_COOKIE['accessToken']) && $_COOKIE['accessToken'] != '') {
+    } else if (isset($_COOKIE['accessToken']) && $_COOKIE['accessToken'] != '') {
         $token = $_COOKIE['accessToken'];
         $auth = User::checkAuthentication($token);
-    } if (!$auth && isset($_COOKIE['auth']) && $_COOKIE['auth'] != '') {
+    } else if (isset($_COOKIE['auth']) && $_COOKIE['auth'] != '') {
         $token = $_COOKIE['auth'];
         $auth = User::checkAuthentication($token);
     }
 
     // $auth = User::checkAuthentication($token);
-    if ($auth) {
+    if (isset($auth) && $auth) {
         $auth["s_role"] = 'ADMIN';
         return $auth;
     }

@@ -149,12 +149,18 @@ class DB extends SQLite3 {
     public function queryRow($query, $parameters = []) {
         $stmt = $this->getQuery($query, $parameters);
 
-        // filter numeric columns
-        $results = array_filter($stmt->execute()->fetchArray(), function(&$key) {
-            return !is_numeric($key);
-        }, ARRAY_FILTER_USE_KEY);
-        
-        return $results;
+        // filter numeric columns (columns are returned twice, once with column name and once with column index as header)
+        $row = $stmt->execute()->fetchArray();
+
+        if ($row) {
+            $row = array_filter($row, function($key) {
+                return !is_numeric($key);
+            }, ARRAY_FILTER_USE_KEY);
+        } else {
+            $row = [];
+        }
+
+        return $row;
     }
 
     public function queryColumn($query, $parameters = []) {
