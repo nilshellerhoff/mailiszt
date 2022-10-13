@@ -180,7 +180,7 @@ class DB extends SQLite3 {
         // loop through rows and return only with non-numeric index (otherwise double columns)
         $rows = [];
         while ($row = $result->fetchArray()) {
-            $rows[] = array_filter($row, function(&$key) {
+            $rows[] = array_filter($row, function($key) {
                 return !is_numeric($key);
             }, ARRAY_FILTER_USE_KEY);
         }
