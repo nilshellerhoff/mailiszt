@@ -81,6 +81,17 @@ class Base {
         }
     }
 
+    /**
+     * Get the count of the objects of this type in the DB
+     * 
+     * @return int number of objects of this class in the DB
+     */
+    public static function getObjectsCount() {
+        $db = new DB();
+        $query = "SELECT count(*) FROM " . static::$table;
+        return $db->queryScalar($query);
+    }
+
     public function __construct($id, $obj = NULL, $prop = NULL) {
         if (is_null($id) && is_null($obj) && is_null($prop)) {
             throw new Exception(get_class($this) . ' must be instantiated with data');

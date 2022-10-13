@@ -9,6 +9,11 @@ Route::add('/api/log', function() {
         $fields = getFieldsForApi($_GET);
         $loggers = Logger::getAll((int)$_GET["limit"], (int)$_GET["offset"]);
         $apiInfo = array_map(fn($l) => $l->apiGetInfo($auth["s_role"], $fields), $loggers);
-        return makeResponse($apiInfo);
+        return makeResponse(
+            data: $apiInfo,
+            code: 200,
+            num_items: count($apiInfo),
+            num_items_total: Logger::getObjectsCount(),
+        );
     });
 }, 'GET');

@@ -37,3 +37,9 @@ define('REJECTION_MAIL_TEXT', "Hello {{sender}},\n\nUnfortunately you are not al
 
 // X-Mailer-Header value (' ' for none, '' for PHPMailer default)
 define('X_MAILER_HEADER', 'Mailiszt');
+
+// available API response statuses
+define('API_RESPONSE_STATUSES', [
+    200 => "SUCCESS",
+    403 => "UNAUTHORIZED",
+]);

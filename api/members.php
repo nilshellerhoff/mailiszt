@@ -9,7 +9,12 @@ Route::add('/api/member', function() {
         $fields = getFieldsForApi($_GET);
         $members = Member::getAll((int)$_GET["limit"], (int)$_GET["offset"]);
         $apiInfo = array_map(fn($m) => $m->apiGetInfo($auth["s_role"], $fields), $members);
-        return makeResponse($apiInfo);
+        return makeResponse(
+            data: $apiInfo,
+            code: 200,
+            num_items: count($apiInfo),
+            num_items_total: Member::getObjectsCount(),
+        );
     });
 }, 'GET');
 
@@ -21,7 +26,14 @@ Route::add('/api/member/add', function() {
             $properties = getPutData()
         );
         $member->save();
-        return makeResponse($member->apiGetInfo("ADMIN"));
+        return makeResponse(
+            data: [$member->apiGetInfo("ADMIN")],
+            code: 200,
+            message: "CREATED_MEMBER",
+            message_long: "Member '{$member->getFullName()}' created.",
+            num_items: 1,
+            num_items_total: Member::getObjectsCount(),
+        );
     });
 }, 'PUT');
 
@@ -29,7 +41,12 @@ Route::add('/api/member/([0-9]*)', function($i_member) {
     return authenticatedAction(function($auth, $i_member) {
         $fields = getFieldsForApi($_GET);
         $member = new Member((int)$i_member);
-        return makeResponse($member->apiGetInfo("ADMIN", $fields));
+        return makeResponse(
+            data: [$member->apiGetInfo("ADMIN", $fields)],
+            code: 200,
+            num_items: 1,
+            num_items_total: Member::getObjectsCount(),
+        );
     }, $i_member);
 }, 'GET');
 
@@ -42,6 +59,11 @@ Route::add('/api/member/([0-9]*)', function($i_member) {
         $groupsInfo = $put['groups'];
         $member->updateProperties($memberInfo);
         $member->save();
+        return makeResponse(
+            code: 200,
+            message: "UPDATED_MEMBER",
+            message_long: "Member '{$member->getFullName()}' updated.",
+        );
     }, $i_member);
 }, 'PUT');
 
@@ -49,6 +71,11 @@ Route::add('/api/member/([0-9]*)', function($i_member) {
     return authenticatedAction(function($auth, $i_member) {
         $member = new Member($i_member);
         $member->delete();
+        return makeResponse(
+            code: 200,
+            message: "DELETED_MEMBER",
+            message_long: "Member '{$member->getFullName()}' deleted.",
+        );
     }, $i_member);
 }, 'DELETE');
 
@@ -56,7 +83,12 @@ Route::add('/api/member/([0-9]*)', function($i_member) {
 Route::add('/api/member/([0-9]*)/groups', function($i_member) {
     return authenticatedAction(function($auth, $i_member) {
         $member = new Member($id = $i_member);
-        return makeResponse($member->getGroups());
+        return makeResponse(
+            data: $member->getGroups(),
+            code: 200,
+            num_items: count($member->getGroups()),
+            num_items_total: count($member->getGroups()),
+        );
     }, $i_member);
 }, 'GET');
 
@@ -64,5 +96,10 @@ Route::add('/api/member/([0-9]*)/groups', function($i_member) {
     return authenticatedAction(function($auth, $i_member) {
         $member = new Member($id = $i_member);
         $member->setGroups(getPutData());
+        return makeResponse(
+            code: 200,
+            message: "UPDATED_MEMBER_GROUPS",
+            message_long: "Member '{$member->getFullName()}' groups updated.",
+        );
     }, $i_member);
 }, 'PUT');

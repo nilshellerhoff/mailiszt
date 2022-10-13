@@ -17,16 +17,44 @@ function getPutData() {
     return json_decode(file_get_contents('php://input'), true);
 }
 
-function makeResponse($data, $responseCode = 200, $type = 'json') {
-    http_response_code($responseCode);
-    if ($type == 'json') {
-        header("Content-Type: application/json");
-        return json_encode($data);
-    }
-    else if ($type == 'text') {
-        header("Content-Type 'text/plain'");
-        return $data;
-    }
+/**
+ * Make an api response
+ * 
+ * Each api response is a json document structured like this:
+ *  {
+ *      "status": <<HTTP status code of the request>>,
+ *      "status_long": <<human readable status>>,
+ *      "message": <<capitalized, underscore short message of action>>
+ *      "message_long": <<human readable message of action>>
+ *      "num_items": <<number of items returned in this request>>
+ *      "num_items_total": <<total number of items of the returned entity>>
+ *      "data": <<array of the data returned>>
+ *      "request_completed": <<timestamp of the completed request>>
+ *  }
+ * 
+ * @param array $data array of the data returned
+ * @param int $status status of the request (e.g. 200, 403)
+ * @param string $message capitalized, underscore short message of action
+ * @param string $message_long human readable message of action
+ * @param int $num_items number of items returned in this request
+ * @param int $num_items_total total number of items of the returned entity
+ */
+function makeResponse(array $data = null, int $code = 500, string $message = "", string $message_long = "", int $num_items = -1, int $num_items_total = -1) {
+    $status = API_RESPONSE_STATUSES[$code];
+
+    http_response_code($code);
+    header("Content-Type: application/json");
+
+    return json_encode([
+        "code" => $code,
+        "status" => $status,
+        "message" => $message,
+        "message_long" => $message_long,
+        "num_items" => $num_items,
+        "num_items_total" => $num_items_total,
+        "data" => $data,
+        "request_completed" => date(DATE_FORMAT),
+    ]);
 }
 
 function checkAuthToken() {

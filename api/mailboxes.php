@@ -9,7 +9,12 @@ Route::add('/api/mailbox', function() {
         $fields = getFieldsForApi($_GET);
         $mailboxes = Mailbox::getAll((int)$_GET["limit"], (int)$_GET["offset"]);
         $apiInfo = array_map(fn($m) => $m->apiGetInfo($auth["s_role"], $fields), $mailboxes);
-        return makeResponse($apiInfo);
+        return makeResponse(
+            data: $apiInfo,
+            code: 200,
+            num_items: count($apiInfo),
+            num_items_total: Mailbox::getObjectsCount(),
+        );
     });
 }, 'GET');
 
@@ -21,7 +26,13 @@ Route::add('/api/mailbox/add', function() {
             $properties = getPutData()
         );
         $mailbox->save();
-        return makeResponse($mailbox->apiGetInfo("ADMIN"));
+        $response_data = [$mailbox->apiGetInfo("ADMIN")];
+        return makeResponse(
+            data: $response_data,
+            code: 200,
+            num_items: count($response_data),
+            num_items_total: Mailbox::getObjectsCount(),
+        );
     });
 }, 'PUT');
 
@@ -29,7 +40,13 @@ Route::add('/api/mailbox/([0-9]*)', function($i_mailbox) {
     return authenticatedAction(function($auth, $i_mailbox) {
         $fields = getFieldsForApi($_GET);
         $mailbox = new Mailbox((int)$i_mailbox);
-        return makeResponse($mailbox->apiGetInfo("ADMIN", $fields));
+        $response_data = [$mailbox->apiGetInfo("ADMIN", $fields)];
+        return makeResponse(
+            data: $response_data,
+            code: 200,
+            num_items: count($response_data),
+            num_items_total: Mailbox::getObjectsCount(),
+        );
     }, $i_mailbox);
 }, 'GET');
 
@@ -38,6 +55,11 @@ Route::add('/api/mailbox/([0-9]*)', function($i_mailbox) {
         $mailbox = new Mailbox($i_mailbox);
         $mailbox->updateProperties(getPutData());
         $mailbox->save();
+        return makeResponse(
+            code: 200,
+            message: "UPDATED_MAILBOX",
+            message_long: "returned mailbox '{$mailbox->properties['s_name']}'",
+        );
     }, $i_mailbox);
 }, 'PUT');
 
@@ -45,6 +67,11 @@ Route::add('/api/mailbox/([0-9]*)', function($i_mailbox) {
     return authenticatedAction(function($auth, $i_mailbox) {
         $mailbox = new Mailbox($i_mailbox);
         $mailbox->delete();
+        return makeResponse(
+            code: 200,
+            message: "DELETED_MAILBOX",
+            message_long: "deleted mailbox '{$mailbox->properties['s_name']}'",
+        );
     }, $i_mailbox);
 }, 'DELETE');
 
@@ -52,7 +79,12 @@ Route::add('/api/mailbox/([0-9]*)', function($i_mailbox) {
 Route::add('/api/mailbox/([0-9]*)/groups', function($i_mailbox) {
     return authenticatedAction(function($auth, $i_mailbox) {
         $mailbox = new Mailbox($i_mailbox);
-        return makeResponse($mailbox->getGroups());
+        $response_data = $mailbox->getGroups();
+        return makeResponse(
+            data: $response_data,
+            code: 200,
+            num_items: count($response_data),
+        );
     }, $i_mailbox);
 }, 'GET');
 
@@ -61,6 +93,11 @@ Route::add('/api/mailbox/([0-9]*)/groups', function($i_mailbox) {
         $mailbox = new Mailbox($i_mailbox);
         $mailbox->setGroups(getPutData());
         $mailbox->save();
+        return makeResponse(
+            code: 200,
+            message: "UPDATED_MAILBOX_GROUPS",
+            message_long: "updated groups of mailbox '{$mailbox->properties['s_name']}'",
+        );
     }, $i_mailbox);
 }, 'PUT');
 
@@ -68,7 +105,10 @@ Route::add('/api/mailbox/([0-9]*)/groups', function($i_mailbox) {
 Route::add('/api/mailbox/([0-9]*)/recipients', function($i_mailbox) {
     return authenticatedAction(function($auth, $i_mailbox) {
         $mailbox = new Mailbox($i_mailbox);
-        return makeResponse($mailbox->getRecipients());
+        return makeResponse(
+            data: $mailbox->getRecipients(),
+            code: 200,
+        );
     }, $i_mailbox);
 }, 'GET');
 
@@ -80,7 +120,10 @@ Route::add('/api/mailbox/([0-9]*)/recipients', function($i_mailbox) {
             $obj = null,
             $properties = getPutData()
         );
-        return makeResponse($mailbox->getRecipients());
+        return makeResponse(
+            data: $mailbox->getRecipients(),
+            code: 200,
+        );
     }, $i_mailbox);
 }, 'PUT');
 
