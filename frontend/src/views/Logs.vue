@@ -1,5 +1,7 @@
 <template>
   <v-container class="ma-0 pa-1 pa-sm-4" fluid>
+
+    <!-- Search Field (not working for now as apiside filtering not implemented yet) -->
     <v-row no-gutters>
       <v-col class="d-none d-sm-flex">
         <v-text-field
@@ -37,7 +39,14 @@
     </v-row>
 
     <!-- table -->
-    <v-data-table :headers="headers" :items="filteredLogs">
+    <v-data-table
+      :headers="headers"
+      :items="filteredLogs"
+      :page.sync="page"
+      :items-per-page.sync="itemsPerPage"
+      @pagination="loadData"
+      :server-items-length="serverItemsLength"
+    >
     </v-data-table>
   </v-container>
 </template>
@@ -55,6 +64,9 @@ export default {
         ],
         logs: [],
         mobileSearchVisible: false,
+        page: 1,
+        itemsPerPage: 10,
+        serverItemsLength: -1,
     }
   },
   computed: {
@@ -69,12 +81,24 @@ export default {
     },
   },
   methods: {
+    loadServerItemsLength() {
+      // this is kinda hacky, we request the number of items from the server by requesting a non existing field
+      this.$api.get("/log?fields=a").then((response) => {
+        this.serverItemsLength = response.data.length;
+      });
+    },
     loadData() {
-        this.$api.get(`/log`).then(response => this.logs = response.data)
+        let $limit = this.itemsPerPage
+        let $offset = (this.page - 1) * this.itemsPerPage
+        this.$api.get(`/log?limit=${$limit}&offset=${$offset}`).then(response => this.logs = response.data)
+    },
+    logEvent(event) {
+      console.log(event)
     }
   },
   mounted() {
     this.$root.$on("reloadData", () => {
+      this.loadServerItemsLength();
       this.loadData();
     });
   },
