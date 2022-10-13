@@ -47,7 +47,7 @@ export default {
   methods: {
     getGroupsAvail() {
       this.$api.get(`group`).then((response) => {
-        this.groupsAvail[0].items = response.data.map((group) => ({
+        this.groupsAvail[0].items = response.data.payload.map((group) => ({
           value: group.i_group,
           text: group.s_name,
         }));
@@ -60,7 +60,7 @@ export default {
 
       this.$api.put(`/mailbox/add`, this.mailbox).then((response) => {
         // populate the element with the new data
-        this.mailbox = response.data
+        this.mailbox = response.data.payload
           this.btnState = "done";
           setTimeout(() => {
             this.$root.$emit("reloadData");

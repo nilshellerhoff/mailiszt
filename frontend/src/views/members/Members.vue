@@ -196,12 +196,12 @@ export default {
   methods: {
     getMembers() {
       this.$api.get("/member").then((response) => {
-        this.members = response.data;
+        this.members = response.data.payload;
       });
     },
     getGroups() {
       this.$api.get("/group").then((response) => {
-        this.groups = response.data;
+        this.groups = response.data.payload;
       });
     },
     deleteMember(i_member, name) {

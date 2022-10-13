@@ -47,7 +47,7 @@ export default {
   methods: {
     getAvailableMembers() {
       this.$api.get(`/member`).then((response) => {
-        this.membersAvailable = response.data;
+        this.membersAvailable = response.data.payload;
       });
     },
   },

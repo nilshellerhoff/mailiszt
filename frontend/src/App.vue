@@ -72,7 +72,7 @@ export default {
         this.$api
           .put("users/current/")
           .then((response) => {
-            this.userInfo = response.data;
+            this.userInfo = response.data.payload[0];
           })
           .catch(() => {
             this.logoutLocal();
@@ -92,9 +92,9 @@ export default {
         })
         .then((response) => {
           if (response.data) {
-            this.accessToken = response.data;
-            this.$cookies.set("auth", response.data);
-            this.$api.defaults.headers["Authorization"] = response.data;
+            this.accessToken = response.data.payload.token;
+            this.$cookies.set("auth", response.data.payload.token);
+            this.$api.defaults.headers["Authorization"] = response.data.payload.token;
             return true;
           } else {
             return false;

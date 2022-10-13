@@ -71,7 +71,7 @@ export default {
   methods: {
     getAvailableGroups() {
       this.$api.get(`/group`).then((response) => {
-        this.groupsAvailable = response.data;
+        this.groupsAvailable = response.data.payload;
       });
     },
   },

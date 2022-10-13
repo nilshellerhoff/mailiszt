@@ -80,7 +80,7 @@ export default {
   methods: {
     getMailboxes() {
       this.$api.get("/mailbox").then((response) => {
-        this.mailboxes = response.data;
+        this.mailboxes = response.data.payload;
       });
     },
     deleteMailbox(i_mailbox, name) {

@@ -37,10 +37,10 @@ export default {
   methods: {
     getMember() {
       this.$api.get(`/member/${this.memberId}`).then((response) => {
-        this.member = response.data;
+        this.member = response.data.payload[0];
       });
       this.$api.get(`/member/${this.memberId}/groups`).then((response) => {
-        this.groups.member = response.data.map(g => g.i_group)
+        this.groups.member = response.data.payload.map(g => g.i_group)
       })
     },
     async saveMember() {

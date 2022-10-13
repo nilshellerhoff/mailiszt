@@ -28,7 +28,7 @@ export default {
     methods: {
         getSetting() {
             this.$api.get(`/setting/enable_dbadmin`).then(response => {
-                this.status = response.data
+                this.status = response.data.payload;
             })
         },
         setSetting() {

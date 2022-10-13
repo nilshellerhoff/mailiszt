@@ -24,7 +24,7 @@ export default {
   methods: {
     getMail() {
       this.$api.get(`/mail/${this.mailId}`).then((response) => {
-        this.mail = response.data;
+        this.mail = response.data.payload;
       });
     },
   },

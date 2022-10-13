@@ -87,7 +87,7 @@ export default {
       this.$api
         .get("/mail?fields=i_mail,s_tomail,s_toname,s_frommail,s_fromname,s_subject,num_recipients,d_sent")
         .then((response) => {
-          this.mails = response.data;
+          this.mails = response.data.payload;
         });
     },
     getDate(isodate) {

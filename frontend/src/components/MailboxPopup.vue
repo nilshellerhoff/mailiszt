@@ -360,14 +360,14 @@ export default {
       this.$api
         .put(`/mailbox/${this.mailbox.i_mailbox || 0}/recipients`, this.mailbox)
         .then((response) => {
-          this.recipients = response.data;
+          this.recipients = response.data.payload;
           this.$refs.recipientsPopup.open();
         });
     },
 
     getMembers() {
       this.$api.get(`/member`).then(response => {
-        this.members = response.data
+        this.members = response.data.payload
       })
     }
   },

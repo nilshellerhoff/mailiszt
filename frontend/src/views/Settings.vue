@@ -35,7 +35,7 @@ export default {
   mounted() {
     this.$root.$on('reloadData', () => {
       this.$api.get(`/setting/version_number`).then(response => {
-        this.versionNumber = response.data
+        this.versionNumber = response.data.payload
       })
     })
   }

@@ -59,16 +59,16 @@ export default {
     getStats() {
       this.$api
         .get(`/member/?fields=i_member`)
-        .then((response) => (this.members = response.data));
+        .then((response) => (this.members = response.data.payload));
       this.$api
         .get(`/group/?fields=i_group`)
-        .then((response) => (this.groups = response.data));
+        .then((response) => (this.groups = response.data.payload));
       this.$api
         .get(`/mailbox/?fields=i_mailbox`)
-        .then((response) => (this.lists = response.data));
+        .then((response) => (this.lists = response.data.payload));
       this.$api
         .get(`/mail/?fields=i_mail`)
-        .then((response) => (this.mails = response.data));
+        .then((response) => (this.mails = response.data.payload));
     },
   },
   mounted() {

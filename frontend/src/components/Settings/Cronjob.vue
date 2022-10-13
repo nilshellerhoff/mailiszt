@@ -53,7 +53,7 @@ export default {
     },
     getSetting() {
       this.$api.get(`/setting/enable_email_fetching`).then((response) => {
-        this.status = response.data;
+        this.status = response.data.payload;
       });
     },
     setSetting() {

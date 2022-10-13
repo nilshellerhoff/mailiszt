@@ -48,7 +48,7 @@ export default {
   methods: {
     getMailbox() {
       this.$api.get(`/mailbox/${this.mailboxId}`).then((response) => {
-        this.mailbox = response.data;
+        this.mailbox = response.data.payload[0];
 
         // convert json types into objects
         this.groups = { groups : JSON.parse(this.mailbox.j_groups) }
@@ -58,7 +58,7 @@ export default {
     },
     getGroupsAvail() {
       this.$api.get(`group`).then((response) => {
-        this.groupsAvail[0].items = response.data.map((group) => ({
+        this.groupsAvail[0].items = response.data.payload.map((group) => ({
           value: group.i_group,
           text: group.s_name,
         }));

@@ -40,7 +40,7 @@ export default {
       this.btnState = "loading";
       this.$api.put(`/member/add`, this.member).then((response) => {
         this.$api
-          .put(`/member/${response.data.i_member}/groups`, this.groups.member)
+          .put(`/member/${response.data.payload[0].i_member}/groups`, this.groups.member)
           .then(() => {
             this.btnState = "done";
             setTimeout(() => {

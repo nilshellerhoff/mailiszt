@@ -71,10 +71,10 @@ export default {
         .catch((error) => {
           this.$refs.button.loading(false)
           this.$refs.button.error()
-          if (error.response.status == 400) {
+          if (error.response.data.status == 400) {
             this.newPasswordError = true;
           }
-          if (error.response.status == 403) {
+          if (error.response.data.status == 403) {
             this.oldPasswordError = true;
           }
         });

@@ -83,14 +83,14 @@ export default {
   methods: {
     loadServerItemsLength() {
       // this is kinda hacky, we request the number of items from the server by requesting a non existing field
-      this.$api.get("/log?fields=a").then((response) => {
-        this.serverItemsLength = response.data.length;
+      this.$api.get("/log?limit=0").then((response) => {
+        this.serverItemsLength = response.data.num_items_total;
       });
     },
     loadData() {
         let $limit = this.itemsPerPage
         let $offset = (this.page - 1) * this.itemsPerPage
-        this.$api.get(`/log?limit=${$limit}&offset=${$offset}`).then(response => this.logs = response.data)
+        this.$api.get(`/log?limit=${$limit}&offset=${$offset}`).then(response => this.logs = response.data.payload)
     },
     logEvent(event) {
       console.log(event)

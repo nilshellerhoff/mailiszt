@@ -122,7 +122,7 @@ export default {
   methods: {
     getGroups() {
       this.$api.get("/group").then((response) => {
-        this.groups = response.data;
+        this.groups = response.data.payload;
       });
     },
     deleteGroup(i_group, name) {
