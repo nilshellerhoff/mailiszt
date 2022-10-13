@@ -13,9 +13,16 @@ Route::add('/api/users/current/login', function() {
             'expires' => time() + AUTH_TOKEN_LIFETIME,
             'path' => '/',
         ]);
-        return makeResponse($token);
+        return makeResponse(
+            data: ["token" => $token],
+            code: 200,
+        );
     } else {
-        return makeResponse('invalid authentication', 403);
+        return makeResponse(
+            code: 401,
+            message: "INVALID_CREDENTIALS",
+            message_long: "The username or password you entered is incorrect.",
+        );
     }
 }, 'PUT');
 
@@ -30,7 +37,10 @@ Route::add('/api/users/current', function() {
     return authenticatedAction(function($auth) {
         $userid = $auth["i_user"];
         $user = new User($userid);
-        return makeResponse($user->apiGetInfo($auth["s_role"])); 
+        return makeResponse(
+            data: ["role" => $user->apiGetInfo($auth["s_role"])],
+            code: 200,
+        );
     });
 }, 'PUT');
 
@@ -43,21 +53,33 @@ Route::add('/api/users/current/password', function() {
         $newPass2 = $put_data["newPassword2"];
 
         if ($newPass1 != $newPass2) {
-            return makeResponse("passwords do not match", 400);
+            return makeResponse(
+                code: 400,
+                message: "PASSWORDS_DONT_MATCH",
+                message_long: "The new passwords you entered don't match.",
+            );
         }
 
         $userid = User::idFromToken($put_data["accessToken"]);
         $user = new User($userid);
 
         if (!$user->checkPassword($userid, $oldPass)) {
-            return makeResponse("wrong old password", 403);
+            return makeResponse(
+                code: 401,
+                message: "INVALID_CREDENTIALS",
+                message_long: "The username or password you entered is incorrect.",
+            );
         }
 
         $user->updatePassword($newPass1);
         $user->save();
 
         // return "password changed to '$newPass1'";
-        return makeResponse("password updated", 200);
+        return makeResponse(
+            code: 200,
+            message: "PASSWORD_CHANGED",
+            message_long: "Your password has been changed.",
+        );
     });
 }, 'PUT');
 

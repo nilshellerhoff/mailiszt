@@ -52,7 +52,7 @@ function makeResponse(array $data = null, int $code = 500, string $message = "",
         "message_long" => $message_long,
         "num_items" => $num_items,
         "num_items_total" => $num_items_total,
-        "data" => $data,
+        "payload" => $data,
         "request_completed" => date(DATE_FORMAT),
     ]);
 }
