@@ -40,6 +40,8 @@ define('X_MAILER_HEADER', 'Mailiszt');
 
 // available API response statuses
 define('API_RESPONSE_STATUSES', [
-    200 => "SUCCESS",
-    403 => "UNAUTHORIZED",
+    200 => "Success",
+    400 => "Bad Request",
+    401 => "Unauthorized",
+    403 => "Forbidden",
 ]);
