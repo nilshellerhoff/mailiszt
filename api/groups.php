@@ -7,7 +7,7 @@ use Steampixel\Route;
 Route::add('/api/group', function() {
     return authenticatedAction(function($auth) {
         $fields = getFieldsForApi($_GET);
-        $groups = Group::getAll();
+        $groups = Group::getAll((int)$_GET["limit"], (int)$_GET["offset"]);
         $apiInfo = array_map(fn($g) => $g->apiGetInfo($auth["s_role"], $fields), $groups);
         return makeResponse($apiInfo);
     });
