@@ -10,7 +10,7 @@ Route::add('/api/attachment/([0-9]*)(.*)', function($i_attachment, $name) {
         
         // if the name is not the attachment name, redirect
         if ($name != $attachment->properties['s_name'] && $name != '/' . $attachment->properties['s_name']) {
-            header('Location: ' . $attachment->getUrl());
+            header('Location: ' . '/api' . $attachment->getUrl());
             return;
         }
 
