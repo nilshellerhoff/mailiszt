@@ -17,14 +17,34 @@ class Base {
     public static $table = ""; // table name where class data is stored
     public static $identifier = ""; // identifier in $table
 
-    public static function getAll() {
+    /**
+     * Get all objects of this class from the database
+     * 
+     * @param int $limit limit the number of objects returned
+     * @param int $offset offset of the returned objects (to be used in combination with limit)
+     * 
+     * @return static[] array of objects
+     */
+    public static function getAll(int $limit = 0, int $offset = 0) {
         // get all objects of this type from the DB and return as list
         $db = new DB();
-        $ids = $db->queryColumn("SELECT " . static::$identifier . " FROM " . static::$table);
+
+        if ($limit > 0) {
+            $query = "SELECT * FROM " . static::$table . " LIMIT " . $limit . " OFFSET " . $offset;
+        } else {
+            $query ="SELECT * FROM " . static::$table;
+        }
+
+        $ids = $db->queryColumn($query);
         return static::getObjects($ids);
     }
 
-    public static function getObjects($ids) {
+    /**
+     * Get the objects with the given ids from the database
+     * 
+     * @return static[] array of objects
+     */
+    public static function getObjects($ids, int $limit = 0, int $offset = 0) {
         // get an array of objects based on an array of ids
         $objects = [];
         foreach ($ids as $id) {
@@ -36,17 +56,28 @@ class Base {
 
     /**
      * Return objects which match one or more filter criteria
+     * 
      * @param array $filter associative array of filter rules as column => value
+     * @param int $limit limit the number of objects returned
+     * @param int $offset offset of the returned objects (to be used in combination with limit)
+     * 
      * @return static[] array of objects which match the filter conditions
      */
-    public static function getObjectsFilter(array $filter) {
+    public static function getObjectsFilter(array $filter, int $limit = 0, int $offset = 0) {
         $db = new DB();
         if ($filter) {
             $filterString = $db->buildWhere($filter, "AND");
-            $ids = $db->queryColumn("SELECT " . static::$identifier . " FROM " . static::$table . " WHERE " . $filterString, $filter);
+
+            if ($limit > 0) {
+                $query = "SELECT " . static::$identifier . " FROM " . static::$table . " WHERE " . $filterString . " LIMIT " . $limit . " OFFSET " . $offset;
+            } else {
+                $query = "SELECT " . static::$identifier . " FROM " . static::$table . " WHERE " . $filterString;
+            }
+    
+            $ids = $db->queryColumn($query, $filter);
             return static::getObjects($ids);    
         } else {
-            return static::getAll();
+            return static::getAll($limit, $offset);
         }
     }
 
