@@ -29,8 +29,11 @@ class Base {
         // get all objects of this type from the DB and return as list
         $db = new DB();
 
-        if ($limit > 0) {
-            $query = "SELECT * FROM " . static::$table . " LIMIT " . $limit . " OFFSET " . $offset;
+
+        if ($limit) {
+            $limitString = $limit >= 0 ? " LIMIT " . $limit : "";
+            $offsetString = $offset >= 0 ? " OFFSET " . $offset : "";
+            $query = "SELECT " . static::$identifier . " FROM " . static::$table . $limitString . $offsetString;
         } else {
             $query ="SELECT * FROM " . static::$table;
         }
