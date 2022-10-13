@@ -63,13 +63,15 @@ class Base {
      * 
      * @return static[] array of objects which match the filter conditions
      */
-    public static function getObjectsFilter(array $filter, int $limit = 0, int $offset = 0) {
+    public static function getObjectsFilter(array $filter, int $limit = null, int $offset = null) {
         $db = new DB();
         if ($filter) {
             $filterString = $db->buildWhere($filter, "AND");
 
-            if ($limit > 0) {
-                $query = "SELECT " . static::$identifier . " FROM " . static::$table . " WHERE " . $filterString . " LIMIT " . $limit . " OFFSET " . $offset;
+            if ($limit) {
+                $limitString = $limit ? " LIMIT " . $limit : "";
+                $offsetString = $offset ? " OFFSET " . $offset : "";
+                $query = "SELECT " . static::$identifier . " FROM " . static::$table . " WHERE " . $filterString . $limitString . $offsetString;
             } else {
                 $query = "SELECT " . static::$identifier . " FROM " . static::$table . " WHERE " . $filterString;
             }
@@ -83,7 +85,7 @@ class Base {
 
     /**
      * Get the count of the objects of this type in the DB
-     * 
+     * nils
      * @return int number of objects of this class in the DB
      */
     public static function getObjectsCount() {
