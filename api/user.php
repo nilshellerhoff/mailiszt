@@ -38,7 +38,7 @@ Route::add('/api/users/current', function() {
         $userid = $auth["i_user"];
         $user = new User($userid);
         return makeResponse(
-            data: ["role" => $user->apiGetInfo($auth["s_role"])],
+            data: [$user->apiGetInfo($auth["s_role"])],
             code: 200,
         );
     });
