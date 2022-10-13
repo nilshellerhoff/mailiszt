@@ -25,18 +25,13 @@ class Base {
      * 
      * @return static[] array of objects
      */
-    public static function getAll(int $limit = 0, int $offset = 0) {
+    public static function getAll(int $limit = -1, int $offset = -1) {
         // get all objects of this type from the DB and return as list
         $db = new DB();
 
-
-        if ($limit) {
-            $limitString = $limit >= 0 ? " LIMIT " . $limit : "";
-            $offsetString = $offset >= 0 ? " OFFSET " . $offset : "";
-            $query = "SELECT " . static::$identifier . " FROM " . static::$table . $limitString . $offsetString;
-        } else {
-            $query ="SELECT * FROM " . static::$table;
-        }
+        $limitString = $limit >= 0 ? " LIMIT " . $limit : "";
+        $offsetString = $offset >= 0 ? " OFFSET " . $offset : "";
+        $query = "SELECT " . static::$identifier . " FROM " . static::$table . $limitString . $offsetString;
 
         $ids = $db->queryColumn($query);
         return static::getObjects($ids);
@@ -71,13 +66,9 @@ class Base {
         if ($filter) {
             $filterString = $db->buildWhere($filter, "AND");
 
-            if ($limit) {
-                $limitString = $limit >= 0 ? " LIMIT " . $limit : "";
-                $offsetString = $offset >= 0 ? " OFFSET " . $offset : "";
-                $query = "SELECT " . static::$identifier . " FROM " . static::$table . " WHERE " . $filterString . $limitString . $offsetString;
-            } else {
-                $query = "SELECT " . static::$identifier . " FROM " . static::$table . " WHERE " . $filterString;
-            }
+            $limitString = $limit >= 0 ? " LIMIT " . $limit : "";
+            $offsetString = $offset >= 0 ? " OFFSET " . $offset : "";
+            $query = "SELECT " . static::$identifier . " FROM " . static::$table . " WHERE " . $filterString . $limitString . $offsetString;
     
             $ids = $db->queryColumn($query, $filter);
             return static::getObjects($ids);    
