@@ -40,7 +40,7 @@ Route::add('/api/group/([0-9]*)', function($i_group) {
         $fields = getFieldsForApi($_GET);
         $group = new Group((int)$i_group);
         return makeResponse(
-            data: $group->apiGetInfo($auth['s_role'], $fields),
+            data: [$group->apiGetInfo($auth['s_role'], $fields)],
             code: 200
         );
     }, $i_group);
