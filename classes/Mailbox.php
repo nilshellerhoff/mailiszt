@@ -280,7 +280,7 @@ class Mailbox extends Base {
                 }
 
                 $mails[] = $mail;
-            } catch (Exception $e) {
+            } catch (\Throwable $e) {
                 Logger::error("Error while fetching mail: " . $e->getMessage(), 'MAILBOX_FETCH_MAILS');
             }
         }
