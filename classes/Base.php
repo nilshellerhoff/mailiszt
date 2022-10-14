@@ -25,12 +25,12 @@ class Base {
      * 
      * @return static[] array of objects
      */
-    public static function getAll(int $limit = -1, int $offset = -1) {
+    public static function getAll(int|null $limit = -1, int|null $offset = -1) {
         // get all objects of this type from the DB and return as list
         $db = new DB();
 
-        $limitString = $limit >= 0 ? " LIMIT " . $limit : "";
-        $offsetString = $offset >= 0 ? " OFFSET " . $offset : "";
+        $limitString = !is_null($limit) ? " LIMIT " . $limit : "";
+        $offsetString = !is_null($offset) ? " OFFSET " . $offset : "";
         $query = "SELECT " . static::$identifier . " FROM " . static::$table . $limitString . $offsetString;
 
         $ids = $db->queryColumn($query);

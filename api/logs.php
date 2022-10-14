@@ -7,7 +7,7 @@ use Steampixel\Route;
 Route::add('/api/log', function() {
     return authenticatedAction(function($auth) {
         $fields = getFieldsForApi($_GET);
-        $loggers = Logger::getAll((int)$_GET["limit"], (int)$_GET["offset"]);
+        $loggers = Logger::getAll(...getLimitForApi($_GET));
         $apiInfo = array_map(fn($l) => $l->apiGetInfo($auth["s_role"], $fields), $loggers);
         return makeResponse(
             data: $apiInfo,

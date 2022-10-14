@@ -7,7 +7,7 @@ use Steampixel\Route;
 Route::add('/api/mailbox', function() {
     return authenticatedAction(function($auth) {
         $fields = getFieldsForApi($_GET);
-        $mailboxes = Mailbox::getAll((int)$_GET["limit"], (int)$_GET["offset"]);
+        $mailboxes = Mailbox::getAll(...getLimitForApi($_GET));
         $apiInfo = array_map(fn($m) => $m->apiGetInfo($auth["s_role"], $fields), $mailboxes);
         return makeResponse(
             data: $apiInfo,

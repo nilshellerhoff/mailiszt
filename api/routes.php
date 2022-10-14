@@ -111,6 +111,26 @@ function getFieldsForApi(array $get) {
     return $fields;
 }
 
+/**
+ * Get the limit for filtering object output
+ * 
+ * @param string[] $get the list of GET-parameter values
+ * 
+ * @return array array [limit, offset] (either can be null)
+*/
+function getLimitForApi(array $get) {
+    // if no limit is specified, return empty
+    if (!isset($get['limit']) || $get['limit'] == '') {
+        return [null, null];
+    // if no offset is given, return limit but no offset
+    } else if (!isset($get['offset']) || $get['offset'] == '') {
+        return [(int)$get['limit'], null];
+    } else {
+    // if both are given, return like that
+        return [(int)$get['limit'], (int)$get['offset']];
+    }
+}
+
 // include api definitions
 include('members.php');
 include('groups.php');
