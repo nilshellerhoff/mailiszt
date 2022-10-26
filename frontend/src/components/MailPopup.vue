@@ -38,12 +38,12 @@
       <!-- Recipients -->
       <v-row>
         <v-col cols="4">
-          {{ recipients.length }} recipients{{
-            recipients.length > 0 ? ":" : ""
+          {{ mail.num_recipients }} recipients{{
+            mail.num_recipients > 0 ? ":" : ""
           }}
         </v-col>
         <v-spacer></v-spacer>
-        <v-col cols="4">
+        <v-col cols="4" v-if="mail.num_recipients > 0">
           <v-text-field
             dense
             label="Search"
@@ -52,7 +52,7 @@
           ></v-text-field>
         </v-col>
       </v-row>
-      <v-chip-group>
+      <v-chip-group v-if="mail.num_recipients > 0">
         <div
           v-for="r in recipients.filter((r) =>
             String(r.s_email).includes(recipientsSearch)
@@ -95,7 +95,7 @@ iframe.mailbody {
 import DetailsPopup from "@/components/DetailsPopup.vue";
 
 export default {
-  name: "MemberPopup",
+  name: "MailPopup",
   props: ["popupTitle", "mail", "recipients"],
   data: function () {
     return {
