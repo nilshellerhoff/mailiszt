@@ -1,5 +1,5 @@
 # Mailiszt
-Simple Mailing List Manager written in PHP and Vue designed to be as lightweight as possible (only requirements are PHP 7.4+ with SQLite module). You can organize members into groups and organize these groups into mailing lists based on logical conditions. 
+Simple Mailing List Manager written in PHP and Vue designed to be as lightweight as possible (only requirements are PHP 8.0+ with SQLite module). You can organize members into groups and organize these groups into mailing lists based on logical conditions. 
 
 ## Building
 
